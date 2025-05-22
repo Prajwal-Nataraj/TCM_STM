@@ -287,6 +287,22 @@ void CmdProc_ResetParams(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint
 		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
 }
 
+void CmdProc_EnBridge(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(Motor_EnBridge())
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
+}
+
+void CmdProc_DisBridge(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(Motor_DisBridge())
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
+}
+
 void CmdProc_Start(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
 {
 	if(Motor_Start())
@@ -297,18 +313,15 @@ void CmdProc_Start(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *
 
 void CmdProc_Stop(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
 {
-	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
-	uint8_t clear = GetArgUINT8(pCmdBuf);
-
-	if(Motor_Stop(clear))
+	if(Motor_Stop())
 		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
 	else
 		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
 }
 
-void CmdProc_Run(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+void CmdProc_CriticalStop(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
 {
-	if(Motor_Run())
+	if(Motor_CriticalStop())
 		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
 	else
 		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
@@ -338,12 +351,14 @@ static const CmdHandler_t CmdTable[] =
 		{ 	CMD_DIR			, 		CmdProc_Direction 	},
 		{ 	CMD_RESETPRM	, 		CmdProc_ResetParams },
 		{ 	CMD_START		, 		CmdProc_Start 		},
-		{ 	CMD_RUN			, 		CmdProc_Run	 		},
-		{ 	CMD_STOP		, 		CmdProc_Stop 		},
+		{ 	CMD_STOP		, 		CmdProc_Stop		},
+		{ 	CMD_CRITSTOP	, 		CmdProc_CriticalStop},
 		{ 	CMD_SETZERO		, 		CmdProc_SetZero		},
 		{ 	CMD_RTZ			, 		CmdProc_RTZ 		},
 		{ 	CMD_RTIME		, 		CmdProc_RampTime	},
 		{ 	CMD_ACCEL		, 		CmdProc_Accel		},
+		{ 	CMD_ENBRIDGE	, 		CmdProc_EnBridge	},
+		{ 	CMD_DISBRIDGE	, 		CmdProc_DisBridge	},
 };
 
 StdReturn_t Cmd_Process(uint8_t *CmdBuf, uint8_t *RspBuf, uint32_t *RspLen)

@@ -38,13 +38,6 @@ float Motor_GetDistance(void)
 bool Motor_SetSpeed(float speed)
 {
 	Motor.newSpeed = speed;
-
-	/* v = u + at;
-	 * t = (v - u) / a; */
-	float rtime = 0;
-	rtime = mmpm_to_rpm(fabs(Motor.newSpeed - Motor.currentSpeed)) / Motor.accel;
-	Motor.rampTime = (uint16_t)(rtime * 1000);	// convert to ms
-
 	return true;
 }
 /* Get Vertical Speed in mm/min */
@@ -92,59 +85,10 @@ bool Motor_GetDirection(void)
 	return Motor.direction;
 }
 
-/* Set Zero Position */
-bool Motor_SetZeroPos(void)
-{
-	Motor.zeroPosition = SPD_GetMecAngle(SpeednTorqCtrlM1.SPD);
-	return true;
-}
-
-/* Return Motor back to Zero Pos */
-bool Motor_RTZ(void)
-{
-//	bool prevDir = 0;
-//	float prevSpeed = 0;
-//	uint16_t prevRampTime = 0;
-//
-//	prevDir = Motor.direction;
-//	prevSpeed = Motor.speed;
-//	prevRampTime = Motor.rampTime;
-//
-//	Motor.direction = (SPD_GetMecAngle(SpeednTorqCtrlM1.SPD) > Motor.zeroPosition) ? 0 : 1;				// Do direction for RTZ
-//	Motor.speed = 1000.0;
-//	Motor.rampTime = 1000;
-//
-//	if(Motor_Run())
-//	{
-//		Motor.direction = prevDir;
-//		Motor.speed = prevSpeed;
-//		Motor.rampTime = prevRampTime;
-//	}
-//
-//	Motor.targetMecAngCache = Motor.targetMecAng;
-//	Motor.targetMecAng = Motor.zeroPosition;
-//	Motor.restoreTarMecAng = ENABLE;
-////	MC_StartMotor1();
-//	MCI_StartMotor(pMCI[M1]);
-//	Motor.RTZstate = ONGOING;
-//
-	return true;
-}
-
-/* Conversion from mm/min to rpm */
-float mmpm_to_rpm(float mmpm)
-{
-	float rpm = 0;
-	rpm = (mmpm * (Motor.direction ? 1 :-1))	\
-		* (float)(GEAR_RATIO / MM_PER_THREAD);
-
-	return rpm;
-}
-
 /* Reset Motor Parameters to 0 */
 bool Motor_ResetParams(void)
 {
-	if(!Motor_Stop(false))
+	if(!Motor_Stop())
 		return false;
 
 	Motor.distance = 0;
@@ -165,50 +109,135 @@ void Motor_ResetDriveParams(void)
 	FOC_Init();
 }
 
-/* Turn ON motor and align Axis */
-bool Motor_Start(void)
+/* Conversion from mm/min to rpm */
+float mmpm_to_rpm(float mmpm)
 {
-	Motor.targetMecAng += (376 * (Motor.distance * (Motor.direction ? 1 :-1)));		// 1mm = 376 MecAngle
+	float rpm = 0;
+	rpm = (mmpm * (Motor.direction ? 1 :-1))	\
+		* (float)(GEAR_RATIO / MM_PER_THREAD);
 
+	return rpm;
+}
+
+/* Calculate Acceleration time in ms */
+uint16_t Motor_CalcAccelTimeMs(void)
+{
+	/* v = u + at;
+	 * t = (v - u) / a */
+
+	float accelTime = 0;
+	accelTime = mmpm_to_rpm(fabs(Motor.newSpeed - Motor.currentSpeed)) / Motor.accel;
+	return (uint16_t)(accelTime * 1000);	// convert to ms
+}
+
+/* Enable Bridge */
+bool Motor_EnBridge(void)
+{
 	MCI_StartMotor(pMCI[M1]);
-	Motor.stopAtTarget = ENABLE;
-	Speed.prev_time_send = HAL_GetTick();
-	Speed.sendAccess = true;
-
 	return true;
 }
 
-/* Stop Vertical Movement */
-bool Motor_Stop(bool clear)
+/* Disable Bridge */
+bool Motor_DisBridge(void)
 {
 	MCI_StopMotor(pMCI[M1]);
+	MCI_ExecSpeedRamp(pMCI[M1], 0, 50);
 	Motor.currentSpeed = 0;
-
-	if(clear)
-		MCI_ExecSpeedRamp(pMCI[M1], 0, 100);
-
-	Speed.sendAccess = false;
-//	sendToPort(&huart_MD, SPD_GetMecAngle(SpeednTorqCtrlM1.SPD));
 
 	return true;
 }
 
-/* Set the Motor Parameters */
-bool Motor_Run(void)
+/* Start Vertical Movement with Acceleration */
+bool Motor_Start(void)
 {
+//	Motor.targetMecAng += (376 * (Motor.distance * (Motor.direction ? 1 :-1)));		// 1mm = 376 MecAngle
+
 	float speed = 0;
 	float adjSpeed = 0;
-	uint16_t rampTime = 0;
 
-	speed = mmpm_to_rpm(Motor.newSpeed);							// mm/min to RPM
-	adjSpeed = (0.9972 * speed) /*- 0.0044*/;						// Adjusted Speed
-	rampTime = Motor.rampTime; 										// in ms
+	speed = mmpm_to_rpm(Motor.newSpeed);			// mm/min in UP or DOWN to +RPM or -RPM
+	adjSpeed = 0.9972 * speed;						// Adjusted Speed
 
-	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, rampTime);
+	Motor.rampTime = Motor_CalcAccelTimeMs();
+
+	//	Motor.stopAtTarget = ENABLE;
+	//	Speed.prev_time_send = HAL_GetTick();
+	//	Speed.sendAccess = true;
+
+	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, Motor.rampTime);
 	Motor.currentSpeed = Motor.newSpeed;
 
 	return true;
 }
+
+/* Stop Vertical Movement with Deceleration */
+bool Motor_Stop(void)
+{
+	MCI_ExecSpeedRamp(pMCI[M1], 0, Motor.rampTime);
+	Motor.currentSpeed = 0;
+
+	//	Speed.sendAccess = false;
+	//	sendToPort(&huart_MD, SPD_GetMecAngle(SpeednTorqCtrlM1.SPD));
+
+	return true;
+}
+
+/* Critical Stop (without Deceleration) */
+bool Motor_CriticalStop(void)
+{
+	MCI_ExecSpeedRamp(pMCI[M1], 0, 50);
+	Motor.currentSpeed = 0;
+
+	//	Speed.sendAccess = false;
+	//	sendToPort(&huart_MD, SPD_GetMecAngle(SpeednTorqCtrlM1.SPD));
+
+	return true;
+}
+
+///* Turn ON motor and align Axis */
+//bool Motor_Start(void)
+//{
+//	Motor.targetMecAng += (376 * (Motor.distance * (Motor.direction ? 1 :-1)));		// 1mm = 376 MecAngle
+//
+//	MCI_StartMotor(pMCI[M1]);
+//	Motor.stopAtTarget = ENABLE;
+////	Speed.prev_time_send = HAL_GetTick();
+////	Speed.sendAccess = true;
+//
+//	return true;
+//}
+//
+///* Stop Vertical Movement */
+//bool Motor_Stop(bool clear)
+//{
+//	MCI_StopMotor(pMCI[M1]);
+//	Motor.currentSpeed = 0;
+//
+//	if(clear)
+//		MCI_ExecSpeedRamp(pMCI[M1], 0, 100);
+//
+////	Speed.sendAccess = false;
+////	sendToPort(&huart_MD, SPD_GetMecAngle(SpeednTorqCtrlM1.SPD));
+//
+//	return true;
+//}
+//
+///* Set the Motor Parameters */
+//bool Motor_SetParams(void)
+//{
+//	float speed = 0;
+//	float adjSpeed = 0;
+//
+//	speed = mmpm_to_rpm(Motor.newSpeed);			// mm/min to RPM
+//	adjSpeed = 0.9972 * speed;						// Adjusted Speed
+//
+//	Motor.rampTime = Motor_CalcAccelTimeMs();
+//
+//	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, Motor.rampTime);
+//	Motor.currentSpeed = Motor.newSpeed;
+//
+//	return true;
+//}
 
 uint32_t Motor_GetPrevSendTick(void)
 {
@@ -277,30 +306,69 @@ bool Motor_StopAtTarget(void)
 	return true;
 }
 
+/* Set Zero Position */
+bool Motor_SetZeroPos(void)
+{
+	Motor.zeroPosition = SPD_GetMecAngle(SpeednTorqCtrlM1.SPD);
+	return true;
+}
+
+/* Return Motor back to Zero Pos */
+bool Motor_RTZ(void)
+{
+//	bool prevDir = 0;
+//	float prevSpeed = 0;
+//	uint16_t prevRampTime = 0;
+//
+//	prevDir = Motor.direction;
+//	prevSpeed = Motor.speed;
+//	prevRampTime = Motor.rampTime;
+//
+//	Motor.direction = (SPD_GetMecAngle(SpeednTorqCtrlM1.SPD) > Motor.zeroPosition) ? 0 : 1;				// Do direction for RTZ
+//	Motor.speed = 1000.0;
+//	Motor.rampTime = 1000;
+//
+//	if(Motor_Run())
+//	{
+//		Motor.direction = prevDir;
+//		Motor.speed = prevSpeed;
+//		Motor.rampTime = prevRampTime;
+//	}
+//
+//	Motor.targetMecAngCache = Motor.targetMecAng;
+//	Motor.targetMecAng = Motor.zeroPosition;
+//	Motor.restoreTarMecAng = ENABLE;
+////	MC_StartMotor1();
+//	MCI_StartMotor(pMCI[M1]);
+//	Motor.RTZstate = ONGOING;
+//
+	return true;
+}
+
 /* Stop Motor when Zero Position is reached */
 bool Motor_CheckRTZ(void)
 {
-	if(ONGOING == Motor.RTZstate)
-	{
-		if(DIR_UP == Motor_GetDirection())
-		{
-			if(SPD_GetMecAngle(SpeednTorqCtrlM1.SPD) <= Motor.zeroPosition)
-			{
-				Motor_Stop(false);
-				Motor_Run();
-				Motor.RTZstate = COMPLETED;
-			}
-		}
-		else
-		{
-			if(SPD_GetMecAngle(SpeednTorqCtrlM1.SPD) >= Motor.zeroPosition)
-			{
-				Motor_Stop(false);
-				Motor_Run();
-				Motor.RTZstate = COMPLETED;
-			}
-		}
-	}
+//	if(ONGOING == Motor.RTZstate)
+//	{
+//		if(DIR_UP == Motor_GetDirection())
+//		{
+//			if(SPD_GetMecAngle(SpeednTorqCtrlM1.SPD) <= Motor.zeroPosition)
+//			{
+//				Motor_Stop();
+//				Motor_SetParams();
+//				Motor.RTZstate = COMPLETED;
+//			}
+//		}
+//		else
+//		{
+//			if(SPD_GetMecAngle(SpeednTorqCtrlM1.SPD) >= Motor.zeroPosition)
+//			{
+//				Motor_Stop();
+//				Motor_SetParams();
+//				Motor.RTZstate = COMPLETED;
+//			}
+//		}
+//	}
 
 	return true;
 }

@@ -49,12 +49,14 @@
 #define CMD_DIR				(0x03)
 #define CMD_RESETPRM		(0x04)
 #define CMD_START			(0x05)
-#define CMD_RUN				(0x06)
-#define CMD_STOP			(0x07)
+#define CMD_STOP			(0x06)
+#define CMD_CRITSTOP		(0x07)
 #define CMD_SETZERO			(0x08)
 #define CMD_RTZ				(0x09)
 #define CMD_RTIME			(0x0A)
 #define CMD_ACCEL			(0x0B)
+#define CMD_ENBRIDGE		(0x0C)
+#define CMD_DISBRIDGE		(0x0D)
 
 #define CMD_EXC_CMDS    	((uint8_t)243)
 
@@ -106,7 +108,7 @@ void CmdProc_Start(uint8_t *, uint32_t, uint8_t *, uint32_t *);
 
 void CmdProc_Stop(uint8_t *, uint32_t, uint8_t *, uint32_t *);
 
-void CmdProc_Run(uint8_t *, uint32_t, uint8_t *, uint32_t *);
+void CmdProc_CriticalStop(uint8_t *, uint32_t, uint8_t *, uint32_t *);
 
 void CmdProc_SetZero(uint8_t *, uint32_t, uint8_t *, uint32_t *);
 

@@ -174,7 +174,7 @@
 #define DOUT_ACTIVE_HIGH                    DOutputActiveHigh
 #define DOUT_ACTIVE_LOW                     DOutputActiveLow
 
-/**********  AUXILIARY ENCODER TIMER MOTOR 1 *************/
+/**********  ENCODER TIMER MOTOR 1 *************/
 #define M1_PULSE_NBR                        ((4 * (M1_ENCODER_PPR)) - 1)
 #define M1_ENC_IC_FILTER_LL LL_TIM_IC_FILTER_FDIV16_N8
 #define M1_ENC_IC_FILTER   12

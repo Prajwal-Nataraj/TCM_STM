@@ -75,7 +75,7 @@ __weak int32_t SPD_GetMecAngle(const SpeednPosFdbk_Handle_t *pHandle)
   *         the unit defined by [SPEED_UNIT](measurement_units.md).
   * @param  pHandle: handler of the current instance of the SpeednPosFdbk component.
   */
-__weak int16_t SPD_GetAvrgMecSpeedUnit(const SpeednPosFdbk_Handle_t *pHandle)
+__weak /*int16_t*/float SPD_GetAvrgMecSpeedUnit(const SpeednPosFdbk_Handle_t *pHandle)
 {
 #ifdef NULL_PTR_CHECK_SPD_POS_FBK
   return ((MC_NULL == pHandle) ? 0 : pHandle->hAvrMecSpeedUnit);
@@ -129,7 +129,7 @@ __attribute__((section(".ccmram")))
   *         -
 
   */
-__weak bool SPD_IsMecSpeedReliable(SpeednPosFdbk_Handle_t *pHandle, const int16_t *pMecSpeedUnit)
+__weak bool SPD_IsMecSpeedReliable(SpeednPosFdbk_Handle_t *pHandle, const /*int16_t*/float *pMecSpeedUnit)
 {
   bool SpeedSensorReliability = true;
 #ifdef NULL_PTR_CHECK_SPD_POS_FBK

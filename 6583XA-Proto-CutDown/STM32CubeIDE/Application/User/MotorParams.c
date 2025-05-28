@@ -105,7 +105,8 @@ bool Motor_RTZ(void)
 	Motor.targetMecAngCache = Motor.targetMecAng;
 	Motor.targetMecAng = Motor.zeroPosition;
 	Motor.restoreTarMecAng = ENABLE;
-	MC_StartMotor1();
+//	MC_StartMotor1();
+	MCI_StartMotor(pMCI[M1]);
 	Motor.RTZstate = ONGOING;
 
 	return true;
@@ -139,7 +140,8 @@ bool Motor_Start(void)
 {
 	Motor.targetMecAng += (376 * (Motor.distance * (Motor.direction ? 1 :-1)));		// 1mm = 376 MecAngle
 
-	MC_StartMotor1();
+//	MC_StartMotor1();
+	MCI_StartMotor(pMCI[M1]);
 	Motor.stopAtTarget = ENABLE;
 	Speed.prev_time_send = HAL_GetTick();
 	Speed.sendAccess = true;
@@ -150,10 +152,12 @@ bool Motor_Start(void)
 /* Stop Vertical Movement */
 bool Motor_Stop(bool clear)
 {
-	MC_StopMotor1();
+//	MC_StopMotor1();
+	MCI_StopMotor(pMCI[M1]);
 
 	if(clear)
-		MC_ProgramSpeedRampMotor1(0, 100);
+		MCI_ExecSpeedRamp(pMCI[M1], 0, 100);
+//		MC_ProgramSpeedRampMotor1(0, 100);
 
 	Speed.sendAccess = false;
 	sendToPort(&huart_MD, SPD_GetMecAngle(SpeednTorqCtrlM1.SPD));
@@ -161,17 +165,20 @@ bool Motor_Stop(bool clear)
 	return true;
 }
 
-/* Start the Vertical Movement (post Motor_Start()) */
-float speed123 = 0;
+/* Set the Motor Parameters */
 bool Motor_Run(void)
 {
-//	float speed = 0;
+	float speed = 0;
+	float adjSpeed = 0;
 	uint16_t rampTime = 0;
 
-	speed123 = (float)(Motor.speed * (Motor.direction ? 1 :-1)) * (float)(6.0 / 5.08);		// RPM to mm/min
+	speed = (float)(Motor.speed * (Motor.direction ? 1 :-1))	\
+		  * (float)(GEAR_RATIO / MM_PER_THREAD);				// RPM to mm/min
+	adjSpeed = (0.9972 * speed) - 0.0044;						// Adjusted Speed
 	rampTime = Motor.rampTime; //in ms
 
-	MC_ProgramSpeedRampMotor1(speed123, rampTime);
+//	MC_ProgramSpeedRampMotor1(speed123, rampTime);
+	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, rampTime);
 
 	return true;
 }
@@ -218,7 +225,8 @@ bool Motor_StopAtTarget(void)
 	{
 		if(SPD_GetMecAngle(SpeednTorqCtrlM1.SPD) >= Motor.targetMecAng)
 		{
-			MC_StopMotor1();
+//			MC_StopMotor1();
+			MCI_StopMotor(pMCI[M1]);
 			Motor.stopAtTarget = DISABLE;
 			if(ENABLE == Motor.restoreTarMecAng)
 				Motor.targetMecAng = Motor.targetMecAngCache;
@@ -230,7 +238,8 @@ bool Motor_StopAtTarget(void)
 		{
 			if(SPD_GetMecAngle(SpeednTorqCtrlM1.SPD) <= Motor.targetMecAng)
 			{
-				MC_StopMotor1();
+//				MC_StopMotor1();
+				MCI_StopMotor(pMCI[M1]);
 				Motor.stopAtTarget = DISABLE;
 				if(ENABLE == Motor.restoreTarMecAng)
 					Motor.targetMecAng = Motor.targetMecAngCache;

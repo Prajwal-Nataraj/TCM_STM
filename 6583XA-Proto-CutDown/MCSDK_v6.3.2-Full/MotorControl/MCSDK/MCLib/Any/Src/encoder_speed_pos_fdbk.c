@@ -157,7 +157,7 @@ __weak int16_t ENC_CalcAngle(ENCODER_Handle_t *pHandle)
     int32_t wtemp1;
     /* PR 52926 We need to keep only the 16 LSB, bit 31 could be at 1
      if the overflow occurs just after the entry in the High frequency task */
-    uwtemp1 = (LL_TIM_GetCounter(pHandle->TIMx) & 0xffffU) * (pHandle->U32MAXdivPulseNumber);
+    uwtemp1 = (LL_TIM_GetCounter(pHandle->TIMx) & 0x7fffffffU) * (pHandle->U32MAXdivPulseNumber);
 #ifndef FULL_MISRA_C_COMPLIANCY_ENC_SPD_POS
     wtemp1 = (int32_t)uwtemp1 >> 16U;  //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
 #else
@@ -199,7 +199,7 @@ __weak int16_t ENC_CalcAngle(ENCODER_Handle_t *pHandle)
   *         expressed in the unit defined by #SPEED_UNIT
   * @retval true = sensor information is reliable. false = sensor information is not reliable
   */
-__weak bool ENC_CalcAvrgMecSpeedUnit(ENCODER_Handle_t *pHandle, int16_t *pMecSpeedUnit)
+__weak bool ENC_CalcAvrgMecSpeedUnit(ENCODER_Handle_t *pHandle, /*int16_t*/float *pMecSpeedUnit)
 {
   bool bReliability;
 #ifdef NULL_PTR_CHECK_ENC_SPD_POS_FDB
@@ -210,8 +210,8 @@ __weak bool ENC_CalcAvrgMecSpeedUnit(ENCODER_Handle_t *pHandle, int16_t *pMecSpe
   else
   {
 #endif
-    int32_t wtemp1;
-    int32_t wtemp2;
+    /*int32_t*/float wtemp1;
+    /*int32_t*/float wtemp2;
     uint32_t OverflowCntSample;
     uint32_t CntCapture;
     uint32_t directionSample;
@@ -301,13 +301,13 @@ __weak bool ENC_CalcAvrgMecSpeedUnit(ENCODER_Handle_t *pHandle, int16_t *pMecSpe
     wtemp2 = ((int32_t)pHandle->PulseNumber) * ((int32_t)pHandle->SpeedBufferSize);
     wtemp1 = ((0 == wtemp2) ? wtemp1 : (wtemp1 / wtemp2));
 
-    *pMecSpeedUnit = (int16_t)wtemp1;
+    *pMecSpeedUnit = /*(int16_t)*/wtemp1;
 
     /* Computes & stores average mechanical acceleration */
-    pHandle->_Super.hMecAccelUnitP = (int16_t)(wtemp1 - pHandle->_Super.hAvrMecSpeedUnit);
+    pHandle->_Super.hMecAccelUnitP = /*(int16_t)*/(wtemp1 - pHandle->_Super.hAvrMecSpeedUnit);
 
     /* Stores average mechanical speed */
-    pHandle->_Super.hAvrMecSpeedUnit = (int16_t)wtemp1;
+    pHandle->_Super.hAvrMecSpeedUnit = /*(int16_t)*/wtemp1;
 
     /* Computes & stores the instantaneous electrical speed [dpp], var wtemp1 */
     wtemp1 = pHandle->DeltaCapturesBuffer[pHandle->DeltaCapturesIndex] * ((int32_t)pHandle->SpeedSamplingFreqHz)
@@ -319,7 +319,7 @@ __weak bool ENC_CalcAvrgMecSpeedUnit(ENCODER_Handle_t *pHandle, int16_t *pMecSpe
     pHandle->_Super.hElSpeedDpp = (int16_t)wtemp1;
 
     /* Last captured value update */
-    pHandle->PreviousCapture = (CntCapture >= (uint32_t)65535) ? 65535U : (uint16_t)CntCapture;
+    pHandle->PreviousCapture = (CntCapture >= (uint32_t)(pHandle->PulseNumber-1)) ? (pHandle->PulseNumber-1) : (uint32_t)CntCapture;
     /*Buffer index update*/
     pHandle->DeltaCapturesIndex++;
 
@@ -367,7 +367,7 @@ __weak void ENC_SetMecAngle(ENCODER_Handle_t *pHandle, int16_t hMecAngle)
 #endif
     TIM_TypeDef *TIMx = pHandle->TIMx;
 
-    uint16_t hAngleCounts;
+    uint32_t hAngleCounts;
     uint16_t hMecAngleuint;
     int16_t localhMecAngle = hMecAngle;
 
@@ -383,9 +383,9 @@ __weak void ENC_SetMecAngle(ENCODER_Handle_t *pHandle, int16_t hMecAngle)
       hMecAngleuint = (uint16_t)localhMecAngle;
     }
 
-    hAngleCounts = (uint16_t)((((uint32_t)hMecAngleuint) * ((uint32_t)pHandle->PulseNumber)) / 65535U);
+    hAngleCounts = (uint32_t)((((uint32_t)hMecAngleuint) * ((uint32_t)pHandle->PulseNumber)) / 65535U);
 
-    TIMx->CNT = (uint16_t)hAngleCounts;
+    TIMx->CNT = (uint32_t)hAngleCounts;
 #ifdef NULL_PTR_CHECK_ENC_SPD_POS_FDB
   }
 #endif

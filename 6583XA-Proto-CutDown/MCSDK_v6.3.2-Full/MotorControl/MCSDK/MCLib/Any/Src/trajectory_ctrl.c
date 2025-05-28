@@ -289,6 +289,17 @@ void TC_PositionRegulation(PosCtrl_Handle_t *pHandle)
 
     wMecAngle = SPD_GetMecAngle(STC_GetSpeedSensor(pHandle->pSTC));
     wError = wMecAngleRef - wMecAngle;
+
+    /* check s16 format saturation to avoid overflow in PID computation */
+    if (wError > INT16_MAX)
+    {
+      wError = INT16_MAX;
+    }
+    else if (wError < INT16_MIN) 
+    {
+      wError = INT16_MIN;
+    }
+
     hTorqueRef_Pos = PID_Controller(pHandle->PIDPosRegulator, wError);
 
     STC_SetControlMode(pHandle->pSTC, MCM_TORQUE_MODE);

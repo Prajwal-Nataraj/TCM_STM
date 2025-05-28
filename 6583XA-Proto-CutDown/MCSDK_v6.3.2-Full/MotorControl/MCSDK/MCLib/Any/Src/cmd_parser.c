@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    register_interface.c
+  * @file    cmd_parser.c
   * @author  Motor Control SDK Team, ST Microelectronics
   * @brief   This file provides firmware functions that implement the register access for the MCP protocol
   *

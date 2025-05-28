@@ -60,7 +60,7 @@ extern "C" {
 typedef struct
 {
   uint16_t hDurationms;       /**< @brief Duration of the RevUp phase. This parameter is expressed in millisecond.*/
-  int16_t hFinalMecSpeedUnit; /**< @brief Mechanical speed assumed by VSS at the end of the RevUp phase. Expressed in
+  /*int16_t*/float hFinalMecSpeedUnit; /**< @brief Mechanical speed assumed by VSS at the end of the RevUp phase. Expressed in
                                    the unit defined by #SPEED_UNIT */
   int16_t hFinalTorque;       /**< @brief Motor torque reference imposed by STC at the end of RevUp phase. This value
                                    represents actually the Iq current expressed in digit.*/
@@ -164,7 +164,7 @@ bool RUC_FirstAccelerationStageReached(RevUpCtrl_Handle_t *pHandle);
 void RUC_SetPhaseDurationms(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase, uint16_t hDurationms);
 
 /* Allows to modify targeted mechanical speed of a selected phase */
-void RUC_SetPhaseFinalMecSpeedUnit(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase, int16_t hFinalMecSpeedUnit);
+void RUC_SetPhaseFinalMecSpeedUnit(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase, /*int16_t*/float hFinalMecSpeedUnit);
 
 /* Allows to modify targeted the motor torque of a selected phase */
 void RUC_SetPhaseFinalTorque(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase, int16_t hFinalTorque);
@@ -173,7 +173,7 @@ void RUC_SetPhaseFinalTorque(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase, int16_
 uint16_t RUC_GetPhaseDurationms(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase);
 
 /* Allows to read targeted Rotor speed set in selected phase */
-int16_t RUC_GetPhaseFinalMecSpeedUnit(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase);
+/*int16_t*/float RUC_GetPhaseFinalMecSpeedUnit(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase);
 
 /* Allows to read targeted motor torque set in selected phase */
 int16_t RUC_GetPhaseFinalTorque(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase);

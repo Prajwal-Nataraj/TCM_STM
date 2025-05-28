@@ -74,7 +74,7 @@
   *
   * @sa MCI_ExecSpeedRamp
   */
-__weak void MCI_ExecSpeedRamp(MCI_Handle_t *pHandle, int16_t hFinalSpeed, uint16_t hDurationms)
+__weak void MCI_ExecSpeedRamp(MCI_Handle_t *pHandle, /*int16_t*/float hFinalSpeed, uint16_t hDurationms)
 {
 #ifdef NULL_PTR_CHECK_MC_INT
   if (MC_NULL == pHandle)
@@ -692,7 +692,11 @@ __weak void MCI_ExecBufferedCommands(MCI_Handle_t *pHandle)
         case MCI_CMD_EXECSPEEDRAMP:
         {
           pHandle->pFOCVars->bDriveInput = INTERNAL;
-          STC_SetControlMode(pHandle->pSTC, MCM_SPEED_MODE);
+
+//          STC_SetControlMode(pHandle->pSTC, MCM_SPEED_MODE);
+          pHandle->pSTC->Mode = MCM_SPEED_MODE;
+          pHandle->pSTC->RampRemainingStep = 0u; /* Interrupts previous ramp */
+
           commandHasBeenExecuted = STC_ExecRamp(pHandle->pSTC, pHandle->hFinalSpeed, pHandle->hDurationms);
           break;
         }
@@ -700,7 +704,11 @@ __weak void MCI_ExecBufferedCommands(MCI_Handle_t *pHandle)
         case MCI_CMD_EXECTORQUERAMP:
         {
           pHandle->pFOCVars->bDriveInput = INTERNAL;
-          STC_SetControlMode(pHandle->pSTC, MCM_TORQUE_MODE);
+
+//          STC_SetControlMode(pHandle->pSTC, MCM_TORQUE_MODE);
+          pHandle->pSTC->Mode = MCM_TORQUE_MODE;
+		  pHandle->pSTC->RampRemainingStep = 0u; /* Interrupts previous ramp */
+
           commandHasBeenExecuted = STC_ExecRamp(pHandle->pSTC, pHandle->hFinalTorque, pHandle->hDurationms);
           break;
         }
@@ -1008,7 +1016,7 @@ __weak int16_t MCI_GetLastRampFinalTorque(MCI_Handle_t *pHandle) //cstat !MISRAC
 __weak float_t MCI_GetLastRampFinalTorque_F(MCI_Handle_t *pHandle) //cstat !MISRAC2012-Rule-8.13
 {
 #ifdef NULL_PTR_CHECK_MC_INT
-  int16_t retVal = 0;
+  float_t retVal = 0;
 
   if (MC_NULL == pHandle)
   {

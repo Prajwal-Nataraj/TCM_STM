@@ -243,7 +243,7 @@ __attribute__((section(".ccmram")))
   * @attention @p wIntegralTermValue divided by @f$K_{id}@f$ must fit in a 16-bit signed 
   * integer value.
   */
-__weak void PID_SetIntegralTerm(PID_Handle_t *pHandle, int32_t wIntegralTermValue)
+__weak void PID_SetIntegralTerm(PID_Handle_t *pHandle, /*int32_t*/float wIntegralTermValue)
 {
 #ifdef NULL_PTR_CHECK_PID_REG
   if (MC_NULL == pHandle)
@@ -611,9 +611,9 @@ __attribute__((section(".ccmram")))
   * The resulting value is then saturated by the upper and lower output limit values before 
   * being returned.
   */
-__weak int16_t PI_Controller(PID_Handle_t *pHandle, int32_t wProcessVarError)
+__weak /*int16_t*/float PI_Controller(PID_Handle_t *pHandle, /*int32_t*/float wProcessVarError)
 {
-  int16_t returnValue;
+	/*int32_t*/float returnValue;
 #ifdef NULL_PTR_CHECK_PID_REG
   if (MC_NULL == pHandle)
   {
@@ -622,16 +622,16 @@ __weak int16_t PI_Controller(PID_Handle_t *pHandle, int32_t wProcessVarError)
   else
   {
 #endif
-    int32_t wProportional_Term;
-    int32_t wIntegral_Term;
-    int32_t wOutput_32;
-    int32_t wIntegral_sum_temp;
-    int32_t wDischarge = 0;
-    int16_t hUpperOutputLimit = pHandle->hUpperOutputLimit;
-    int16_t hLowerOutputLimit = pHandle->hLowerOutputLimit;
+	  /*int32_t*/float wProportional_Term;
+	  /*int32_t*/float wIntegral_Term;
+	  /*int32_t*/float wOutput_32;
+    /*int32_t*/float wIntegral_sum_temp;
+    /*int32_t*/float wDischarge = 0;
+    /*int32_t*/float hUpperOutputLimit = (float)pHandle->hUpperOutputLimit;
+    /*int32_t*/float hLowerOutputLimit = (float)pHandle->hLowerOutputLimit;
 
     /* Proportional term computation*/
-    wProportional_Term = pHandle->hKpGain * wProcessVarError;
+    wProportional_Term = (float)pHandle->hKpGain * wProcessVarError;
 
     /* Integral term computation */
     if (0 == pHandle->hKiGain)
@@ -640,7 +640,7 @@ __weak int16_t PI_Controller(PID_Handle_t *pHandle, int32_t wProcessVarError)
     }
     else
     {
-      wIntegral_Term = pHandle->hKiGain * wProcessVarError;
+      wIntegral_Term = (float)pHandle->hKiGain * wProcessVarError;
       wIntegral_sum_temp = pHandle->wIntegralTerm + wIntegral_Term;
 
       if (wIntegral_sum_temp < 0)
@@ -694,7 +694,7 @@ __weak int16_t PI_Controller(PID_Handle_t *pHandle, int32_t wProcessVarError)
       }
     }
 
-#ifndef FULL_MISRA_C_COMPLIANCY_PID_REGULATOR
+#ifdef FULL_MISRA_C_COMPLIANCY_PID_REGULATOR
     /* WARNING: the below instruction is not MISRA compliant, user should verify
                that Cortex-M3 assembly instruction ASR (arithmetic shift right)
                is used by the compiler to perform the shifts (instead of LSR
@@ -702,8 +702,8 @@ __weak int16_t PI_Controller(PID_Handle_t *pHandle, int32_t wProcessVarError)
     //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
     wOutput_32 = (wProportional_Term >> pHandle->hKpDivisorPOW2) + (pHandle->wIntegralTerm >> pHandle->hKiDivisorPOW2);
 #else
-    wOutput_32 = (wProportional_Term / (int32_t)pHandle->hKpDivisor)
-              + (pHandle->wIntegralTerm / (int32_t)pHandle->hKiDivisor);
+    wOutput_32 = (wProportional_Term / (/*int32_t*/float)pHandle->hKpDivisor)
+              + (pHandle->wIntegralTerm / (/*int32_t*/float)pHandle->hKiDivisor);
 #endif
 
     if (wOutput_32 > hUpperOutputLimit)
@@ -722,7 +722,7 @@ __weak int16_t PI_Controller(PID_Handle_t *pHandle, int32_t wProcessVarError)
     }
 
     pHandle->wIntegralTerm += wDischarge;
-    returnValue = (int16_t)wOutput_32;
+    returnValue = /*(int32_t)*/wOutput_32;
 #ifdef NULL_PTR_CHECK_PID_REG
   }
 #endif

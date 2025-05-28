@@ -58,7 +58,7 @@ typedef struct
                                           scaling factor 65536. */
   uint16_t hRemainingStep;           /*!< Number of steps remaining to reach the final
                                           speed. */
-  int16_t hFinalMecSpeedUnit;        /*!< Backup of hFinalMecSpeedUnit to be applied in
+  /*int16_t*/float hFinalMecSpeedUnit;        /*!< Backup of hFinalMecSpeedUnit to be applied in
                                           the last step.*/
   bool bTransitionStarted;           /*!< Retaining information about started Transition status.*/
   bool bTransitionEnded;             /*!< Retaining information about ended transition status.*/
@@ -89,15 +89,15 @@ int16_t VSS_CalcElAngle(VirtualSpeedSensor_Handle_t *pHandle, int16_t *pInputVar
 
 /* Computes the rotor average theoretical mechanical speed in the unit defined by SPEED_UNIT and
  * returns it in pMecSpeedUnit */
-bool VSS_CalcAvrgMecSpeedUnit(VirtualSpeedSensor_Handle_t *pHandle, int16_t *hMecSpeedUnit);
+bool VSS_CalcAvrgMecSpeedUnit(VirtualSpeedSensor_Handle_t *pHandle, /*int16_t*/float *hMecSpeedUnit);
 
 /* Set the mechanical acceleration of virtual sensor */
-void  VSS_SetMecAcceleration(VirtualSpeedSensor_Handle_t *pHandle, int16_t  hFinalMecSpeedUnit, uint16_t hDurationms);
+void  VSS_SetMecAcceleration(VirtualSpeedSensor_Handle_t *pHandle, /*int16_t*/float  hFinalMecSpeedUnit, uint16_t hDurationms);
 /* Checks if the ramp executed after a VSPD_SetMecAcceleration command has been completed */
 bool VSS_RampCompleted(VirtualSpeedSensor_Handle_t *pHandle);
 
 /* Get the final speed of last setled ramp of virtual sensor expressed in 0.1Hz */
-int16_t  VSS_GetLastRampFinalSpeed(VirtualSpeedSensor_Handle_t *pHandle);
+/*int16_t*/float  VSS_GetLastRampFinalSpeed(VirtualSpeedSensor_Handle_t *pHandle);
 
 /* Set the command to Start the transition phase from VirtualSpeedSensor to other SpeedSensor */
 bool VSS_SetStartTransition(VirtualSpeedSensor_Handle_t *pHandle, bool bCommand);

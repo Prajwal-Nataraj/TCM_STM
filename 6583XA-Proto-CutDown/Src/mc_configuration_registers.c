@@ -24,7 +24,7 @@
 #include "register_interface.h"
 #include "parameters_conversion.h"
 
-#define FIRMWARE_NAME_STR "ST MC SDK\tVer.6.3.0"
+#define FIRMWARE_NAME_STR "ST MC SDK\tVer.6.3.2"
 
 const char_t CTL_BOARD[] = "~6583XA";
 static const char_t M1_PWR_BOARD[] = "~6583XA";

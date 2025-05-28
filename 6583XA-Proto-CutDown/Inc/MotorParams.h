@@ -67,7 +67,7 @@ void Motor_ResetDriveParams(void);
 bool Motor_Start(void);
 /* Stop Vertical Movement */
 bool Motor_Stop(bool);
-/* Start the Vertical Movement */
+/* Set the Motor Parameters */
 bool Motor_Run(void);
 
 uint32_t Motor_GetPrevSendTick(void);

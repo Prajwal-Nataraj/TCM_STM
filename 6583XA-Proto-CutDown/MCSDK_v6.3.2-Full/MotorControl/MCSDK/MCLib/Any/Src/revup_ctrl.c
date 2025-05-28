@@ -92,7 +92,7 @@
 
 
 /* Returns the  mechanical speed of a selected phase */
-static inline int16_t RUC_GetPhaseFinalMecSpeed01Hz(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase)
+static inline /*int16_t*/float RUC_GetPhaseFinalMecSpeed01Hz(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase)
 {
   return (pHandle->ParamsData[bPhase].hFinalMecSpeedUnit);
 }
@@ -666,7 +666,7 @@ __weak void RUC_SetPhaseDurationms(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase, 
   * @param  hFinalMecSpeedUnit: new targeted mechanical speed.
   *         This parameter must be expressed in 0.1Hz.
   */
-__weak void RUC_SetPhaseFinalMecSpeedUnit(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase, int16_t hFinalMecSpeedUnit)
+__weak void RUC_SetPhaseFinalMecSpeedUnit(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase, /*int16_t*/float hFinalMecSpeedUnit)
 {
 #ifdef NULL_PTR_CHECK_REV_UP_CTL
   if (MC_NULL == pHandle)
@@ -728,12 +728,12 @@ __weak uint16_t RUC_GetPhaseDurationms(RevUpCtrl_Handle_t *pHandle, uint8_t bPha
   *         This parameter must be a number between 0 and 6.
   *  @retval Returns targeted rotor speed set for a selected phase.
   */
-__weak int16_t RUC_GetPhaseFinalMecSpeedUnit(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase)
+__weak /*int16_t*/float RUC_GetPhaseFinalMecSpeedUnit(RevUpCtrl_Handle_t *pHandle, uint8_t bPhase)
 {
 #ifdef NULL_PTR_CHECK_REV_UP_CTL
   return ((MC_NULL == pHandle) ? 0 : (int16_t)pHandle->ParamsData[bPhase].hFinalMecSpeedUnit);
 #else
-  return ((int16_t)pHandle->ParamsData[bPhase].hFinalMecSpeedUnit);
+  return ((/*int16_t*/float)pHandle->ParamsData[bPhase].hFinalMecSpeedUnit);
 #endif
 }
 

@@ -29,12 +29,12 @@
 #include "mc_math.h"
 
 /************************* CPU & ADC PERIPHERAL CLOCK CONFIG ******************/
-#define SYSCLK_FREQ                      160000000uL
+#define SYSCLK_FREQ                      170000000uL
 #define TIM_CLOCK_DIVIDER                1
-#define ADV_TIM_CLK_MHz                  160 /* Actual TIM clk including Timer clock divider*/
-#define ADC_CLK_MHz                      40
-#define HALL_TIM_CLK                     160000000uL
-#define APB1TIM_FREQ                     160000000uL
+#define ADV_TIM_CLK_MHz                  170 /* Actual TIM clk including Timer clock divider*/
+#define ADC_CLK_MHz                      42
+#define HALL_TIM_CLK                     170000000uL
+#define APB1TIM_FREQ                     170000000uL
 
 /*************************  IRQ Handler Mapping  *********************/
 #define TIMx_UP_M1_IRQHandler            TIM1_UP_TIM16_IRQHandler

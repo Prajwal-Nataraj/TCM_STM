@@ -63,11 +63,11 @@ typedef struct
   uint16_t SpeedSamplingFreqHz;                      /*!< Frequency (Hz) at which motor speed is to be computed. */
 
   /* SW Settings */
-  uint16_t PulseNumber;                              /*!< Number of pulses per revolution, provided by each
+  uint32_t PulseNumber;                              /*!< Number of pulses per revolution, provided by each
                                                           of the two encoder signals, multiplied by 4 */
   volatile uint16_t TimerOverflowNb;                 /*!< Number of overflows occurred since
                                                           last speed measurement event*/
-  uint16_t PreviousCapture;                          /*!< Timer counter value captured during
+  uint32_t PreviousCapture;                          /*!< Timer counter value captured during
                                                           previous speed measurement event*/
   uint8_t SpeedBufferSize;                           /*!< Size of the buffer used to calculate the average
                                                           speed. It must be <= 16.*/
@@ -95,7 +95,7 @@ void ENC_Clear(ENCODER_Handle_t *pHandle);
 int16_t ENC_CalcAngle(ENCODER_Handle_t *pHandle);
 
 /* The method generates a capture event on a channel, computes & stores average mechanical speed */
-bool ENC_CalcAvrgMecSpeedUnit(ENCODER_Handle_t *pHandle, int16_t *pMecSpeedUnit);
+bool ENC_CalcAvrgMecSpeedUnit(ENCODER_Handle_t *pHandle, /*int16_t*/float *pMecSpeedUnit);
 
 /* It set instantaneous rotor mechanical angle */
 void ENC_SetMecAngle(ENCODER_Handle_t *pHandle, int16_t hMecAngle);

@@ -54,7 +54,7 @@ typedef struct
   MC_ControlMode_t Mode;               /*!< Modality of STC. It can be one of these two settings:
                                            MCM_TORQUE_MODE to enable the Torque mode or
                                            MCM_SPEED_MODE to enable the Speed mode. */
-  int16_t TargetFinal;                 /*!< Backup of #hTargetFinal to be applied in the last step. */
+  /*int16_t*/float TargetFinal;                 /*!< Backup of #hTargetFinal to be applied in the last step. */
   int32_t SpeedRefUnitExt;             /*!< Current mechanical rotor speed reference expressed in
                                             [SPEED_UNIT](measurement_units.md) multiplied by 65536.*/
   int32_t TorqueRef;                   /*!< Current motor torque reference. This value represents actually
@@ -101,7 +101,7 @@ int16_t STC_GetMecSpeedRefUnit(SpeednTorqCtrl_Handle_t *pHandle);
 void STC_SetControlMode(SpeednTorqCtrl_Handle_t *pHandle, MC_ControlMode_t bMode);
 
 /* Starts the execution of a ramp using new target and duration */
-bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, int16_t hTargetFinal, uint32_t hDurationms);
+bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, /*int16_t*/float hTargetFinal, uint32_t hDurationms);
 
 /* Computes the new value of motor torque reference */
 int16_t STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle);

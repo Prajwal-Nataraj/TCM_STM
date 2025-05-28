@@ -82,54 +82,11 @@ STSPIN32G4_StatusTypeDef STSPIN32G4_init(STSPIN32G4_HandleTypeDef *hdl)
 
 #if defined(USE_FULL_LL_DRIVER)
 
-  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-
   hdl->i2cHdl = I2C3;
-
-  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOE);
-  LL_GPIO_SetOutputPin(GD_WAKE_GPIO_Port, GD_WAKE_Pin);
-
-  GPIO_InitStruct.Pin = GD_WAKE_Pin;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  GPIO_InitStruct.Speed = LL_GPIO_SPEED_LOW;
-  LL_GPIO_Init(GD_WAKE_GPIO_Port, &GPIO_InitStruct);
-
-  GPIO_InitStruct.Pin = GD_NFAULT_Pin;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-  LL_GPIO_Init(GD_NFAULT_GPIO_Port, &GPIO_InitStruct);
-
-  GPIO_InitStruct.Pin = GD_READY_Pin;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-  LL_GPIO_Init(GD_READY_GPIO_Port, &GPIO_InitStruct);
 
 #else
 
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-
   hdl->i2cHdl = &hi2c3;
-
-  __HAL_RCC_GPIOE_CLK_ENABLE();
-  HAL_GPIO_WritePin(GD_WAKE_GPIO_Port, GD_WAKE_Pin, GPIO_PIN_SET);
-
-  GPIO_InitStruct.Pin = GD_WAKE_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GD_WAKE_GPIO_Port, &GPIO_InitStruct);
-
-  GPIO_InitStruct.Pin = GD_NFAULT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GD_NFAULT_GPIO_Port, &GPIO_InitStruct);
-
-  GPIO_InitStruct.Pin = GD_READY_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GD_READY_GPIO_Port, &GPIO_InitStruct);
 
 #endif
 
@@ -144,30 +101,6 @@ STSPIN32G4_StatusTypeDef STSPIN32G4_init(STSPIN32G4_HandleTypeDef *hdl)
 STSPIN32G4_StatusTypeDef STSPIN32G4_deInit(STSPIN32G4_HandleTypeDef *hdl)
 {
   STSPIN32G4_StatusTypeDef status = STSPIN32G4_OK;
-
-#if defined(USE_FULL_LL_DRIVER)
-
-  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-  status = (STSPIN32G4_StatusTypeDef) LL_I2C_DeInit(hdl->i2cHdl);
-
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-
-  GPIO_InitStruct.Pin = GD_WAKE_Pin;
-  LL_GPIO_Init(GD_WAKE_GPIO_Port, &GPIO_InitStruct);
-  GPIO_InitStruct.Pin = GD_NFAULT_Pin;
-  LL_GPIO_Init(GD_NFAULT_GPIO_Port, &GPIO_InitStruct);
-  GPIO_InitStruct.Pin = GD_READY_Pin;
-  LL_GPIO_Init(GD_READY_GPIO_Port, &GPIO_InitStruct);
-
-#else
-
-  status = (STSPIN32G4_StatusTypeDef) HAL_I2C_DeInit(hdl->i2cHdl);
-  HAL_GPIO_DeInit(GD_WAKE_GPIO_Port, GD_WAKE_Pin);
-  HAL_GPIO_DeInit(GD_NFAULT_GPIO_Port, GD_NFAULT_Pin);
-  HAL_GPIO_DeInit(GD_READY_GPIO_Port, GD_READY_Pin);
-
-#endif
 
   hdl->i2cHdl = NULL;
 

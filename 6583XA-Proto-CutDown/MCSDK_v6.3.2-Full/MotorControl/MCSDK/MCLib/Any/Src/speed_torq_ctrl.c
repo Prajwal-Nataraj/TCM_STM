@@ -266,7 +266,7 @@ __weak void STC_SetControlMode(SpeednTorqCtrl_Handle_t *pHandle, MC_ControlMode_
   * @ref PositionControl "Position Control" loop or
   * speed regulation with @ref SpeedRegulatorPotentiometer Speed potentiometer.
   */
-__weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, int16_t hTargetFinal, uint32_t hDurationms)
+__weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, /*int16_t*/float hTargetFinal, uint32_t hDurationms)
 {
   bool allowedRange = true;
 #ifdef NULL_PTR_CHECK_SPD_TRQ_CTL
@@ -279,7 +279,7 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, int16_t hTargetFinal,
 #endif
     uint32_t wAux;
     int32_t wAux1;
-    int16_t hCurrentReference;
+    /*int16_t*/float hCurrentReference;
 
     /* Check if the hTargetFinal is out of the bound of application */
     if (MCM_TORQUE_MODE == pHandle->Mode)
@@ -308,7 +308,7 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, int16_t hTargetFinal,
     {
 #ifndef FULL_MISRA_C_COMPLIANCY_SPD_TORQ_CTRL
       //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
-      hCurrentReference = (int16_t)(pHandle->SpeedRefUnitExt >> 16);
+      hCurrentReference = (/*int16_t*/float)(pHandle->SpeedRefUnitExt >> 16);
 #else
       hCurrentReference = (int16_t)(pHandle->SpeedRefUnitExt / 65536);
 #endif
@@ -343,7 +343,8 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, int16_t hTargetFinal,
       {
         if (MCM_SPEED_MODE == pHandle->Mode)
         {
-          pHandle->SpeedRefUnitExt = ((int32_t)hTargetFinal) * 65536;
+//          pHandle->SpeedRefUnitExt = ((int32_t)hTargetFinal) * 65536;
+          pHandle->SpeedRefUnitExt = (int32_t)(hTargetFinal * 65536.0);
         }
         else
         {
@@ -365,7 +366,8 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, int16_t hTargetFinal,
 
         /* Compute the increment/decrement amount (wIncDecAmount) to be applied to
         the reference value at each CalcTorqueReference */
-        wAux1 = (((int32_t)hTargetFinal) - ((int32_t)hCurrentReference)) * 65536;
+//        wAux1 = (((int32_t)hTargetFinal) - ((int32_t)hCurrentReference)) * 65536;
+        wAux1 = (int32_t)((hTargetFinal - hCurrentReference) * 65536.0);
         wAux1 /= ((int32_t)pHandle->RampRemainingStep);
         pHandle->IncDecAmount = wAux1;
       }
@@ -391,7 +393,7 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, int16_t hTargetFinal,
   */
 __weak int16_t STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
 {
-  int16_t hTorqueReference;
+	/*int16_t*/float hTorqueReference;
 #ifdef NULL_PTR_CHECK_SPD_TRQ_CTL
   if (MC_NULL == pHandle)
   {
@@ -401,9 +403,9 @@ __weak int16_t STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
   {
 #endif
     int32_t wCurrentReference;
-    int16_t hMeasuredSpeed;
-    int16_t hTargetSpeed;
-    int16_t hError;
+    /*int16_t*/float hMeasuredSpeed;
+    /*int16_t*/float hTargetSpeed;
+    /*int16_t*/float hError;
 
     if (MCM_TORQUE_MODE == pHandle->Mode)
     {
@@ -427,7 +429,8 @@ __weak int16_t STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
     else if (1U == pHandle->RampRemainingStep)
     {
       /* Set the backup value of hTargetFinal */
-      wCurrentReference = ((int32_t)pHandle->TargetFinal) * 65536;
+//      wCurrentReference = ((int32_t)pHandle->TargetFinal) * 65536;
+    	wCurrentReference = (int32_t)(pHandle->TargetFinal * 65536.0);
       pHandle->RampRemainingStep = 0U;
     }
     else
@@ -442,16 +445,19 @@ __weak int16_t STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
       /* Compute speed error */
 #ifndef FULL_MISRA_C_COMPLIANCY_SPD_TORQ_CTRL
       //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
-      hTargetSpeed = (int16_t)(wCurrentReference >> 16);
+//      hTargetSpeed = (int16_t)(wCurrentReference >> 16);
+    	hTargetSpeed = (float)wCurrentReference / 65536.0;
 #else
       hTargetSpeed = (int16_t)(wCurrentReference / 65536);
 #endif
       hMeasuredSpeed = SPD_GetAvrgMecSpeedUnit(pHandle->SPD);
       hError = hTargetSpeed - hMeasuredSpeed;
-      hTorqueReference = PI_Controller(pHandle->PISpeed, (int32_t)hError);
+//      hTorqueReference = PI_Controller(pHandle->PISpeed, (int32_t)hError);
+      hTorqueReference = PI_Controller(pHandle->PISpeed, hError);
 
       pHandle->SpeedRefUnitExt = wCurrentReference;
-      pHandle->TorqueRef = ((int32_t)hTorqueReference) * 65536;
+//      pHandle->TorqueRef = ((int32_t)hTorqueReference) * 65536;
+      pHandle->TorqueRef = (int32_t)(hTorqueReference * 65536.0);
     }
     else
     {

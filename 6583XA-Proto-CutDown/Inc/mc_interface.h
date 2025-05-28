@@ -135,7 +135,7 @@ typedef struct
   pFOCVars_t pFOCVars;                   /*!< Pointer to FOC vars used by MCI.*/
   PWMC_Handle_t *pPWM;                   /*!< Pointer to PWM handle structure.*/
   MCI_UserCommands_t lastCommand;        /*!< Last command coming from the user.*/
-  int16_t hFinalSpeed;                   /*!< Final speed of last ExecSpeedRamp command.*/
+  /*int16_t*/float hFinalSpeed;                   /*!< Final speed of last ExecSpeedRamp command.*/
   int16_t hFinalTorque;                  /*!< Final torque of last ExecTorqueRamp command.*/
   qd_t Iqdref;                           /*!< Current component of last SetCurrentReferences command.*/
   ScaleParams_t *pScale;
@@ -151,7 +151,7 @@ typedef struct
 /* Exported functions ------------------------------------------------------- */
 void MCI_Init(MCI_Handle_t *pHandle, SpeednTorqCtrl_Handle_t *pSTC, pFOCVars_t pFOCVars, PWMC_Handle_t *pPWMHandle);
 void MCI_ExecBufferedCommands(MCI_Handle_t *pHandle );
-void MCI_ExecSpeedRamp(MCI_Handle_t *pHandle,  int16_t hFinalSpeed, uint16_t hDurationms);
+void MCI_ExecSpeedRamp(MCI_Handle_t *pHandle,  /*int16_t*/float hFinalSpeed, uint16_t hDurationms);
 void MCI_ExecSpeedRamp_F(MCI_Handle_t *pHandle, const float_t FinalSpeed, uint16_t hDurationms);
 
 void MCI_ExecTorqueRamp(MCI_Handle_t *pHandle,  int16_t hFinalTorque, uint16_t hDurationms);

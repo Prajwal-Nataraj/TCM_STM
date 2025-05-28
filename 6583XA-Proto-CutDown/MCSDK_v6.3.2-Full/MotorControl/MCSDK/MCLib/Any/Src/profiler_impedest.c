@@ -1,6 +1,6 @@
 /**
  ******************************************************************************
- * @file    profiler_dcac.c
+ * @file    profiler_impedest.c
  * @author  Motor Control SDK Team, ST Microelectronics
  * @brief   This file provides firmware functions of profiler DC/AC
  *          component

@@ -31,6 +31,7 @@ extern "C" {
 #include "polpulse.h"
 #include "pwm_curr_fdbk.h"
 #include "speed_pos_fdbk_hso.h"
+#include "speed_torq_ctrl_hso.h" 
 #include "mc_type.h"
 
 /** @addtogroup MCSDK
@@ -57,7 +58,8 @@ typedef struct
 {
   POLPULSE_Obj PolpulseObj;        /*!< @brief pointer on polPulse component handler.*/
   PWMC_Handle_t * pPWM;            /*!< @brief pointer PWM current feedback component handler .*/
-  SPD_Handle_t *pSPD;    /*!< @brief pointer on sensorless component handler.*/
+  SPD_Handle_t *pSPD;              /*!< @brief pointer on sensorless component handler.*/
+  STC_Handle_t* pSTC;              /*!< @brief pointer on speed & torque component handler.*/
   TIM_TypeDef * TIMx;              /*!< @brief timer used for PWM generation.*/
   int16_t pulse_countdown;         /*!< @brief pulse counter.*/
   bool flagPolePulseActivation;    /*!< @brief PolPulse activation flag.*/

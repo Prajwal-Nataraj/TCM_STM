@@ -65,7 +65,7 @@ typedef struct
                                     */
   int16_t   hKpGain;              /**< @brief @f$K_{pg}@f$, numerator of the proportional gain of the PID Regulator component */
   int16_t   hKiGain;              /**< @brief @f$K_{ig}@f$, numerator of the integral gain of the PID Regulator component */
-  int32_t   wIntegralTerm;        /**< @brief integral term of the PID Regulator
+  /*int32_t*/float   wIntegralTerm;        /**< @brief integral term of the PID Regulator
                                     *
                                     * This value is updated on each call to the PI_Controller() or PID_Controller() functions. It 
                                     * contains the integral term before being divided by @f$K_{id}@f$, the divisor of the integral
@@ -175,7 +175,7 @@ int16_t PID_GetDefaultKP(PID_Handle_t *pHandle);
 int16_t PID_GetDefaultKI(PID_Handle_t *pHandle);
 
 /* Sets the value of the integral term of a PID component */
-void PID_SetIntegralTerm(PID_Handle_t *pHandle, int32_t wIntegralTermValue);
+void PID_SetIntegralTerm(PID_Handle_t *pHandle, /*int32_t*/float wIntegralTermValue);
 
 /* Returns the divisor of Kp, the proportional gain of a PID component */
 uint16_t PID_GetKPDivisor(PID_Handle_t *pHandle);
@@ -223,7 +223,7 @@ void PID_SetKDDivisorPOW2(PID_Handle_t *pHandle, uint16_t hKdDivisorPOW2);
  * Computes the output of a PI Regulator component, sum of its proportional 
  * and integral terms
  */
-int16_t PI_Controller(PID_Handle_t *pHandle, int32_t wProcessVarError);
+/*int16_t*/float PI_Controller(PID_Handle_t *pHandle, /*int32_t*/float wProcessVarError);
 
 /* 
  * Computes the output of a PID Regulator component, sum of its proportional, 

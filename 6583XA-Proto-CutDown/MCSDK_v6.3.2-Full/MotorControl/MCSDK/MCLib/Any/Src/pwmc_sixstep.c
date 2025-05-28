@@ -206,7 +206,7 @@ __weak void PWMC_TurnOnLowSides( PWMC_Handle_t * pHandle, uint32_t ticks)
   LL_TIM_OC_SetCompareCH3(TIMx, 0u);
   LL_TIM_WriteReg(TIMx, CCMR1, 0x4848);
   LL_TIM_WriteReg(TIMx, CCMR2, 0x6848);
-  LL_TIM_WriteReg(TIMx, CCER, 0x1111);
+  LL_TIM_WriteReg(TIMx, CCER, pHandle->TimerCfg->CCER_Align_cfg);
   LL_TIM_GenerateEvent_UPDATE( TIMx );  
   LL_TIM_GenerateEvent_COM( TIMx );
   /* Main PWM Output Enable */

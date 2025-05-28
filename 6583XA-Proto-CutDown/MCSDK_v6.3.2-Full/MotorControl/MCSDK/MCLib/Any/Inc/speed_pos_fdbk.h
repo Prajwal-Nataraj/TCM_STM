@@ -60,14 +60,14 @@ typedef struct
                                            method. */
   int16_t hMecAngle;                  /*!< Instantaneous measure of rotor mechanical angle. */
   int32_t wMecAngle;                  /*!< Mechanical angle frame based on coefficient #bElToMecRatio. */
-  int16_t hAvrMecSpeedUnit;           /*!< Average mechanical speed expressed in the unit defined by
+  /*int16_t*/float hAvrMecSpeedUnit;           /*!< Average mechanical speed expressed in the unit defined by
                                            [SPEED_UNIT](measurement_units.md). */
   int16_t hElSpeedDpp;                /*!< Instantaneous electrical speed expressed in Digit Per control Period
                                            ([dpp](measurement_units.md)),
                                            expresses the angular speed as the variation of the electrical angle. */
   int16_t InstantaneousElSpeedDpp;    /*!< Instantaneous computed electrical speed, expressed in
                                            [dpp](measurement_units.md). */
-  int16_t hMecAccelUnitP;             /*!< Average mechanical acceleration expressed in the unit defined by #SpeedUnit,
+  /*int16_t*/float hMecAccelUnitP;             /*!< Average mechanical acceleration expressed in the unit defined by #SpeedUnit,
                                            only reported with encoder implementation */
   uint16_t hMaxReliableMecSpeedUnit;  /*!< Maximum value of measured mechanical speed that is considered to be valid.
                                            Expressed in the unit defined by [SPEED_UNIT](measurement_units.md). */
@@ -98,11 +98,11 @@ typedef struct
 
 int32_t SPD_GetMecAngle(const SpeednPosFdbk_Handle_t *pHandle);
 
-int16_t SPD_GetAvrgMecSpeedUnit(const SpeednPosFdbk_Handle_t *pHandle);
+/*int16_t*/float SPD_GetAvrgMecSpeedUnit(const SpeednPosFdbk_Handle_t *pHandle);
 
 int16_t SPD_GetElSpeedDpp(const SpeednPosFdbk_Handle_t *pHandle);
 
-bool SPD_IsMecSpeedReliable(SpeednPosFdbk_Handle_t *pHandle, const int16_t *pMecSpeedUnit);
+bool SPD_IsMecSpeedReliable(SpeednPosFdbk_Handle_t *pHandle, const /*int16_t*/float *pMecSpeedUnit);
 
 int16_t SPD_GetS16Speed(const SpeednPosFdbk_Handle_t *pHandle);
 

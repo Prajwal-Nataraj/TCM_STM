@@ -55,6 +55,14 @@ extern MCI_Handle_t * pMCI[NBR_OF_MOTORS];
   */
 void esc_boot(ESC_Handle_t * pHandle)
 {
+  /* Save the value of the Motor Timer Arr set up into the main function
+   * i.e. htim1.Init.Period = ((PWM_PERIOD_CYCLES) / 2);
+   * that depends on project.
+   */
+  TIM_TypeDef * TIMm = pHandle->pESC_params->Motor_TIM;
+  uint32_t tempArr = LL_TIM_GetAutoReload(TIMm);
+  pHandle->timer_arr = tempArr;
+
   TIM_TypeDef * TIMx = pHandle->pESC_params->Command_TIM;
   /*##- Start the Input Capture in interrupt mode ##########################*/
   LL_TIM_CC_EnableChannel (TIMx, LL_TIM_CHANNEL_CH2);
@@ -561,7 +569,6 @@ static bool esc_phase_check(ESC_Handle_t * pHandle)
  }
  return(ESC_phase_check_status);
 }
-
 #endif // ESC_BEEP_FEATURE
 
 static void esc_reset_pwm_ch(ESC_Handle_t * pHandle)
@@ -572,7 +579,7 @@ static void esc_reset_pwm_ch(ESC_Handle_t * pHandle)
                            | LL_TIM_CHANNEL_CH3 | LL_TIM_CHANNEL_CH1N
                            | LL_TIM_CHANNEL_CH2N | LL_TIM_CHANNEL_CH3N ) );
 
-    LL_TIM_SetAutoReload (TIMx, ((PWM_PERIOD_CYCLES) / 2));
+    LL_TIM_SetAutoReload (TIMx, pHandle->timer_arr); /* Take the value set at initialization */
    
     /* Set the Output State */ 
     LL_TIM_CC_EnableChannel (TIMx, (LL_TIM_CHANNEL_CH1 | LL_TIM_CHANNEL_CH2

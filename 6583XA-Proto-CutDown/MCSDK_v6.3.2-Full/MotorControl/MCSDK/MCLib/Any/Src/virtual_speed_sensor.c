@@ -213,7 +213,7 @@ __weak int16_t VSS_CalcElAngle(VirtualSpeedSensor_Handle_t *pHandle, int16_t *pI
   * of the MC tasks state machine or in its RUM state in @ref OpenLoop "Open Loop Control" configuration into
   * TSK_MediumFrequencyTask.
   */
-__weak bool VSS_CalcAvrgMecSpeedUnit(VirtualSpeedSensor_Handle_t *pHandle, int16_t *hMecSpeedUnit)
+__weak bool VSS_CalcAvrgMecSpeedUnit(VirtualSpeedSensor_Handle_t *pHandle, /*int16_t*/float *hMecSpeedUnit)
 {
   bool SpeedSensorReliability;
 #ifdef NULL_PTR_CHECK_VIR_SPD_SEN
@@ -235,9 +235,14 @@ __weak bool VSS_CalcAvrgMecSpeedUnit(VirtualSpeedSensor_Handle_t *pHandle, int16
 #endif
 
       /* Convert dpp into MecUnit */
-      *hMecSpeedUnit = (int16_t)((((int32_t)pHandle->_Super.hElSpeedDpp)
-                               * ((int32_t )pHandle->_Super.hMeasurementFrequency) * SPEED_UNIT)
-                               / (((int32_t)pHandle->_Super.DPPConvFactor) * ((int32_t)pHandle->_Super.bElToMecRatio)));
+//      *hMecSpeedUnit = (int16_t)((((int32_t)pHandle->_Super.hElSpeedDpp)
+//                               * ((int32_t )pHandle->_Super.hMeasurementFrequency) * SPEED_UNIT)
+//                               / (((int32_t)pHandle->_Super.DPPConvFactor) * ((int32_t)pHandle->_Super.bElToMecRatio)));
+
+      *hMecSpeedUnit = (((/*int32_t*/float)pHandle->_Super.hElSpeedDpp)
+							 * ((/*int32_t*/float )pHandle->_Super.hMeasurementFrequency) * (float)SPEED_UNIT)
+							 / (((/*int32_t*/float)pHandle->_Super.DPPConvFactor) * ((/*int32_t*/float)pHandle->_Super.bElToMecRatio));
+
       pHandle->_Super.hAvrMecSpeedUnit = *hMecSpeedUnit;
       pHandle->hRemainingStep--;
     }
@@ -245,8 +250,8 @@ __weak bool VSS_CalcAvrgMecSpeedUnit(VirtualSpeedSensor_Handle_t *pHandle, int16
     {
       *hMecSpeedUnit = pHandle->hFinalMecSpeedUnit;
       pHandle->_Super.hAvrMecSpeedUnit = *hMecSpeedUnit;
-      pHandle->_Super.hElSpeedDpp = (int16_t)((((int32_t)*hMecSpeedUnit) * ((int32_t)pHandle->_Super.DPPConvFactor))
-                                          / (((int32_t)SPEED_UNIT) * ((int32_t)pHandle->_Super.hMeasurementFrequency)));
+      pHandle->_Super.hElSpeedDpp = (/*int16_t*/float)((((/*int32_t*/float)*hMecSpeedUnit) * ((/*int32_t*/float)pHandle->_Super.DPPConvFactor))
+                                          / (((/*int32_t*/float)SPEED_UNIT) * ((/*int32_t*/float)pHandle->_Super.hMeasurementFrequency)));
       pHandle->_Super.hElSpeedDpp *= ((int16_t)pHandle->_Super.bElToMecRatio);
       pHandle->hRemainingStep = 0U;
     }
@@ -285,7 +290,7 @@ __weak bool VSS_CalcAvrgMecSpeedUnit(VirtualSpeedSensor_Handle_t *pHandle, int16
   * - Called during @ref RevUpCtrl "Rev-Up Control" and
   * @ref EncAlignCtrl "Encoder Alignment Controller procedure" initialization.
   */
-__weak void  VSS_SetMecAcceleration(VirtualSpeedSensor_Handle_t *pHandle, int16_t hFinalMecSpeedUnit,
+__weak void  VSS_SetMecAcceleration(VirtualSpeedSensor_Handle_t *pHandle, /*int16_t*/float hFinalMecSpeedUnit,
                                     uint16_t hDurationms)
 {
 #ifdef NULL_PTR_CHECK_VIR_SPD_SEN
@@ -307,10 +312,10 @@ __weak void  VSS_SetMecAcceleration(VirtualSpeedSensor_Handle_t *pHandle, int16_
       {
         pHandle->_Super.hAvrMecSpeedUnit = hFinalMecSpeedUnit;
 
-        pHandle->_Super.hElSpeedDpp = (int16_t)((((int32_t)hFinalMecSpeedUnit)
-                                               * ((int32_t)pHandle->_Super.DPPConvFactor))
-                                              / (((int32_t)SPEED_UNIT)
-                                               * ((int32_t)pHandle->_Super.hMeasurementFrequency)));
+        pHandle->_Super.hElSpeedDpp = (int16_t)((((/*int32_t*/float)hFinalMecSpeedUnit)
+                                               * ((/*int32_t*/float)pHandle->_Super.DPPConvFactor))
+                                              / (((/*int32_t*/float)SPEED_UNIT)
+                                               * ((/*int32_t*/float)pHandle->_Super.hMeasurementFrequency)));
 
         pHandle->_Super.hElSpeedDpp *= ((int16_t)pHandle->_Super.bElToMecRatio);
 
@@ -324,8 +329,8 @@ __weak void  VSS_SetMecAcceleration(VirtualSpeedSensor_Handle_t *pHandle, int16_
         hNbrStep++;
         pHandle->hRemainingStep = hNbrStep;
         hCurrentMecSpeedDpp = pHandle->_Super.hElSpeedDpp / ((int16_t)pHandle->_Super.bElToMecRatio);
-        hFinalMecSpeedDpp = (int16_t)((((int32_t )hFinalMecSpeedUnit) * ((int32_t)pHandle->_Super.DPPConvFactor))
-                                    / (((int32_t )SPEED_UNIT) * ((int32_t)pHandle->_Super.hMeasurementFrequency)));
+        hFinalMecSpeedDpp = (int16_t)((((/*int32_t*/float )hFinalMecSpeedUnit) * ((/*int32_t*/float)pHandle->_Super.DPPConvFactor))
+                                    / (((/*int32_t*/float )SPEED_UNIT) * ((/*int32_t*/float)pHandle->_Super.hMeasurementFrequency)));
 
         if (0U == hNbrStep)
         {
@@ -395,7 +400,7 @@ __weak bool VSS_RampCompleted(VirtualSpeedSensor_Handle_t *pHandle)
   *
   * - Will be call for future dual motor implementation into START state of MC tasks state machine into TSK_MediumFrequencyTask.
   */
-__weak int16_t  VSS_GetLastRampFinalSpeed(VirtualSpeedSensor_Handle_t *pHandle)
+__weak /*int16_t*/float  VSS_GetLastRampFinalSpeed(VirtualSpeedSensor_Handle_t *pHandle)
 {
 #ifdef NULL_PTR_CHECK_VIR_SPD_SEN
   return ((MC_NULL == pHandle) ? 0 : pHandle->hFinalMecSpeedUnit);

@@ -22,8 +22,8 @@
 #ifndef ESC_H
 #define ESC_H
  
-#define ESC_FILTER_DEEP 4    
-#define ESC_BEEP_FEATURE    
+#define ESC_FILTER_DEEP 4
+#define ESC_BEEP_FEATURE
     
 typedef enum
 {
@@ -72,6 +72,7 @@ typedef struct
   uint32_t pwm_accumulator;
   uint32_t arming_counter;
   uint32_t pwm_timeout;
+  uint32_t timer_arr;                                   /* Save PWM Timer ARR value of current project*/
   int32_t turnoff_delay;
   volatile uint32_t Ton_value;
   int16_t restart_delay;

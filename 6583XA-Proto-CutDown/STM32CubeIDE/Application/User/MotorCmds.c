@@ -1,0 +1,350 @@
+/**
+ *  @file MotorCmds.c
+ *  @brief Motor Controller Commands
+ *  @author Prajwal Nataraj
+ *
+ **/
+
+#include "MotorCmds.h"
+
+extern UART_HandleTypeDef huart_MD;
+
+const char *Error_msg[13] =
+{
+	"RET_OK\n",     	// Success
+	"RET_NOK\n",        // General failure
+	"RET_HW_NOK\n",     // Bad hardware / not responding
+	"RET_ARGS_NOK\n",   // Improper arguments
+	"RET_ENV_NOK\n",    // Improper conditions
+	"RET_TIMEDOUT\n",   // Timed out
+	"RET_NO_IMPL\n",    // Not implemented
+	"RET_BUF_FULL\n",   // Buffer is full
+	"RET_BUF_EMPTY\n",  // Buffer is empty
+	"RET_PROCESSING\n", // Processing
+	"RET_CRC_NOK\n",	// CRC failed
+	"RET_COM_NOK\n",	// Communication failed
+	"RET_DEVADDR_NOK\n" // Invalid Device Address
+};
+
+uint8_t checkCRC(uint8_t *Buf, uint8_t len)
+{
+    uint8_t size = 0;
+    uint8_t dividend = 0;
+    uint8_t nextDiv = 0;
+
+    size = 4 + len;
+    dividend = Buf[0];
+
+    for(uint8_t i = 1; i < size; i++)
+    {
+        nextDiv = Buf[i];
+        for(uint8_t j = 0; j < 8; j++)
+        {
+            dividend = (dividend & 0x80) ? (dividend ^ CRC_POL) : (dividend ^ 0);
+
+            if((i == size - 1) && (j == 7))
+            	break;
+
+            dividend <<= 1;
+
+            if(nextDiv & 0x80)
+                dividend |= 0x01;
+
+            nextDiv <<= 1;
+        }
+    }
+
+    return dividend << 1;
+}
+
+uint8_t Check_DevAddr(uint8_t devAddr)
+{
+	if(DEVADDR == devAddr)
+		return RET_OK;
+	return RET_DEVADDR_NOK;
+}
+
+static inline uint8_t GetArgUINT8(uint8_t *Buf)
+{
+    return *Buf;
+}
+
+static inline float32_t GetArgFLT32(uint8_t *Buf)
+{
+    float32_t arg;
+    memcpy((void*)&arg, (void*)Buf, sizeof(float32_t));
+    return arg;
+}
+
+static inline void SetValFLT32(float32_t Val, uint8_t *Buf)
+{
+    memcpy((void*)Buf, (void*)&Val, sizeof(float32_t));
+}
+
+static uint8_t GetAddr(void)
+{
+	return DEVADDR;
+}
+
+static void ACK(uint8_t FuncCode, uint8_t *RspBuf, uint32_t *RspLen)
+{
+    RspBuf[0] = GetAddr();
+    RspBuf[1] = FuncCode;
+    RspBuf[2] = 0x01;
+    RspBuf[3] = 0x00;
+    *RspLen = 4;
+}
+
+static void NACK(uint8_t FuncCode, uint8_t Exception, uint8_t *RspBuf, uint32_t *RspLen)
+{
+    RspBuf[0] = GetAddr();
+    RspBuf[1] = FuncCode;
+    RspBuf[2] = 0x02;
+    RspBuf[3] = CMD_EXC_CMDS;
+    RspBuf[4] = Exception;
+    *RspLen = 5;
+}
+
+/* Fill response */
+static void RESP(uint8_t FuncCode, uint8_t *Data, uint8_t DataLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+    uint8_t *pData = Data;
+    RspBuf[0] = GetAddr();
+    RspBuf[1] = FuncCode;
+    RspBuf[2] = DataLen;
+    for(uint8_t i = 0; i < DataLen; i++)
+        RspBuf[3 + i] = *pData++;
+    *RspLen = (3 + DataLen);
+}
+
+
+
+void CmdProc_Init(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(Motor_Init())
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
+}
+
+void CmdProc_Distance(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
+
+	float32_t distance = 0;
+
+	if(argGS == CMD_GET)
+	{
+		distance = Motor_GetDistance();
+
+		uint8_t data[4] = {0};
+		SetValFLT32(distance, data);
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)data, sizeof(data), RspBuf, RspLen);
+		return;
+	}
+
+	if(argGS == CMD_SET)
+	{
+		pCmdBuf += 1;
+		distance = GetArgFLT32(pCmdBuf);
+
+		if(!Motor_SetDistance(distance))
+			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+		else
+			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+		return;
+	}
+}
+
+void CmdProc_Speed(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
+
+	float32_t speed = 0;
+
+	if(argGS == CMD_GET)
+	{
+		speed = Motor_GetSpeed();
+
+		uint8_t data[4] = {0};
+		SetValFLT32(speed, data);
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)data, sizeof(data), RspBuf, RspLen);
+		return;
+	}
+
+	if(argGS == CMD_SET)
+	{
+		pCmdBuf += 1;
+		speed = GetArgFLT32(pCmdBuf);
+
+		if(!Motor_SetSpeed(speed))
+			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+		else
+			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+		return;
+	}
+}
+
+void CmdProc_RampTime(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
+
+	float32_t rampTime = 0;
+
+	if(argGS == CMD_GET)
+	{
+		rampTime = (float32_t)Motor_GetRampTime();
+
+		uint8_t data[4] = {0};
+		SetValFLT32(rampTime, data);
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)data, sizeof(data), RspBuf, RspLen);
+		return;
+	}
+
+	if(argGS == CMD_SET)
+	{
+		pCmdBuf += 1;
+		rampTime = GetArgFLT32(pCmdBuf);
+
+		if(!Motor_SetRampTime((uint16_t)rampTime))
+			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+		else
+			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+		return;
+	}
+}
+
+void CmdProc_Direction(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
+
+	uint8_t dir = 0;
+
+	if(argGS == CMD_GET)
+	{
+		dir = Motor_GetDirection();
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)&dir, sizeof(dir), RspBuf, RspLen);
+		return;
+	}
+
+	if(argGS == CMD_SET)
+	{
+		pCmdBuf += 1;
+		dir = GetArgUINT8(pCmdBuf);
+
+		if(!Motor_SetDirection(dir))
+			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+		else
+			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+		return;
+	}
+}
+
+void CmdProc_ResetParams(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(Motor_ResetParams())
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
+}
+
+void CmdProc_Start(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(Motor_Start())
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
+}
+
+void CmdProc_Stop(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t clear = GetArgUINT8(pCmdBuf);
+
+	if(Motor_Stop(clear))
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
+}
+
+void CmdProc_Run(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(Motor_Run())
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
+}
+
+void CmdProc_SetZero(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(Motor_SetZeroPos())
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
+}
+
+void CmdProc_RTZ(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(Motor_RTZ())
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
+}
+
+static const CmdHandler_t CmdTable[] =
+{
+		{ 	CMD_INIT		, 		CmdProc_Init 		},
+		{ 	CMD_DIST		, 		CmdProc_Distance 	},
+		{ 	CMD_SPEED		, 		CmdProc_Speed 		},
+		{ 	CMD_DIR			, 		CmdProc_Direction 	},
+		{ 	CMD_RESETPRM	, 		CmdProc_ResetParams },
+		{ 	CMD_START		, 		CmdProc_Start 		},
+		{ 	CMD_RUN			, 		CmdProc_Run	 		},
+		{ 	CMD_STOP		, 		CmdProc_Stop 		},
+		{ 	CMD_SETZERO		, 		CmdProc_SetZero		},
+		{ 	CMD_RTZ			, 		CmdProc_RTZ 		},
+		{ 	CMD_RTIME		, 		CmdProc_RampTime	},
+};
+
+StdReturn_t Cmd_Process(uint8_t *CmdBuf, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(0 == checkCRC(CmdBuf, CMDBYTE_DATALEN))
+	{
+		if(RET_OK == Check_DevAddr(CMDBYTE_DEVADDR))
+		{
+			if(CMDBYTE_FUNCCODE == CmdTable[CMDBYTE_FUNCCODE].FuncCode)
+				CmdTable[CMDBYTE_FUNCCODE].FuncHandler(CmdBuf, CMDBYTE_DATALEN, RspBuf, RspLen);
+			else
+				return RET_NO_IMPL;
+
+			if (*RspLen != 0)
+			{
+				RspBuf[*RspLen] = 0x00;								// Appending zeros for CRC calculation.
+				RspBuf[*RspLen] = GetCRC(RspBuf, (*RspLen)-3);		// Send only the no. of data bytes for CRC calculation.
+				*RspLen += 1;										// +1 for CRC byte.
+
+				HAL_UART_Transmit(&huart_MD, RspBuf, *RspLen, UART_TIMEOUT);
+			}
+		}
+		else
+			return RET_DEVADDR_NOK;
+	}
+	else
+		return RET_CRC_NOK;
+
+	return RET_OK;
+}
+void Send_ErrorMsg(uint8_t stdRet)
+{
+	HAL_UART_Transmit(&huart_MD, (uint8_t *)Error_msg[stdRet], strlen(Error_msg[stdRet]), UART_TIMEOUT);
+}
+
+/********************************* END OF FILE ********************************/

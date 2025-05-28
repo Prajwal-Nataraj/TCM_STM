@@ -153,6 +153,10 @@ int main(void)
 
     StdReturn_t stdRet;
     HAL_UART_Transmit(&huart_MD, (uint8_t *)"Welcome to TCM Motor Drive", 28, UART_TIMEOUT);
+
+//    ab_t Iab;
+//    uint32_t prevTime = 0;
+//    prevTime = HAL_GetTick();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -172,6 +176,13 @@ int main(void)
       		  memset(CmdBuf, 0, sizeof(CmdBuf));
       		  memset(RspBuf, 0, sizeof(CmdBuf));
       	  }
+
+//      	  if(IsTimedOut(prevTime, 5000))
+//      	  {
+//      		Iab = MC_GetIabMotor1();
+//      		sendToPort(&huart_MD, Iab.a);
+//      		sendToPort(&huart_MD, Iab.b);
+//      	  }
 
 //      	  if(IsTimedOut(Motor_GetPrevSendTick(), SEND_RATE) && getSendAccess())
 //      	  {

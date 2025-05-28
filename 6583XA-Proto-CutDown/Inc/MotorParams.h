@@ -59,25 +59,32 @@ float Motor_GetAccel(void);
 bool Motor_SetDirection(bool);
 /* Get Vertical Direction */
 bool Motor_GetDirection(void);
-/* Set Zero Position */
-bool Motor_SetZeroPos(void);
-/* Return Motor back to Zero Pos */
-bool Motor_RTZ(void);
-/* Conversion from mm/min to rpm */
-float mmpm_to_rpm(float mmpm);
 /* Reset Motor Parameters to 0 */
 bool Motor_ResetParams(void);
 /* Resets the Motor's Drive Parameters */
 void Motor_ResetDriveParams(void);
-/* Turn ON motor and align Axis */
+/* Conversion from mm/min to rpm */
+float mmpm_to_rpm(float mmpm);
+/* Calculate Acceleration time in ms */
+uint16_t Motor_CalcAccelTimeMs(void);
+/* Enable Bridge */
+bool Motor_EnBridge(void);
+/* Disable Bridge */
+bool Motor_DisBridge(void);
+/* Start Vertical Movement with Acceleration */
 bool Motor_Start(void);
-/* Stop Vertical Movement */
-bool Motor_Stop(bool);
-/* Set the Motor Parameters */
-bool Motor_Run(void);
+/* Stop Vertical Movement with Deceleration */
+bool Motor_Stop(void);
+/* Critical Stop (without Deceleration) */
+bool Motor_CriticalStop(void);
+
+///* Set the Motor Parameters */
+//bool Motor_SetParams(void);
 
 uint32_t Motor_GetPrevSendTick(void);
+
 void Motor_SetPrevSendTick(uint32_t);
+
 bool getSendAccess(void);
 /* Send Data to COM Port */
 bool sendToPort(UART_HandleTypeDef *, float);
@@ -85,6 +92,10 @@ bool sendToPort(UART_HandleTypeDef *, float);
 bool IsTimedOut(uint32_t, uint32_t);
 /* Stop the Motor when Target Distance is reached */
 bool Motor_StopAtTarget(void);
+/* Set Zero Position */
+bool Motor_SetZeroPos(void);
+/* Return Motor back to Zero Pos */
+bool Motor_RTZ(void);
 /* Stop Motor when Zero Position is reached */
 bool Motor_CheckRTZ(void);
 

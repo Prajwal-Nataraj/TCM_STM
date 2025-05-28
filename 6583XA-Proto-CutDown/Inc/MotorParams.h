@@ -26,8 +26,10 @@ typedef struct
 	float distance;
 	int32_t targetMecAng;
 	int32_t targetMecAngCache;
-	float newSpeed;
-	float currentSpeed;
+	float newSpeedMMPM;
+	float currentSpeedMMPM;
+	float newSpeedRPM;
+	float currentSpeedRPM;
 	bool direction;
 	uint16_t rampTime;
 	float accel;
@@ -75,7 +77,7 @@ bool Motor_DisBridge(void);
 bool Motor_Start(void);
 /* Stop Vertical Movement with Deceleration */
 bool Motor_Stop(void);
-/* Critical Stop (without Deceleration) */
+/* Critical Stop (max Deceleration) */
 bool Motor_CriticalStop(void);
 
 ///* Set the Motor Parameters */

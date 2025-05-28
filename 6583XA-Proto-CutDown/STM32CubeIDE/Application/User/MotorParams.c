@@ -37,13 +37,13 @@ float Motor_GetDistance(void)
 /* Set Vertical Speed in mm/min */
 bool Motor_SetSpeed(float speed)
 {
-	Motor.newSpeed = speed;
+	Motor.newSpeedMMPM = speed;
 	return true;
 }
 /* Get Vertical Speed in mm/min */
 float Motor_GetSpeed(void)
 {
-	return Motor.currentSpeed;
+	return Motor.currentSpeedMMPM;
 }
 
 /* Set Ramp Time in ms */
@@ -95,8 +95,10 @@ bool Motor_ResetParams(void)
 	Motor.targetMecAng = 0;
 	Motor.targetMecAngCache = 0;
 	Motor.restoreTarMecAng = DISABLE;
-	Motor.newSpeed = 0;
-	Motor.currentSpeed = 0;
+	Motor.newSpeedMMPM = 0;
+	Motor.currentSpeedMMPM = 0;
+	Motor.newSpeedRPM = 0;
+	Motor.currentSpeedRPM = 0;
 	Motor.direction = 0;
 	Motor.zeroPosition = SPD_GetMecAngle(SpeednTorqCtrlM1.SPD);
 	Motor_SetAccel(1181.10236);									// 100mm/min / 100ms or 1mm/min / 1ms
@@ -126,7 +128,7 @@ uint16_t Motor_CalcAccelTimeMs(void)
 	 * t = (v - u) / a */
 
 	float accelTime = 0;
-	accelTime = mmpm_to_rpm(Motor.newSpeed - Motor.currentSpeed) / Motor.accel;
+	accelTime = (Motor.newSpeedRPM - Motor.currentSpeedRPM) / Motor.accel;
 	return (uint16_t)(abs(accelTime * 1000));	// convert to ms
 }
 
@@ -142,7 +144,7 @@ bool Motor_DisBridge(void)
 {
 	MCI_StopMotor(pMCI[M1]);
 	MCI_ExecSpeedRamp(pMCI[M1], 0, 50);
-	Motor.currentSpeed = 0;
+	Motor.currentSpeedMMPM = 0;
 
 	return true;
 }
@@ -152,11 +154,10 @@ bool Motor_Start(void)
 {
 //	Motor.targetMecAng += (376 * (Motor.distance * (Motor.direction ? 1 :-1)));		// 1mm = 376 MecAngle
 
-	float speed = 0;
 	float adjSpeed = 0;
 
-	speed = mmpm_to_rpm(Motor.newSpeed);			// mm/min in UP or DOWN to +RPM or -RPM
-	adjSpeed = 0.9972 * speed;						// Adjusted Speed
+	Motor.newSpeedRPM = mmpm_to_rpm(Motor.newSpeedMMPM);						// mm/min in UP or DOWN to +RPM or -RPM
+	adjSpeed = 0.9972 * Motor.newSpeedRPM;										// Adjusted Speed
 
 	Motor.rampTime = Motor_CalcAccelTimeMs();
 	Motor.rampTime = (Motor.rampTime < 1) ? 1 : Motor.rampTime;		// always keep Motor.rampTime > 0
@@ -166,7 +167,9 @@ bool Motor_Start(void)
 	//	Speed.sendAccess = true;
 
 	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, Motor.rampTime);
-	Motor.currentSpeed = Motor.newSpeed;
+
+	Motor.currentSpeedMMPM = Motor.newSpeedMMPM;
+	Motor.currentSpeedRPM = Motor.newSpeedRPM;
 
 	return true;
 }
@@ -175,7 +178,8 @@ bool Motor_Start(void)
 bool Motor_Stop(void)
 {
 	MCI_ExecSpeedRamp(pMCI[M1], 0, Motor.rampTime);
-	Motor.currentSpeed = 0;
+	Motor.currentSpeedMMPM = 0;
+	Motor.currentSpeedRPM = 0;
 
 	//	Speed.sendAccess = false;
 	//	sendToPort(&huart_MD, SPD_GetMecAngle(SpeednTorqCtrlM1.SPD));
@@ -183,62 +187,18 @@ bool Motor_Stop(void)
 	return true;
 }
 
-/* Critical Stop (without Deceleration) */
+/* Critical Stop (max Deceleration) */
 bool Motor_CriticalStop(void)
 {
 	MCI_ExecSpeedRamp(pMCI[M1], 0, 50);
-	Motor.currentSpeed = 0;
+	Motor.currentSpeedMMPM = 0;
+	Motor.currentSpeedRPM = 0;
 
 	//	Speed.sendAccess = false;
 	//	sendToPort(&huart_MD, SPD_GetMecAngle(SpeednTorqCtrlM1.SPD));
 
 	return true;
 }
-
-///* Turn ON motor and align Axis */
-//bool Motor_Start(void)
-//{
-//	Motor.targetMecAng += (376 * (Motor.distance * (Motor.direction ? 1 :-1)));		// 1mm = 376 MecAngle
-//
-//	MCI_StartMotor(pMCI[M1]);
-//	Motor.stopAtTarget = ENABLE;
-////	Speed.prev_time_send = HAL_GetTick();
-////	Speed.sendAccess = true;
-//
-//	return true;
-//}
-//
-///* Stop Vertical Movement */
-//bool Motor_Stop(bool clear)
-//{
-//	MCI_StopMotor(pMCI[M1]);
-//	Motor.currentSpeed = 0;
-//
-//	if(clear)
-//		MCI_ExecSpeedRamp(pMCI[M1], 0, 100);
-//
-////	Speed.sendAccess = false;
-////	sendToPort(&huart_MD, SPD_GetMecAngle(SpeednTorqCtrlM1.SPD));
-//
-//	return true;
-//}
-//
-///* Set the Motor Parameters */
-//bool Motor_SetParams(void)
-//{
-//	float speed = 0;
-//	float adjSpeed = 0;
-//
-//	speed = mmpm_to_rpm(Motor.newSpeed);			// mm/min to RPM
-//	adjSpeed = 0.9972 * speed;						// Adjusted Speed
-//
-//	Motor.rampTime = Motor_CalcAccelTimeMs();
-//
-//	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, Motor.rampTime);
-//	Motor.currentSpeed = Motor.newSpeed;
-//
-//	return true;
-//}
 
 uint32_t Motor_GetPrevSendTick(void)
 {

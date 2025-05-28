@@ -220,6 +220,37 @@ void CmdProc_RampTime(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_
 	}
 }
 
+void CmdProc_Accel(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
+
+	float32_t accel = 0;
+
+	if(argGS == CMD_GET)
+	{
+		accel = (float32_t)Motor_GetAccel();
+
+		uint8_t data[4] = {0};
+		SetValFLT32(accel, data);
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)data, sizeof(data), RspBuf, RspLen);
+		return;
+	}
+
+	if(argGS == CMD_SET)
+	{
+		pCmdBuf += 1;
+		accel = GetArgFLT32(pCmdBuf);
+
+		if(!Motor_SetAccel(accel))
+			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+		else
+			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+		return;
+	}
+}
+
 void CmdProc_Direction(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
 {
 	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
@@ -312,6 +343,7 @@ static const CmdHandler_t CmdTable[] =
 		{ 	CMD_SETZERO		, 		CmdProc_SetZero		},
 		{ 	CMD_RTZ			, 		CmdProc_RTZ 		},
 		{ 	CMD_RTIME		, 		CmdProc_RampTime	},
+		{ 	CMD_ACCEL		, 		CmdProc_Accel		},
 };
 
 StdReturn_t Cmd_Process(uint8_t *CmdBuf, uint8_t *RspBuf, uint32_t *RspLen)

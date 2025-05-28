@@ -11,6 +11,9 @@
 #include "main.h"
 #include "string.h"
 #include "stdio.h"
+#include "stdbool.h"
+#include "math.h"
+#include "mc_tasks.h"
 
 #include "MotorParams.h"
 
@@ -51,6 +54,7 @@
 #define CMD_SETZERO			(0x08)
 #define CMD_RTZ				(0x09)
 #define CMD_RTIME			(0x0A)
+#define CMD_ACCEL			(0x0B)
 
 #define CMD_EXC_CMDS    	((uint8_t)243)
 
@@ -90,11 +94,23 @@ void CmdProc_Distance(uint8_t *, uint32_t , uint8_t *, uint32_t *);
 
 void CmdProc_Speed(uint8_t *, uint32_t , uint8_t *, uint32_t *);
 
+void CmdProc_RampTime(uint8_t *, uint32_t, uint8_t *, uint32_t *);
+
+void CmdProc_Accel(uint8_t *, uint32_t, uint8_t *, uint32_t *);
+
 void CmdProc_Direction(uint8_t *, uint32_t , uint8_t *, uint32_t *);
 
-void CmdProc_CongifAPIs(uint8_t *, uint32_t , uint8_t *, uint32_t *);
-
 void CmdProc_ResetParams(uint8_t *, uint32_t , uint8_t *, uint32_t *);
+
+void CmdProc_Start(uint8_t *, uint32_t, uint8_t *, uint32_t *);
+
+void CmdProc_Stop(uint8_t *, uint32_t, uint8_t *, uint32_t *);
+
+void CmdProc_Run(uint8_t *, uint32_t, uint8_t *, uint32_t *);
+
+void CmdProc_SetZero(uint8_t *, uint32_t, uint8_t *, uint32_t *);
+
+void CmdProc_RTZ(uint8_t *, uint32_t, uint8_t *, uint32_t *);
 
 /* Send Error Message */
 void Send_ErrorMsg(uint8_t);

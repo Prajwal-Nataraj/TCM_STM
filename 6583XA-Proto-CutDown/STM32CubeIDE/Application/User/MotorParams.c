@@ -8,8 +8,8 @@
 #include "math.h"
 #include "MotorParams.h"
 
-#define GEAR_RATIO		6.0f
-#define MM_PER_THREAD	5.08f
+#define GEAR_RATIO			6.0f
+#define MM_PER_THREAD		5.08f
 
 extern UART_HandleTypeDef huart_MD;
 
@@ -37,13 +37,20 @@ float Motor_GetDistance(void)
 /* Set Vertical Speed in mm/min */
 bool Motor_SetSpeed(float speed)
 {
-	Motor.speed = speed;
+	Motor.newSpeed = speed;
+
+	/* v = u + at;
+	 * t = (v - u) / a; */
+	float rtime = 0;
+	rtime = mmpm_to_rpm(fabs(Motor.newSpeed - Motor.currentSpeed)) / Motor.accel;
+	Motor.rampTime = (uint16_t)(rtime * 1000);	// convert to ms
+
 	return true;
 }
 /* Get Vertical Speed in mm/min */
 float Motor_GetSpeed(void)
 {
-	return Motor.speed;
+	return Motor.currentSpeed;
 }
 
 /* Set Ramp Time in ms */
@@ -56,6 +63,18 @@ bool Motor_SetRampTime(uint16_t rtime)
 uint16_t Motor_GetRampTime(void)
 {
 	return Motor.rampTime;
+}
+
+/* Set Acceleration in rpm/s */
+bool Motor_SetAccel(float accel)
+{
+	Motor.accel = accel;
+	return true;
+}
+/* Get Acceleration in rpm/s */
+float Motor_GetAccel(void)
+{
+	return Motor.accel;
 }
 
 /* Set Vertical Direction */
@@ -83,33 +102,43 @@ bool Motor_SetZeroPos(void)
 /* Return Motor back to Zero Pos */
 bool Motor_RTZ(void)
 {
-	bool prevDir = 0;
-	float prevSpeed = 0;
-	uint16_t prevRampTime = 0;
-
-	prevDir = Motor.direction;
-	prevSpeed = Motor.speed;
-	prevRampTime = Motor.rampTime;
-
-	Motor.direction = (SPD_GetMecAngle(SpeednTorqCtrlM1.SPD) > Motor.zeroPosition) ? 0 : 1;				// Do direction for RTZ
-	Motor.speed = 1000.0;
-	Motor.rampTime = 1000;
-
-	if(Motor_Run())
-	{
-		Motor.direction = prevDir;
-		Motor.speed = prevSpeed;
-		Motor.rampTime = prevRampTime;
-	}
-
-	Motor.targetMecAngCache = Motor.targetMecAng;
-	Motor.targetMecAng = Motor.zeroPosition;
-	Motor.restoreTarMecAng = ENABLE;
-//	MC_StartMotor1();
-	MCI_StartMotor(pMCI[M1]);
-	Motor.RTZstate = ONGOING;
-
+//	bool prevDir = 0;
+//	float prevSpeed = 0;
+//	uint16_t prevRampTime = 0;
+//
+//	prevDir = Motor.direction;
+//	prevSpeed = Motor.speed;
+//	prevRampTime = Motor.rampTime;
+//
+//	Motor.direction = (SPD_GetMecAngle(SpeednTorqCtrlM1.SPD) > Motor.zeroPosition) ? 0 : 1;				// Do direction for RTZ
+//	Motor.speed = 1000.0;
+//	Motor.rampTime = 1000;
+//
+//	if(Motor_Run())
+//	{
+//		Motor.direction = prevDir;
+//		Motor.speed = prevSpeed;
+//		Motor.rampTime = prevRampTime;
+//	}
+//
+//	Motor.targetMecAngCache = Motor.targetMecAng;
+//	Motor.targetMecAng = Motor.zeroPosition;
+//	Motor.restoreTarMecAng = ENABLE;
+////	MC_StartMotor1();
+//	MCI_StartMotor(pMCI[M1]);
+//	Motor.RTZstate = ONGOING;
+//
 	return true;
+}
+
+/* Conversion from mm/min to rpm */
+float mmpm_to_rpm(float mmpm)
+{
+	float rpm = 0;
+	rpm = (mmpm * (Motor.direction ? 1 :-1))	\
+		* (float)(GEAR_RATIO / MM_PER_THREAD);
+
+	return rpm;
 }
 
 /* Reset Motor Parameters to 0 */
@@ -122,10 +151,11 @@ bool Motor_ResetParams(void)
 	Motor.targetMecAng = 0;
 	Motor.targetMecAngCache = 0;
 	Motor.restoreTarMecAng = DISABLE;
-	Motor.speed = 0;
+	Motor.newSpeed = 0;
+	Motor.currentSpeed = 0;
 	Motor.direction = 0;
 	Motor.zeroPosition = SPD_GetMecAngle(SpeednTorqCtrlM1.SPD);
-	Motor.rampTime = 100;				/* Default 100ms. Should not be zero. */
+	Motor_SetAccel(1181.10236);									// 100mm/min / 100ms or 1mm/min / 1ms
 
 	return true;
 }
@@ -140,7 +170,6 @@ bool Motor_Start(void)
 {
 	Motor.targetMecAng += (376 * (Motor.distance * (Motor.direction ? 1 :-1)));		// 1mm = 376 MecAngle
 
-//	MC_StartMotor1();
 	MCI_StartMotor(pMCI[M1]);
 	Motor.stopAtTarget = ENABLE;
 	Speed.prev_time_send = HAL_GetTick();
@@ -152,15 +181,14 @@ bool Motor_Start(void)
 /* Stop Vertical Movement */
 bool Motor_Stop(bool clear)
 {
-//	MC_StopMotor1();
 	MCI_StopMotor(pMCI[M1]);
+	Motor.currentSpeed = 0;
 
 	if(clear)
 		MCI_ExecSpeedRamp(pMCI[M1], 0, 100);
-//		MC_ProgramSpeedRampMotor1(0, 100);
 
 	Speed.sendAccess = false;
-	sendToPort(&huart_MD, SPD_GetMecAngle(SpeednTorqCtrlM1.SPD));
+//	sendToPort(&huart_MD, SPD_GetMecAngle(SpeednTorqCtrlM1.SPD));
 
 	return true;
 }
@@ -172,13 +200,12 @@ bool Motor_Run(void)
 	float adjSpeed = 0;
 	uint16_t rampTime = 0;
 
-	speed = (float)(Motor.speed * (Motor.direction ? 1 :-1))	\
-		  * (float)(GEAR_RATIO / MM_PER_THREAD);				// RPM to mm/min
-	adjSpeed = (0.9972 * speed) - 0.0044;						// Adjusted Speed
-	rampTime = Motor.rampTime; //in ms
+	speed = mmpm_to_rpm(Motor.newSpeed);							// mm/min to RPM
+	adjSpeed = (0.9972 * speed) /*- 0.0044*/;						// Adjusted Speed
+	rampTime = Motor.rampTime; 										// in ms
 
-//	MC_ProgramSpeedRampMotor1(speed123, rampTime);
 	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, rampTime);
+	Motor.currentSpeed = Motor.newSpeed;
 
 	return true;
 }

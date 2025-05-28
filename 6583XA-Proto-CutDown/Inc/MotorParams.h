@@ -8,8 +8,6 @@
 #ifndef MOTORPARAMS_H
 #define MOTORPARAMS_H
 
-#include "stdbool.h"
-#include "mc_tasks.h"
 #include "MotorCmds.h"
 
 #define ONGOING		1
@@ -28,9 +26,11 @@ typedef struct
 	float distance;
 	int32_t targetMecAng;
 	int32_t targetMecAngCache;
-	float speed;
+	float newSpeed;
+	float currentSpeed;
 	bool direction;
 	uint16_t rampTime;
+	float accel;
 	int32_t zeroPosition;
 	bool RTZstate;
 	bool stopAtTarget;
@@ -51,6 +51,10 @@ float Motor_GetSpeed(void);
 bool Motor_SetRampTime(uint16_t);
 /* Get Ramp Time in ms */
 uint16_t Motor_GetRampTime(void);
+/* Set Acceleration in ms */
+bool Motor_SetAccel(float);
+/* Get Acceleration in ms */
+float Motor_GetAccel(void);
 /* Set Vertical Direction */
 bool Motor_SetDirection(bool);
 /* Get Vertical Direction */
@@ -59,6 +63,8 @@ bool Motor_GetDirection(void);
 bool Motor_SetZeroPos(void);
 /* Return Motor back to Zero Pos */
 bool Motor_RTZ(void);
+/* Conversion from mm/min to rpm */
+float mmpm_to_rpm(float mmpm);
 /* Reset Motor Parameters to 0 */
 bool Motor_ResetParams(void);
 /* Resets the Motor's Drive Parameters */

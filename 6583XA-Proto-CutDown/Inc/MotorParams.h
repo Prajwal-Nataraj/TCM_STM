@@ -14,6 +14,8 @@
 #define COMPLETED	0
 #define DIR_UP		1
 #define DIR_DOWN	0
+#define ACCEL		1
+#define DECEL		0
 
 typedef struct
 {
@@ -31,8 +33,8 @@ typedef struct
 	float newSpeedRPM;
 	float currentSpeedRPM;
 	bool direction;
-	uint16_t rampTime;
 	float accel;
+	float decel;
 	int32_t zeroPosition;
 	bool RTZstate;
 	bool stopAtTarget;
@@ -49,14 +51,14 @@ float Motor_GetDistance(void);
 bool Motor_SetSpeed(float);
 /* Get Vertical Speed in mm/min */
 float Motor_GetSpeed(void);
-/* Set Ramp Time in ms */
-bool Motor_SetRampTime(uint16_t);
-/* Get Ramp Time in ms */
-uint16_t Motor_GetRampTime(void);
 /* Set Acceleration in ms */
 bool Motor_SetAccel(float);
 /* Get Acceleration in ms */
 float Motor_GetAccel(void);
+/* Set Deceleration in rpm/s */
+bool Motor_SetDecel(float);
+/* Get Deceleration in rpm/s */
+float Motor_GetDecel(void);
 /* Set Vertical Direction */
 bool Motor_SetDirection(bool);
 /* Get Vertical Direction */
@@ -67,8 +69,8 @@ bool Motor_ResetParams(void);
 void Motor_ResetDriveParams(void);
 /* Conversion from mm/min to rpm */
 float mmpm_to_rpm(float mmpm);
-/* Calculate Acceleration time in ms */
-uint16_t Motor_CalcAccelTimeMs(void);
+/* Calculate Ramp time in ms */
+uint16_t Motor_CalcRampTimeMs(bool, float);
 /* Enable Bridge */
 bool Motor_EnBridge(void);
 /* Disable Bridge */

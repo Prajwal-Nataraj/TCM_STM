@@ -189,37 +189,6 @@ void CmdProc_Speed(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *
 	}
 }
 
-void CmdProc_RampTime(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
-{
-	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
-	uint8_t argGS = GetArgUINT8(pCmdBuf);
-
-	float32_t rampTime = 0;
-
-	if(argGS == CMD_GET)
-	{
-		rampTime = (float32_t)Motor_GetRampTime();
-
-		uint8_t data[4] = {0};
-		SetValFLT32(rampTime, data);
-
-		RESP(CMDBYTE_FUNCCODE, (uint8_t*)data, sizeof(data), RspBuf, RspLen);
-		return;
-	}
-
-	if(argGS == CMD_SET)
-	{
-		pCmdBuf += 1;
-		rampTime = GetArgFLT32(pCmdBuf);
-
-		if(!Motor_SetRampTime((uint16_t)rampTime))
-			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
-		else
-			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
-		return;
-	}
-}
-
 void CmdProc_Accel(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
 {
 	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
@@ -244,6 +213,37 @@ void CmdProc_Accel(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *
 		accel = GetArgFLT32(pCmdBuf);
 
 		if(!Motor_SetAccel(accel))
+			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+		else
+			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+		return;
+	}
+}
+
+void CmdProc_Decel(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
+
+	float32_t decel = 0;
+
+	if(argGS == CMD_GET)
+	{
+		decel = (float32_t)Motor_GetDecel();
+
+		uint8_t data[4] = {0};
+		SetValFLT32(decel, data);
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)data, sizeof(data), RspBuf, RspLen);
+		return;
+	}
+
+	if(argGS == CMD_SET)
+	{
+		pCmdBuf += 1;
+		decel = GetArgFLT32(pCmdBuf);
+
+		if(!Motor_SetDecel(decel))
 			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
 		else
 			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
@@ -355,8 +355,8 @@ static const CmdHandler_t CmdTable[] =
 		{ 	CMD_CRITSTOP	, 		CmdProc_CriticalStop},
 		{ 	CMD_SETZERO		, 		CmdProc_SetZero		},
 		{ 	CMD_RTZ			, 		CmdProc_RTZ 		},
-		{ 	CMD_RTIME		, 		CmdProc_RampTime	},
 		{ 	CMD_ACCEL		, 		CmdProc_Accel		},
+		{ 	CMD_DECEL		, 		CmdProc_Decel		},
 		{ 	CMD_ENBRIDGE	, 		CmdProc_EnBridge	},
 		{ 	CMD_DISBRIDGE	, 		CmdProc_DisBridge	},
 };

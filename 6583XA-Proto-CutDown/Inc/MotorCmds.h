@@ -53,8 +53,8 @@
 #define CMD_CRITSTOP		(0x07)
 #define CMD_SETZERO			(0x08)
 #define CMD_RTZ				(0x09)
-#define CMD_RTIME			(0x0A)
-#define CMD_ACCEL			(0x0B)
+#define CMD_ACCEL			(0x0A)
+#define CMD_DECEL			(0x0B)
 #define CMD_ENBRIDGE		(0x0C)
 #define CMD_DISBRIDGE		(0x0D)
 
@@ -96,9 +96,9 @@ void CmdProc_Distance(uint8_t *, uint32_t , uint8_t *, uint32_t *);
 
 void CmdProc_Speed(uint8_t *, uint32_t , uint8_t *, uint32_t *);
 
-void CmdProc_RampTime(uint8_t *, uint32_t, uint8_t *, uint32_t *);
-
 void CmdProc_Accel(uint8_t *, uint32_t, uint8_t *, uint32_t *);
+
+void CmdProc_Decel(uint8_t *, uint32_t, uint8_t *, uint32_t *);
 
 void CmdProc_Direction(uint8_t *, uint32_t , uint8_t *, uint32_t *);
 

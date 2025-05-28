@@ -126,8 +126,8 @@ uint16_t Motor_CalcAccelTimeMs(void)
 	 * t = (v - u) / a */
 
 	float accelTime = 0;
-	accelTime = mmpm_to_rpm(fabs(Motor.newSpeed - Motor.currentSpeed)) / Motor.accel;
-	return (uint16_t)(accelTime * 1000);	// convert to ms
+	accelTime = mmpm_to_rpm(Motor.newSpeed - Motor.currentSpeed) / Motor.accel;
+	return (uint16_t)(abs(accelTime * 1000));	// convert to ms
 }
 
 /* Enable Bridge */
@@ -159,6 +159,7 @@ bool Motor_Start(void)
 	adjSpeed = 0.9972 * speed;						// Adjusted Speed
 
 	Motor.rampTime = Motor_CalcAccelTimeMs();
+	Motor.rampTime = (Motor.rampTime < 1) ? 1 : Motor.rampTime;		// always keep Motor.rampTime > 0
 
 	//	Motor.stopAtTarget = ENABLE;
 	//	Speed.prev_time_send = HAL_GetTick();

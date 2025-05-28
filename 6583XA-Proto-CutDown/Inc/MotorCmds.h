@@ -12,7 +12,7 @@
 #include "string.h"
 #include "stdio.h"
 #include "stdbool.h"
-#include "math.h"
+#include "stdlib.h"
 #include "mc_tasks.h"
 
 #include "MotorParams.h"

@@ -183,7 +183,7 @@ int main(void)
 //      		sendToPort(&huart_MD, Iab.a);
 //      		sendToPort(&huart_MD, Iab.b);
 //      	  }
-
+//
 //      	  if(IsTimedOut(Motor_GetPrevSendTick(), SEND_RATE) && getSendAccess())
 //      	  {
 //      		  Motor_SetPrevSendTick(HAL_GetTick());
@@ -191,6 +191,11 @@ int main(void)
 ////      		  mm_min_send = SPD_GetMecAngle(SpeednTorqCtrlM1.SPD);
 //      		  sendToPort(&huart_MD, mm_min_send);
 //      	  }
+//
+//		  if(RUN == Mci[M1].State)
+//		  {
+//			  /* Use this instead of above condition and remove SendAccess and SendTick */
+//		  }
 
 //      	  Motor_StopAtTarget();
 //      	  Motor_CheckRTZ();

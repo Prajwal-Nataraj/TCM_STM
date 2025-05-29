@@ -391,6 +391,9 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, /*int16_t*/float hTar
   * passing as parameter the speed sensor used to perform the speed regulation.
   * - Called during START and ALIGNEMENT states of the MC state machine into MediumFrequencyTask.
   */
+static uint8_t settleCounter = 0;
+static FunctionalState PIloop = ENABLE;
+static FunctionalState checkZero = ENABLE;
 __weak int16_t STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
 {
 	/*int16_t*/float hTorqueReference;
@@ -453,7 +456,29 @@ __weak int16_t STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
       hMeasuredSpeed = SPD_GetAvrgMecSpeedUnit(pHandle->SPD);
       hError = hTargetSpeed - hMeasuredSpeed;
 //      hTorqueReference = PI_Controller(pHandle->PISpeed, (int32_t)hError);
-      hTorqueReference = PI_Controller(pHandle->PISpeed, hError);
+
+      /********** Stop PI Loop when hTargetSpeed is 0 to avoid vibration *****BEGIN*****/
+      if((hTargetSpeed < 0.5) && (hTargetSpeed > -0.5) && (ENABLE == checkZero))
+    	  settleCounter++;
+
+      if((hTargetSpeed > 0.5) || (hTargetSpeed < -0.5))
+      {
+    	  PIloop = ENABLE;
+    	  checkZero = ENABLE;
+      }
+
+      if(settleCounter > 50)
+      {
+    	  settleCounter = 0;
+    	  PIloop = DISABLE;
+    	  checkZero = DISABLE;
+      }
+      /********** Stop PI Loop when hTargetSpeed is 0 to avoid vibration *****END*****/
+
+      if(ENABLE == PIloop)
+    	  hTorqueReference = PI_Controller(pHandle->PISpeed, hError);
+      else
+    	  hTorqueReference = pHandle->TorqueRef / 65536;
 
       pHandle->SpeedRefUnitExt = wCurrentReference;
 //      pHandle->TorqueRef = ((int32_t)hTorqueReference) * 65536;

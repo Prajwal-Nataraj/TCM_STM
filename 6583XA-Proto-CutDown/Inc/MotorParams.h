@@ -19,15 +19,7 @@
 
 typedef struct
 {
-	uint32_t prev_time_send;
-	bool sendAccess;
-}Speed_t;
-
-typedef struct
-{
 	float distance;
-	int32_t targetMecAng;
-	int32_t targetMecAngCache;
 	float newSpeedMMPM;
 	float currentSpeedMMPM;
 	float newSpeedRPM;
@@ -35,10 +27,6 @@ typedef struct
 	bool direction;
 	float accel;
 	float decel;
-	int32_t zeroPosition;
-	bool RTZstate;
-	bool stopAtTarget;
-	bool restoreTarMecAng;
 }MotorParams;
 
 /* Initialize/Reset Motor Parameters */
@@ -81,15 +69,6 @@ bool Motor_Start(void);
 bool Motor_Stop(void);
 /* Critical Stop (max Deceleration) */
 bool Motor_CriticalStop(void);
-
-///* Set the Motor Parameters */
-//bool Motor_SetParams(void);
-
-uint32_t Motor_GetPrevSendTick(void);
-
-void Motor_SetPrevSendTick(uint32_t);
-
-bool getSendAccess(void);
 /* Send Data to COM Port */
 bool sendToPort(UART_HandleTypeDef *, float);
 /* Alert a timeout */

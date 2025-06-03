@@ -174,6 +174,7 @@ bool Motor_Start(void)
 bool Motor_Stop(void)
 {
 	rampTime = Motor_CalcRampTimeMs(DECEL, 0);
+	rampTime = (rampTime < 50) ? 50 : rampTime;									// always keep rampTime >= 50
 
 	MCI_ExecSpeedRamp(pMCI[M1], 0, rampTime);
 
@@ -207,10 +208,13 @@ bool sendToPort(UART_HandleTypeDef *phuart_MD, float sendData)
 	return false;
 }
 
-bool IsTimedOut(uint32_t prevTime, uint32_t timeOut)
+bool IsTimedOut(uint32_t *prevTime, uint32_t timeOut)
 {
-	if(HAL_GetTick() - prevTime > timeOut)
+	if(HAL_GetTick() - *prevTime > timeOut)
+	{
+		*prevTime = HAL_GetTick();
 		return true;
+	}
 	return false;
 }
 

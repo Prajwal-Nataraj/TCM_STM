@@ -89,7 +89,7 @@ bool Motor_GetDirection(void)
 /* Reset Motor Parameters to 0 */
 bool Motor_ResetParams(void)
 {
-	if(!Motor_Stop())
+	if(!Motor_DisBridge())
 		return false;
 
 	rampTime = 100;

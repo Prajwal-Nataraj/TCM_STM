@@ -11,8 +11,6 @@
 #define GEAR_RATIO			6.0f
 #define MM_PER_THREAD		5.08f
 
-extern UART_HandleTypeDef huart_MD;
-
 static uint16_t rampTime;
 
 MotorParams Motor;
@@ -194,18 +192,14 @@ bool Motor_CriticalStop(void)
 	return true;
 }
 
-bool sendToPort(UART_HandleTypeDef *phuart_MD, float sendData)
+bool sendToPort(float sendData)
 {
 	char sendBuf[15] = {0};
-	HAL_StatusTypeDef retVal;
 
 	sprintf(sendBuf, "%.2f\r\n", sendData);
-	retVal = HAL_UART_Transmit(phuart_MD, (uint8_t *)sendBuf, 15, 100);
+	UART_Transmit(sendBuf, 15);
 
-	if(HAL_OK == retVal)
-		return true;
-
-	return false;
+	return true;
 }
 
 bool IsTimedOut(uint32_t *prevTime, uint32_t timeOut)

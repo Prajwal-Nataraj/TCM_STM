@@ -70,7 +70,7 @@ bool Motor_Stop(void);
 /* Critical Stop (max Deceleration) */
 bool Motor_CriticalStop(void);
 /* Send Data to COM Port */
-bool sendToPort(UART_HandleTypeDef *, float);
+bool sendToPort(float);
 /* Alert a timeout */
 bool IsTimedOut(uint32_t *, uint32_t);
 /* Stop the Motor when Target Distance is reached */

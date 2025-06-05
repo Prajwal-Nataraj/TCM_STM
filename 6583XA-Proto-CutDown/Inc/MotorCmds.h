@@ -117,6 +117,10 @@ void CmdProc_RTZ(uint8_t *, uint32_t, uint8_t *, uint32_t *);
 /* Send Error Message */
 void Send_ErrorMsg(uint8_t);
 
+void UART_Transmit(char *, uint16_t);
+
+void UART_Receive(char *, uint16_t);
+
 #endif
 
 /********************************* END OF FILE ********************************/

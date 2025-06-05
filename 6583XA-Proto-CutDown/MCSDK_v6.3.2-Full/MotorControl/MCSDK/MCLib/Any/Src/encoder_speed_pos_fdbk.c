@@ -210,8 +210,8 @@ __weak bool ENC_CalcAvrgMecSpeedUnit(ENCODER_Handle_t *pHandle, /*int16_t*/float
   else
   {
 #endif
-    /*int32_t*/float wtemp1;
-    /*int32_t*/float wtemp2;
+	/*int32_t*/float wtemp1;
+	/*int32_t*/float wtemp2;
     uint32_t OverflowCntSample;
     uint32_t CntCapture;
     uint32_t directionSample;
@@ -301,13 +301,13 @@ __weak bool ENC_CalcAvrgMecSpeedUnit(ENCODER_Handle_t *pHandle, /*int16_t*/float
     wtemp2 = ((int32_t)pHandle->PulseNumber) * ((int32_t)pHandle->SpeedBufferSize);
     wtemp1 = ((0 == wtemp2) ? wtemp1 : (wtemp1 / wtemp2));
 
-    *pMecSpeedUnit = /*(int16_t)*/wtemp1;
+    *pMecSpeedUnit = /*int16_t*/wtemp1;
 
     /* Computes & stores average mechanical acceleration */
-    pHandle->_Super.hMecAccelUnitP = /*(int16_t)*/(wtemp1 - pHandle->_Super.hAvrMecSpeedUnit);
+    pHandle->_Super.hMecAccelUnitP = /*int16_t*/(wtemp1 - pHandle->_Super.hAvrMecSpeedUnit);
 
     /* Stores average mechanical speed */
-    pHandle->_Super.hAvrMecSpeedUnit = /*(int16_t)*/wtemp1;
+    pHandle->_Super.hAvrMecSpeedUnit = /*int16_t*/wtemp1;
 
     /* Computes & stores the instantaneous electrical speed [dpp], var wtemp1 */
     wtemp1 = pHandle->DeltaCapturesBuffer[pHandle->DeltaCapturesIndex] * ((int32_t)pHandle->SpeedSamplingFreqHz)

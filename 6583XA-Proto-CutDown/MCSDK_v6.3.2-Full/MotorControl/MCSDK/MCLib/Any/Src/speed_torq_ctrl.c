@@ -344,7 +344,7 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, /*int16_t*/float hTar
         if (MCM_SPEED_MODE == pHandle->Mode)
         {
 //          pHandle->SpeedRefUnitExt = ((int32_t)hTargetFinal) * 65536;
-          pHandle->SpeedRefUnitExt = (int32_t)(hTargetFinal * 65536.0);
+        	pHandle->SpeedRefUnitExt = (int32_t)(hTargetFinal * 65536.0);
         }
         else
         {

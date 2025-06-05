@@ -240,8 +240,8 @@ __weak bool VSS_CalcAvrgMecSpeedUnit(VirtualSpeedSensor_Handle_t *pHandle, /*int
 //                               / (((int32_t)pHandle->_Super.DPPConvFactor) * ((int32_t)pHandle->_Super.bElToMecRatio)));
 
       *hMecSpeedUnit = (((/*int32_t*/float)pHandle->_Super.hElSpeedDpp)
-							 * ((/*int32_t*/float )pHandle->_Super.hMeasurementFrequency) * (float)SPEED_UNIT)
-							 / (((/*int32_t*/float)pHandle->_Super.DPPConvFactor) * ((/*int32_t*/float)pHandle->_Super.bElToMecRatio));
+						 * ((/*int32_t*/float )pHandle->_Super.hMeasurementFrequency) * (float)SPEED_UNIT)
+						 / (((/*int32_t*/float)pHandle->_Super.DPPConvFactor) * ((/*int32_t*/float)pHandle->_Super.bElToMecRatio));
 
       pHandle->_Super.hAvrMecSpeedUnit = *hMecSpeedUnit;
       pHandle->hRemainingStep--;

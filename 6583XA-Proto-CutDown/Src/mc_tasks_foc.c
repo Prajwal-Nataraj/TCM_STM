@@ -177,7 +177,7 @@ __weak void TSK_MediumFrequencyTaskM1(void)
 
   /* USER CODE END MediumFrequencyTask M1 0 */
 
-	/*int16_t*/float wAux = 0;
+  /*int16_t*/float wAux = 0;
   (void)ENC_CalcAvrgMecSpeedUnit(&ENCODER_M1, &wAux);
   PQD_CalcElMotorPower(pMPM[M1]);
 

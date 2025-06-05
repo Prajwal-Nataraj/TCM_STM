@@ -613,7 +613,7 @@ __attribute__((section(".ccmram")))
   */
 __weak /*int16_t*/float PI_Controller(PID_Handle_t *pHandle, /*int32_t*/float wProcessVarError)
 {
-	/*int32_t*/float returnValue;
+	/*int16_t*/float returnValue;
 #ifdef NULL_PTR_CHECK_PID_REG
   if (MC_NULL == pHandle)
   {
@@ -622,13 +622,13 @@ __weak /*int16_t*/float PI_Controller(PID_Handle_t *pHandle, /*int32_t*/float wP
   else
   {
 #endif
-	  /*int32_t*/float wProportional_Term;
-	  /*int32_t*/float wIntegral_Term;
-	  /*int32_t*/float wOutput_32;
-    /*int32_t*/float wIntegral_sum_temp;
-    /*int32_t*/float wDischarge = 0;
-    /*int32_t*/float hUpperOutputLimit = (float)pHandle->hUpperOutputLimit;
-    /*int32_t*/float hLowerOutputLimit = (float)pHandle->hLowerOutputLimit;
+	/*int32_t*/float wProportional_Term;
+	/*int32_t*/float wIntegral_Term;
+	/*int32_t*/float wOutput_32;
+	/*int32_t*/float wIntegral_sum_temp;
+	/*int32_t*/float wDischarge = 0;
+	/*int16_t*/float hUpperOutputLimit = (float)pHandle->hUpperOutputLimit;
+	/*int16_t*/float hLowerOutputLimit = (float)pHandle->hLowerOutputLimit;
 
     /* Proportional term computation*/
     wProportional_Term = (float)pHandle->hKpGain * wProcessVarError;
@@ -722,7 +722,7 @@ __weak /*int16_t*/float PI_Controller(PID_Handle_t *pHandle, /*int32_t*/float wP
     }
 
     pHandle->wIntegralTerm += wDischarge;
-    returnValue = /*(int32_t)*/wOutput_32;
+    returnValue = /*(int16_t)*/wOutput_32;
 #ifdef NULL_PTR_CHECK_PID_REG
   }
 #endif

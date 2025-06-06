@@ -41,6 +41,10 @@
 
 /* Private variables ---------------------------------------------------------*/
 
+UART_HandleTypeDef huart_MD;
+DMA_HandleTypeDef hdma_usart1_rx;
+DMA_HandleTypeDef hdma_usart1_tx;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -48,7 +52,7 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
+//static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_COMP1_Init(void);
@@ -101,7 +105,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
+//  MX_DMA_Init();
   MX_ADC1_Init();
   MX_ADC2_Init();
   MX_COMP1_Init();
@@ -120,19 +124,14 @@ int main(void)
   /* Initialize interrupts */
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
+  uint8_t CmdBuf[CMDBUF_SIZE] = {0};
+  uint8_t RspBuf[RSPBUF_SIZE] = {0};
+  uint32_t RspLen = 0;
 
-  uint32_t prevTime = 0;
-  prevTime = HAL_GetTick();
+//  	float mm_min_send = 0.0;
 
-  /* USER CODE BEGIN 2 */
-      uint8_t CmdBuf[CMDBUF_SIZE] = {0};
-      uint8_t RspBuf[RSPBUF_SIZE] = {0};
-      uint32_t RspLen = 0;
-
-  //  	float mm_min_send = 0.0;
-
-      StdReturn_t stdRet;
-      UART_Transmit("Welcome to TCM Motor Drive", 28);
+    StdReturn_t stdRet;
+    HAL_UART_Transmit(&huart_MD, (uint8_t *)"Welcome to TCM Motor Drive", 28, UART_TIMEOUT);
 
     /* USER CODE END 2 */
 
@@ -140,40 +139,34 @@ int main(void)
     /* USER CODE BEGIN WHILE */
     while (1)
     {
-        	  UART_Receive((char *)CmdBuf, CMDBUF_SIZE);
+		  HAL_UART_Receive(&huart_MD, CmdBuf, CMDBUF_SIZE, UART_TIMEOUT);
 
-        	  if(CmdBuf[0] != 0)
-        	  {
-        		  stdRet = Cmd_Process(CmdBuf, RspBuf, &RspLen);
-        		  CmdBuf[0] = 0;
+		  if(CmdBuf[0] != 0)
+		  {
+			  stdRet = Cmd_Process(CmdBuf, RspBuf, &RspLen);
+			  CmdBuf[0] = 0;
 
-        		  if(RET_OK != stdRet)
-        			  Send_ErrorMsg(stdRet);		// Change to Send_ErrorCode(stdRet) afterwords.
+			  if(RET_OK != stdRet)
+				  Send_ErrorMsg(stdRet);		// Change to Send_ErrorCode(stdRet) afterwords.
 
-        		  memset(CmdBuf, 0, sizeof(CmdBuf));
-        		  memset(RspBuf, 0, sizeof(CmdBuf));
-        	  }
+			  memset(CmdBuf, 0, sizeof(CmdBuf));
+			  memset(RspBuf, 0, sizeof(CmdBuf));
+		  }
 
-        	  if(IsTimedOut(&prevTime, 500))
-			  {
-				  prevTime = HAL_GetTick();
-				  UART_Transmit("Hello\n", 6);
-			  }
+//		  if(RUN == Mci[M1].State)
+//		  {
+//
+//		  }
 
-  //		  if(RUN == Mci[M1].State)
-  //		  {
-  //
-  //		  }
+//      	  Motor_StopAtTarget();
+//      	  Motor_CheckRTZ();
 
-  //      	  Motor_StopAtTarget();
-  //      	  Motor_CheckRTZ();
+		/* USER CODE END WHILE */
 
-            /* USER CODE END WHILE */
-
-            /* USER CODE BEGIN 3 */
-          }
-    /* USER CODE END 3 */
-  }
+		/* USER CODE BEGIN 3 */
+	  }
+/* USER CODE END 3 */
+}
 
 /**
   * @brief System Clock Configuration
@@ -233,11 +226,11 @@ void SystemClock_Config(void)
 static void MX_NVIC_Init(void)
 {
   /* USART1_IRQn interrupt configuration */
-  NVIC_SetPriority(USART1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),3, 1));
-  NVIC_EnableIRQ(USART1_IRQn);
+  HAL_NVIC_SetPriority(USART1_IRQn, 3, 1);
+  HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* DMA1_Channel1_IRQn interrupt configuration */
-  NVIC_SetPriority(DMA1_Channel1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),3, 0));
-  NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 3, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
   /* TIM1_BRK_TIM15_IRQn interrupt configuration */
   NVIC_SetPriority(TIM1_BRK_TIM15_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),4, 1));
   NVIC_EnableIRQ(TIM1_BRK_TIM15_IRQn);
@@ -1070,98 +1063,35 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 0 */
 
-  LL_USART_InitTypeDef USART_InitStruct = {0};
-
-  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-  LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_PCLK2);
-
-  /* Peripheral clock enable */
-  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_USART1);
-
-  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
-  /**USART1 GPIO Configuration
-  PA9   ------> USART1_TX
-  PA10   ------> USART1_RX
-  */
-  GPIO_InitStruct.Pin = UART_TX_Pin;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
-  LL_GPIO_Init(UART_TX_GPIO_Port, &GPIO_InitStruct);
-
-  GPIO_InitStruct.Pin = UART_RX_Pin;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
-  LL_GPIO_Init(UART_RX_GPIO_Port, &GPIO_InitStruct);
-
-  /* USART1 DMA Init */
-
-  /* USART1_RX Init */
-  LL_DMA_SetPeriphRequest(DMA1, LL_DMA_CHANNEL_1, LL_DMAMUX_REQ_USART1_RX);
-
-  LL_DMA_SetDataTransferDirection(DMA1, LL_DMA_CHANNEL_1, LL_DMA_DIRECTION_PERIPH_TO_MEMORY);
-
-  LL_DMA_SetChannelPriorityLevel(DMA1, LL_DMA_CHANNEL_1, LL_DMA_PRIORITY_LOW);
-
-  LL_DMA_SetMode(DMA1, LL_DMA_CHANNEL_1, LL_DMA_MODE_NORMAL);
-
-  LL_DMA_SetPeriphIncMode(DMA1, LL_DMA_CHANNEL_1, LL_DMA_PERIPH_NOINCREMENT);
-
-  LL_DMA_SetMemoryIncMode(DMA1, LL_DMA_CHANNEL_1, LL_DMA_MEMORY_INCREMENT);
-
-  LL_DMA_SetPeriphSize(DMA1, LL_DMA_CHANNEL_1, LL_DMA_PDATAALIGN_BYTE);
-
-  LL_DMA_SetMemorySize(DMA1, LL_DMA_CHANNEL_1, LL_DMA_MDATAALIGN_BYTE);
-
-  /* USART1_TX Init */
-  LL_DMA_SetPeriphRequest(DMA1, LL_DMA_CHANNEL_2, LL_DMAMUX_REQ_USART1_TX);
-
-  LL_DMA_SetDataTransferDirection(DMA1, LL_DMA_CHANNEL_2, LL_DMA_DIRECTION_MEMORY_TO_PERIPH);
-
-  LL_DMA_SetChannelPriorityLevel(DMA1, LL_DMA_CHANNEL_2, LL_DMA_PRIORITY_LOW);
-
-  LL_DMA_SetMode(DMA1, LL_DMA_CHANNEL_2, LL_DMA_MODE_NORMAL);
-
-  LL_DMA_SetPeriphIncMode(DMA1, LL_DMA_CHANNEL_2, LL_DMA_PERIPH_NOINCREMENT);
-
-  LL_DMA_SetMemoryIncMode(DMA1, LL_DMA_CHANNEL_2, LL_DMA_MEMORY_INCREMENT);
-
-  LL_DMA_SetPeriphSize(DMA1, LL_DMA_CHANNEL_2, LL_DMA_PDATAALIGN_BYTE);
-
-  LL_DMA_SetMemorySize(DMA1, LL_DMA_CHANNEL_2, LL_DMA_MDATAALIGN_BYTE);
-
   /* USER CODE BEGIN USART1_Init 1 */
 
   /* USER CODE END USART1_Init 1 */
-  USART_InitStruct.PrescalerValue = LL_USART_PRESCALER_DIV1;
-  USART_InitStruct.BaudRate = 115200;
-  USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
-  USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
-  USART_InitStruct.Parity = LL_USART_PARITY_NONE;
-  USART_InitStruct.TransferDirection = LL_USART_DIRECTION_TX_RX;
-  USART_InitStruct.HardwareFlowControl = LL_USART_HWCONTROL_NONE;
-  USART_InitStruct.OverSampling = LL_USART_OVERSAMPLING_16;
-  LL_USART_Init(USART1, &USART_InitStruct);
-  LL_USART_SetTXFIFOThreshold(USART1, LL_USART_FIFOTHRESHOLD_1_8);
-  LL_USART_SetRXFIFOThreshold(USART1, LL_USART_FIFOTHRESHOLD_1_8);
-  LL_USART_DisableFIFO(USART1);
-  LL_USART_ConfigAsyncMode(USART1);
-
-  /* USER CODE BEGIN WKUPType USART1 */
-
-  /* USER CODE END WKUPType USART1 */
-
-  LL_USART_Enable(USART1);
-
-  /* Polling USART1 initialisation */
-  while((!(LL_USART_IsActiveFlag_TEACK(USART1))) || (!(LL_USART_IsActiveFlag_REACK(USART1))))
+  huart_MD.Instance = USART1;
+  huart_MD.Init.BaudRate = 115200;
+  huart_MD.Init.WordLength = UART_WORDLENGTH_8B;
+  huart_MD.Init.StopBits = UART_STOPBITS_1;
+  huart_MD.Init.Parity = UART_PARITY_NONE;
+  huart_MD.Init.Mode = UART_MODE_TX_RX;
+  huart_MD.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart_MD.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart_MD.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart_MD.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart_MD.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart_MD) != HAL_OK)
   {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&huart_MD, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&huart_MD, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&huart_MD) != HAL_OK)
+  {
+    Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
 
@@ -1172,15 +1102,15 @@ static void MX_USART1_UART_Init(void)
 /**
   * Enable DMA controller clock
   */
-static void MX_DMA_Init(void)
-{
-
-  /* Init with LL driver */
-  /* DMA controller clock enable */
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMAMUX1);
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
-
-}
+//static void MX_DMA_Init(void)
+//{
+//
+//  /* Init with LL driver */
+//  /* DMA controller clock enable */
+//  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMAMUX1);
+//  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
+//
+//}
 
 /**
   * @brief GPIO Initialization Function

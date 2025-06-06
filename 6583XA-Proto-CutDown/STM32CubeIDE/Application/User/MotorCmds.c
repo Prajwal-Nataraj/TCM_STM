@@ -7,6 +7,8 @@
 
 #include "MotorCmds.h"
 
+extern UART_HandleTypeDef huart_MD;
+
 const char *Error_msg[13] =
 {
 	"RET_OK\n",     	// Success
@@ -376,7 +378,7 @@ StdReturn_t Cmd_Process(uint8_t *CmdBuf, uint8_t *RspBuf, uint32_t *RspLen)
 				RspBuf[*RspLen] = GetCRC(RspBuf, (*RspLen)-3);		// Send only the no. of data bytes for CRC calculation.
 				*RspLen += 1;										// +1 for CRC byte.
 
-				UART_Transmit((char *)RspBuf, *RspLen);
+				HAL_UART_Transmit(&huart_MD, RspBuf, *RspLen, UART_TIMEOUT);
 			}
 		}
 		else
@@ -389,19 +391,7 @@ StdReturn_t Cmd_Process(uint8_t *CmdBuf, uint8_t *RspBuf, uint32_t *RspLen)
 }
 void Send_ErrorMsg(uint8_t stdRet)
 {
-	UART_Transmit((char *)Error_msg[stdRet], strlen(Error_msg[stdRet]));
-}
-
-void UART_Transmit(char *pbyte, uint16_t size)
-{
-	for(uint16_t i = 0; i < size; i++)
-		LL_USART_TransmitData8(USART1, pbyte[i]);
-}
-
-void UART_Receive(char *pbyte, uint16_t size)
-{
-	for(uint16_t i = 0; i < size; i++)
-		pbyte[i] = LL_USART_ReceiveData8(USART1);
+	HAL_UART_Transmit(&huart_MD, (uint8_t *)Error_msg[stdRet], strlen(Error_msg[stdRet]), UART_TIMEOUT);
 }
 
 /********************************* END OF FILE ********************************/

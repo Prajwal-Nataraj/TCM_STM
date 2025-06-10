@@ -92,7 +92,7 @@ void ENC_Clear(ENCODER_Handle_t *pHandle);
 
 /* It calculates the rotor electrical and mechanical angle, on the basis
  * of the instantaneous value of the timer counter */
-int16_t ENC_CalcAngle(ENCODER_Handle_t *pHandle);
+/*int16_t*/float ENC_CalcAngle(ENCODER_Handle_t *pHandle);
 
 /* The method generates a capture event on a channel, computes & stores average mechanical speed */
 bool ENC_CalcAvrgMecSpeedUnit(ENCODER_Handle_t *pHandle, /*int16_t*/float *pMecSpeedUnit);

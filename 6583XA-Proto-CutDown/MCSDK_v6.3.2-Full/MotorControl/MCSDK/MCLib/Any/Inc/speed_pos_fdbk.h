@@ -56,10 +56,10 @@ typedef struct
   uint8_t SpeedUnit;                  /*!< The speed unit value is defined into mc_stm_types.h by
                                            [SPEED_UNIT](measurement_units.md) in tenth of Hertz.*/
   uint8_t bMaximumSpeedErrorsNumber;  /*!< Maximum value of not valid speed measurements before an error is reported.*/
-  int16_t hElAngle;                   /*!< Estimated electrical angle reported by the implemented speed and position
+  /*int16_t*/float hElAngle;                   /*!< Estimated electrical angle reported by the implemented speed and position
                                            method. */
-  int16_t hMecAngle;                  /*!< Instantaneous measure of rotor mechanical angle. */
-  int32_t wMecAngle;                  /*!< Mechanical angle frame based on coefficient #bElToMecRatio. */
+  /*int16_t*/float hMecAngle;                  /*!< Instantaneous measure of rotor mechanical angle. */
+  /*int32_t*/float wMecAngle;                  /*!< Mechanical angle frame based on coefficient #bElToMecRatio. */
   /*int16_t*/float hAvrMecSpeedUnit;           /*!< Average mechanical speed expressed in the unit defined by
                                            [SPEED_UNIT](measurement_units.md). */
   int16_t hElSpeedDpp;                /*!< Instantaneous electrical speed expressed in Digit Per control Period

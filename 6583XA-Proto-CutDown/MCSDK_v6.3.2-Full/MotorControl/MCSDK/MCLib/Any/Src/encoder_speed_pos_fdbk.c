@@ -141,9 +141,9 @@ __weak void ENC_Clear(ENCODER_Handle_t *pHandle)
   * @param  pHandle: handler of the current instance of the encoder component
   * @retval Measured electrical angle in [s16degree](measurement_units.md) format.
   */
-__weak int16_t ENC_CalcAngle(ENCODER_Handle_t *pHandle)
+__weak /*int16_t*/float ENC_CalcAngle(ENCODER_Handle_t *pHandle)
 {
-  int16_t elAngle;  /* s16degree format */
+  /*int16_t*/float elAngle;  /* s16degree format */
 #ifdef NULL_PTR_CHECK_ENC_SPD_POS_FDB
   if (NULL == pHandle)
   {
@@ -152,31 +152,31 @@ __weak int16_t ENC_CalcAngle(ENCODER_Handle_t *pHandle)
   else
   {
 #endif
-    int16_t mecAngle; /* s16degree format */
+    /*int16_t*/float mecAngle; /* s16degree format */
     uint32_t uwtemp1;
-    int32_t wtemp1;
+    /*int32_t*/float wtemp1;
     /* PR 52926 We need to keep only the 16 LSB, bit 31 could be at 1
      if the overflow occurs just after the entry in the High frequency task */
     uwtemp1 = (LL_TIM_GetCounter(pHandle->TIMx) & 0x7fffffffU) * (pHandle->U32MAXdivPulseNumber);
-#ifndef FULL_MISRA_C_COMPLIANCY_ENC_SPD_POS
+#ifdef FULL_MISRA_C_COMPLIANCY_ENC_SPD_POS
     wtemp1 = (int32_t)uwtemp1 >> 16U;  //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
 #else
-    wtemp1 = (int32_t)uwtemp1 / 65536;
+    wtemp1 = (float)uwtemp1 / 65536.0;
 #endif
     /* Computes and stores the rotor mechanical angle */
-    mecAngle = (int16_t)wtemp1;
+    mecAngle = /*(int16_t)*/wtemp1;
 
-    int16_t hMecAnglePrev = pHandle->_Super.hMecAngle;
+    /*int16_t*/float hMecAnglePrev = pHandle->_Super.hMecAngle;
 
     pHandle->_Super.hMecAngle = mecAngle;
 
     /* Computes and stores the rotor electrical angle */
-    elAngle = mecAngle * (int16_t)(pHandle->_Super.bElToMecRatio);
+    elAngle = mecAngle * (/*int16_t*/float)(pHandle->_Super.bElToMecRatio);
 
     pHandle->_Super.hElAngle = elAngle;
 
-    int16_t hMecSpeedDpp = mecAngle - hMecAnglePrev;
-    pHandle->_Super.wMecAngle += ((int32_t)hMecSpeedDpp);
+    /*int16_t*/float hMecSpeedDpp = mecAngle - hMecAnglePrev;
+    pHandle->_Super.wMecAngle += hMecSpeedDpp;
 #ifdef NULL_PTR_CHECK_ENC_SPD_POS_FDB
   }
 #endif

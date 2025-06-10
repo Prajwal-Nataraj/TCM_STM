@@ -138,7 +138,7 @@ __weak int16_t VSS_CalcElAngle(VirtualSpeedSensor_Handle_t *pHandle, int16_t *pI
     else
     {
       pHandle->hElAngleAccu += pHandle->_Super.hElSpeedDpp;
-      pHandle->_Super.hMecAngle += (pHandle->_Super.hElSpeedDpp / (int16_t)pHandle->_Super.bElToMecRatio);
+      pHandle->_Super.hMecAngle += ((float)pHandle->_Super.hElSpeedDpp / (float)pHandle->_Super.bElToMecRatio);
 
       if (true == pHandle->bTransitionStarted)
       {

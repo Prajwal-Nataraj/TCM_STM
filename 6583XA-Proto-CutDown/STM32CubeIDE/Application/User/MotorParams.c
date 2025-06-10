@@ -157,7 +157,7 @@ bool Motor_Start(void)
 	float adjSpeed = 0;
 
 	Motor.newSpeedRPM = mmpm_to_rpm(Motor.newSpeedMMPM);						// mm/min in UP or DOWN to +RPM or -RPM
-	adjSpeed = 0.9972 * Motor.newSpeedRPM;										// Adjusted Speed
+	adjSpeed = 1.0 * Motor.newSpeedRPM;										// Adjusted Speed
 
 	rampTime = Motor_CalcRampTimeMs(ACCEL, Motor.newSpeedRPM);
 	rampTime = (rampTime < 1) ? 1 : rampTime;									// always keep rampTime > 0

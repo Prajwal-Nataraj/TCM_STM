@@ -89,9 +89,6 @@ bool Motor_GetDirection(void)
 /* Reset Motor Parameters to 0 */
 bool Motor_ResetParams(void)
 {
-	if(!Motor_DisBridge())
-		return false;
-
 	rampTime = 100;
 
 	Motor.distance = 0;
@@ -103,6 +100,9 @@ bool Motor_ResetParams(void)
 
 	Motor_SetAccel(1181.10236);									// 100mm/min / 100ms or 1mm/min / 1ms
 	Motor_SetDecel(1181.10236);									// 100mm/min / 100ms or 1mm/min / 1ms
+
+	if(!Motor_DisBridge())
+		return false;
 
 	return true;
 }
@@ -145,8 +145,12 @@ bool Motor_EnBridge(void)
 bool Motor_DisBridge(void)
 {
 	MCI_StopMotor(pMCI[M1]);
-	MCI_ExecSpeedRamp(pMCI[M1], 0, 50);
-	Motor.currentSpeedMMPM = 0;
+	if((Motor.currentSpeedMMPM > 0) || (Motor.currentSpeedRPM > 0))
+	{
+		MCI_ExecSpeedRamp(pMCI[M1], 0, 50);
+		Motor.currentSpeedMMPM = 0;
+		Motor.currentSpeedRPM = 0;
+	}
 
 	return true;
 }
@@ -160,7 +164,7 @@ bool Motor_Start(void)
 	adjSpeed = 1.0 * Motor.newSpeedRPM;										// Adjusted Speed
 
 	rampTime = Motor_CalcRampTimeMs(ACCEL, Motor.newSpeedRPM);
-	rampTime = (rampTime < 1) ? 1 : rampTime;									// always keep rampTime > 0
+	rampTime = (rampTime < 50) ? 50 : rampTime;									// always keep rampTime > 0
 
 	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, rampTime);
 

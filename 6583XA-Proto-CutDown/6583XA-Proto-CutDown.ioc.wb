@@ -65,8 +65,8 @@
 # CubeMX versions                                                                                                      #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 File.Version=6
-MxCube.Version=6.14.0
-MxDb.Version=DB.6.0.140
+MxCube.Version=6.14.1
+MxDb.Version=DB.6.0.141
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -1010,7 +1010,7 @@ ADC1.InjNumberOfConversion=1
 # SAMPLING 1 --> M1 PHASE_U_CURR
 ADC1.InjectedRank-1\#ChannelInjectedConversion=1
 ADC1.InjectedChannel-1\#ChannelInjectedConversion=ADC_CHANNEL_3
-ADC1.InjectedSamplingTime-1\#ChannelInjectedConversion=ADC_SAMPLETIME_2CYCLES_5
+ADC1.InjectedSamplingTime-1\#ChannelInjectedConversion=ADC_SAMPLETIME_6CYCLES_5
 ADC1.InjectedOffsetNumber-1\#ChannelInjectedConversion=ADC_OFFSET_NONE
 ADC1.InjectedOffset-1\#ChannelInjectedConversion=0
 
@@ -1076,7 +1076,7 @@ ADC2.InjNumberOfConversion=1
 # SAMPLING 1 --> M1 PHASE_V_CURR
 ADC2.InjectedRank-1\#ChannelInjectedConversion=1
 ADC2.InjectedChannel-1\#ChannelInjectedConversion=ADC_CHANNEL_3
-ADC2.InjectedSamplingTime-1\#ChannelInjectedConversion=ADC_SAMPLETIME_2CYCLES_5
+ADC2.InjectedSamplingTime-1\#ChannelInjectedConversion=ADC_SAMPLETIME_6CYCLES_5
 ADC2.InjectedOffsetNumber-1\#ChannelInjectedConversion=ADC_OFFSET_NONE
 ADC2.InjectedOffset-1\#ChannelInjectedConversion=0
 
@@ -1186,8 +1186,8 @@ MotorControl.CLOCK_FREQUENCY=CPU_CLK_170_MHZ
 MotorControl.CLOCK_SOURCE=INTERNAL
 MotorControl.CPU_CLK_170_MHZ=true
 MotorControl.CTLBOARD_NAME=~6583XA
-MotorControl.CUBE_MX_VER=6.14.0
-MotorControl.CURR_SAMPLING_TIME=2
+MotorControl.CUBE_MX_VER=6.14.1
+MotorControl.CURR_SAMPLING_TIME=6
 MotorControl.CURRENT_READING_TOPOLOGY=THREE_SHUNT_INDEPENDENT_RESOURCES
 MotorControl.DBG_MCU_LOAD_MEASURE=false
 MotorControl.DEBUG_DAC_FUNCTIONALITY_EN=false
@@ -1245,7 +1245,7 @@ MotorControl.M1_CS_OPAMP_VPSEL_U=PA1
 MotorControl.M1_CS_OPAMP_VPSEL_V=PA7
 MotorControl.M1_CS_OPAMP_VPSEL_W=PB0
 MotorControl.M1_CS_OPAMP_W=OPAMP2
-MotorControl.M1_CURR_SAMPLING_TIME=2
+MotorControl.M1_CURR_SAMPLING_TIME=6
 MotorControl.M1_CURRENT_AMPLIFICATION_TOPO=INT_SINGLE_ENDED
 MotorControl.M1_CURRENT_SENSING_TOPO=THREE_SHUNT
 MotorControl.M1_DAC_CURRENT_THRESHOLD=12050
@@ -1322,14 +1322,14 @@ MotorControl.M1_OV_VOLTAGE_THRESHOLD_V=29
 MotorControl.M1_OVERMODULATION=false
 MotorControl.M1_OVP_THRESHOLD_HIGH=29
 MotorControl.M1_PID_FLUX_KD_DEFAULT=100
-MotorControl.M1_PID_FLUX_KI_DEFAULT=1648
-MotorControl.M1_PID_FLUX_KP_DEFAULT=8896
+MotorControl.M1_PID_FLUX_KI_DEFAULT=2048
+MotorControl.M1_PID_FLUX_KP_DEFAULT=8192
 MotorControl.M1_PID_SPEED_KD_DEFAULT=0
-MotorControl.M1_PID_SPEED_KI_DEFAULT=3240
-MotorControl.M1_PID_SPEED_KP_DEFAULT=28800
+MotorControl.M1_PID_SPEED_KI_DEFAULT=3360
+MotorControl.M1_PID_SPEED_KP_DEFAULT=26880
 MotorControl.M1_PID_TORQUE_KD_DEFAULT=100
-MotorControl.M1_PID_TORQUE_KI_DEFAULT=1648
-MotorControl.M1_PID_TORQUE_KP_DEFAULT=8896
+MotorControl.M1_PID_TORQUE_KI_DEFAULT=2048
+MotorControl.M1_PID_TORQUE_KP_DEFAULT=8192
 MotorControl.M1_POLE_PAIR_NUM=2
 MotorControl.M1_POSITION_CTRL_ENABLING=false
 MotorControl.M1_POTENTIOMETER_ENABLE=false

@@ -55,14 +55,14 @@ typedef struct
                                            MCM_TORQUE_MODE to enable the Torque mode or
                                            MCM_SPEED_MODE to enable the Speed mode. */
   /*int16_t*/float TargetFinal;                 /*!< Backup of #hTargetFinal to be applied in the last step. */
-  int32_t SpeedRefUnitExt;             /*!< Current mechanical rotor speed reference expressed in
+  /*int32_t*/float SpeedRefUnitExt;             /*!< Current mechanical rotor speed reference expressed in
                                             [SPEED_UNIT](measurement_units.md) multiplied by 65536.*/
-  int32_t TorqueRef;                   /*!< Current motor torque reference. This value represents actually
+  /*int32_t*/float TorqueRef;                   /*!< Current motor torque reference. This value represents actually
                                             the Iq current expressed in digit multiplied by 65536. */
   uint32_t RampRemainingStep;          /*!< Number of steps remaining to complete the ramp. */
   PID_Handle_t *PISpeed;               /*!< The regulator used to perform the speed control loop. */
   SpeednPosFdbk_Handle_t *SPD;         /*!< The speed sensor used to perform the speed regulation. */
-  int32_t IncDecAmount;                /*!< Increment/decrement amount to be applied to the reference value at each
+  /*int32_t*/float IncDecAmount;                /*!< Increment/decrement amount to be applied to the reference value at each
                                             #CalcTorqueReference. */
   uint16_t STCFrequencyHz;             /*!< Frequency on which the user updates the torque reference calling
                                             #STC_CalcTorqueReference method expressed in Hz */
@@ -95,7 +95,7 @@ void STC_Init(SpeednTorqCtrl_Handle_t *pHandle, PID_Handle_t *pPI, SpeednPosFdbk
 void STC_Clear(SpeednTorqCtrl_Handle_t *pHandle);
 
 /* Gets the current mechanical rotor speed reference */
-int16_t STC_GetMecSpeedRefUnit(SpeednTorqCtrl_Handle_t *pHandle);
+/*int16_t*/float STC_GetMecSpeedRefUnit(SpeednTorqCtrl_Handle_t *pHandle);
 
 /* Sets the mode of the speed and torque controller (Torque mode or Speed mode) */
 void STC_SetControlMode(SpeednTorqCtrl_Handle_t *pHandle, MC_ControlMode_t bMode);
@@ -104,7 +104,7 @@ void STC_SetControlMode(SpeednTorqCtrl_Handle_t *pHandle, MC_ControlMode_t bMode
 bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, /*int16_t*/float hTargetFinal, uint32_t hDurationms);
 
 /* Computes the new value of motor torque reference */
-int16_t STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle);
+/*int32_t*/float STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle);
 
 /* Gets the Default mechanical rotor speed reference */
 int16_t STC_GetMecSpeedRefUnitDefault(SpeednTorqCtrl_Handle_t *pHandle);

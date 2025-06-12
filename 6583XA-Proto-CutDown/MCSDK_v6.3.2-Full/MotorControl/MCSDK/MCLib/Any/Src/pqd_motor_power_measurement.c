@@ -72,16 +72,16 @@ __weak void PQD_CalcElMotorPower(PQD_MotorPowMeas_Handle_t *pHandle)
   else
   {
 #endif
-    int32_t wAux;
+    /*int32_t*/float wAux;
     qd_t Iqd = pHandle->pFOCVars->Iqd;
     qd_t Vqd = pHandle->pFOCVars->Vqd;
 
-    wAux = ((int32_t)Iqd.q * (int32_t)Vqd.q)
-         + ((int32_t)Iqd.d * (int32_t)Vqd.d);
-    wAux /= 65536;
+    wAux = (Iqd.q * Vqd.q)
+         + (Iqd.d * Vqd.d);
+    wAux /= 65536.0;
 
     /* pHandle->hAvrgElMotorPower += (wAux - pHandle->hAvrgElMotorPower) >> 4 */
-    pHandle->hAvrgElMotorPower += (int16_t)((wAux - (int32_t)pHandle->hAvrgElMotorPower) / 16);
+    pHandle->hAvrgElMotorPower += ((wAux - pHandle->hAvrgElMotorPower) / 16.0);
 
 #ifdef NULL_PTR_CHECK_PQD_MOT_POW_MEAS
   }

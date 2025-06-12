@@ -149,9 +149,9 @@ __weak void STC_Clear(SpeednTorqCtrl_Handle_t *pHandle)
   *
   * - Called at MC boot procedure and for speed monitoring through MotorPilote.
   */
-__weak int16_t STC_GetMecSpeedRefUnit(SpeednTorqCtrl_Handle_t *pHandle)
+__weak /*int16_t*/float STC_GetMecSpeedRefUnit(SpeednTorqCtrl_Handle_t *pHandle)
 {
-#ifndef FULL_MISRA_C_COMPLIANCY_SPD_TORQ_CTRL
+#ifdef FULL_MISRA_C_COMPLIANCY_SPD_TORQ_CTRL
 #ifdef NULL_PTR_CHECK_SPD_TRQ_CTL
   //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
   return ((MC_NULL == pHandle) ? 0 : (int16_t)(pHandle->SpeedRefUnitExt >> 16));
@@ -162,7 +162,7 @@ __weak int16_t STC_GetMecSpeedRefUnit(SpeednTorqCtrl_Handle_t *pHandle)
 #ifdef NULL_PTR_CHECK_SPD_TRQ_CTL
   return ((MC_NULL == pHandle) ? 0 : (int16_t)(pHandle->SpeedRefUnitExt / 65536));
 #else
-  return ((int16_t)(pHandle->SpeedRefUnitExt / 65536));
+  return (pHandle->SpeedRefUnitExt / 65536.0);
 #endif
 #endif
 }
@@ -180,9 +180,9 @@ __weak int16_t STC_GetMecSpeedRefUnit(SpeednTorqCtrl_Handle_t *pHandle)
   * Current(Amp) = [Current(digit) * Vdd micro] / [65536 * Rshunt * Aop]
   * - Called during #STC_ExecRamp execution.
   */
-static inline int16_t STC_GetTorqueRef(SpeednTorqCtrl_Handle_t *pHandle)
+static inline /*int32_t*/float STC_GetTorqueRef(SpeednTorqCtrl_Handle_t *pHandle)
 {
-#ifndef FULL_MISRA_C_COMPLIANCY_SPD_TORQ_CTRL
+#ifdef FULL_MISRA_C_COMPLIANCY_SPD_TORQ_CTRL
 #ifdef NULL_PTR_CHECK_SPD_TRQ_CTL
   //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
   return ((MC_NULL == pHandle) ? 0 : (int16_t)(pHandle->TorqueRef >> 16));
@@ -193,7 +193,7 @@ static inline int16_t STC_GetTorqueRef(SpeednTorqCtrl_Handle_t *pHandle)
 #ifdef NULL_PTR_CHECK_SPD_TRQ_CTL
   return ((MC_NULL == pHandle) ? 0 : (int16_t)(pHandle->TorqueRef / 65536));
 #else
-  return ((int16_t)(pHandle->TorqueRef / 65536));
+  return (pHandle->TorqueRef / 65536.0);
 #endif
 #endif
 }
@@ -277,8 +277,8 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, /*int16_t*/float hTar
   else
   {
 #endif
-    uint32_t wAux;
-    int32_t wAux1;
+	/*uint32_t*/float wAux;
+    /*int32_t*/float wAux1;
     /*int16_t*/float hCurrentReference;
 
     /* Check if the hTargetFinal is out of the bound of application */
@@ -306,11 +306,11 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, /*int16_t*/float hTar
     }
     else
     {
-#ifndef FULL_MISRA_C_COMPLIANCY_SPD_TORQ_CTRL
+#ifdef FULL_MISRA_C_COMPLIANCY_SPD_TORQ_CTRL
       //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
-      hCurrentReference = (/*int16_t*/float)(pHandle->SpeedRefUnitExt >> 16);
+      hCurrentReference = (int16_t)(pHandle->SpeedRefUnitExt >> 16);
 #else
-      hCurrentReference = (int16_t)(pHandle->SpeedRefUnitExt / 65536);
+      hCurrentReference = (pHandle->SpeedRefUnitExt / 65536.0);
 #endif
 
 #ifdef CHECK_BOUNDARY
@@ -344,11 +344,11 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, /*int16_t*/float hTar
         if (MCM_SPEED_MODE == pHandle->Mode)
         {
 //          pHandle->SpeedRefUnitExt = ((int32_t)hTargetFinal) * 65536;
-          pHandle->SpeedRefUnitExt = (int32_t)(hTargetFinal * 65536.0);
+          pHandle->SpeedRefUnitExt = (hTargetFinal * 65536.0);
         }
         else
         {
-          pHandle->TorqueRef = ((int32_t)hTargetFinal) * 65536;
+          pHandle->TorqueRef = hTargetFinal * 65536.0;
         }
         pHandle->RampRemainingStep = 0U;
         pHandle->IncDecAmount = 0;
@@ -367,8 +367,8 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, /*int16_t*/float hTar
         /* Compute the increment/decrement amount (wIncDecAmount) to be applied to
         the reference value at each CalcTorqueReference */
 //        wAux1 = (((int32_t)hTargetFinal) - ((int32_t)hCurrentReference)) * 65536;
-        wAux1 = (int32_t)((hTargetFinal - hCurrentReference) * 65536.0);
-        wAux1 /= ((int32_t)pHandle->RampRemainingStep);
+        wAux1 = (hTargetFinal - hCurrentReference) * 65536.0;
+        wAux1 /= (pHandle->RampRemainingStep);
         pHandle->IncDecAmount = wAux1;
       }
     }
@@ -394,7 +394,7 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, /*int16_t*/float hTar
 static uint8_t settleCounter = 0;
 static FunctionalState PIloop = ENABLE;
 static FunctionalState checkZero = ENABLE;
-__weak int16_t STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
+__weak /*int32_t*/float STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
 {
 	/*int16_t*/float hTorqueReference;
 #ifdef NULL_PTR_CHECK_SPD_TRQ_CTL
@@ -405,7 +405,7 @@ __weak int16_t STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
   else
   {
 #endif
-    int32_t wCurrentReference;
+	/*int32_t*/float wCurrentReference;
     /*int16_t*/float hMeasuredSpeed;
     /*int16_t*/float hTargetSpeed;
     /*int16_t*/float hError;
@@ -433,7 +433,7 @@ __weak int16_t STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
     {
       /* Set the backup value of hTargetFinal */
 //      wCurrentReference = ((int32_t)pHandle->TargetFinal) * 65536;
-    	wCurrentReference = (int32_t)(pHandle->TargetFinal * 65536.0);
+    	wCurrentReference = (pHandle->TargetFinal * 65536.0);
       pHandle->RampRemainingStep = 0U;
     }
     else
@@ -487,11 +487,11 @@ __weak int16_t STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
     else
     {
       pHandle->TorqueRef = wCurrentReference;
-#ifndef FULL_MISRA_C_COMPLIANCY_SPD_TORQ_CTRL
+#ifdef FULL_MISRA_C_COMPLIANCY_SPD_TORQ_CTRL
       //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
       hTorqueReference = (int16_t)(wCurrentReference >> 16);
 #else
-      hTorqueReference = (int16_t)(wCurrentReference / 65536);
+      hTorqueReference = wCurrentReference / 65536.0;
 #endif
     }
 #ifdef NULL_PTR_CHECK_SPD_TRQ_CTL
@@ -628,7 +628,7 @@ __weak void STC_ForceSpeedReferenceToCurrentSpeed(SpeednTorqCtrl_Handle_t *pHand
   else
   {
 #endif
-    pHandle->SpeedRefUnitExt = ((int32_t)SPD_GetAvrgMecSpeedUnit(pHandle->SPD)) * (int32_t)65536;
+    pHandle->SpeedRefUnitExt = SPD_GetAvrgMecSpeedUnit(pHandle->SPD) * 65536.0;
 #ifdef NULL_PTR_CHECK_SPD_TRQ_CTL
   }
 #endif

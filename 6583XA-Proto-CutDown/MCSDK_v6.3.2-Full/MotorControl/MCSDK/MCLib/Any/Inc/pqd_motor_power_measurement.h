@@ -48,7 +48,7 @@ extern "C" {
  */
 typedef struct
 {
-  int16_t hAvrgElMotorPower;       /**< @brief Average measured motor power expressed in s16 digit (s16A x s16V). */
+	/*int16_t*/float hAvrgElMotorPower;       /**< @brief Average measured motor power expressed in s16 digit (s16A x s16V). */
 
   float_t ConvFact;                /**< @brief Factor used to convert s16 digit average motor power values into Watts.
                                         Set to @f[\sqrt{3} \frac{V_{dd}}{R_{shunt} \times A_{op} \times 65536}@f]. */

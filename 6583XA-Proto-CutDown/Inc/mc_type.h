@@ -125,8 +125,8 @@ typedef union _FLOAT_U32_
   */
 typedef struct
 {
-  int16_t q;
-  int16_t d;
+  /*int16_t*/float q;
+  /*int16_t*/float d;
 } qd_t;
 
 /**
@@ -144,8 +144,8 @@ typedef struct
   */
 typedef struct
 {
-  int16_t a;
-  int16_t b;
+  /*int16_t*/float a;
+  /*int16_t*/float b;
 } ab_t;
 
 /**
@@ -162,8 +162,8 @@ typedef struct
   */
 typedef struct
 {
-  int16_t alpha;
-  int16_t beta;
+	/*int16_t*/float alpha;
+	/*int16_t*/float beta;
 } alphabeta_t;
 
 /* ACIM definitions start */
@@ -303,7 +303,7 @@ typedef struct
                                   *
                                   * @note This field does not exists if HSO is used.
                                   */
-  int16_t hTeref;               /**< @brief Reference torque.
+  /*int16_t*/float hTeref;               /**< @brief Reference torque.
                                   *
                                   * @note This field does not exists if HSO is used.
                                   */

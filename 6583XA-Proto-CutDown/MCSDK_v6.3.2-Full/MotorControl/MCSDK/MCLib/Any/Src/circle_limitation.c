@@ -73,20 +73,20 @@ __weak qd_t Circle_Limitation(const CircleLimitation_Handle_t *pHandle, qd_t Vqd
   {
 #endif
     int32_t maxModule;
-    int32_t square_q;
-    int32_t square_temp;
-    int32_t square_d;
-    int32_t square_sum;
-    int32_t square_limit;
+    /*int32_t*/float square_q;
+    /*int32_t*/float square_temp;
+    /*int32_t*/float square_d;
+    /*int32_t*/float square_sum;
+    /*int32_t*/float square_limit;
     int32_t vd_square_limit;
-    int32_t new_q;
-    int32_t new_d;
+    /*int32_t*/float new_q;
+    /*int32_t*/float new_d;
 
     maxModule = (int32_t)pHandle->MaxModule;
 
-    square_q = ((int32_t)(Vqd.q)) * Vqd.q;
-    square_d = ((int32_t)(Vqd.d)) * Vqd.d;
-    square_limit = maxModule * maxModule;
+    square_q = Vqd.q * Vqd.q;
+    square_d = Vqd.d * Vqd.d;
+    square_limit = (int32_t)(maxModule * maxModule);
     vd_square_limit = ((int32_t)pHandle->MaxVd) * ((int32_t)pHandle->MaxVd);
     square_sum = square_q + square_d;
 
@@ -138,8 +138,8 @@ __weak qd_t Circle_Limitation(const CircleLimitation_Handle_t *pHandle, qd_t Vqd
           /* Nothing to do */
         }
       }
-      local_vqd.q = (int16_t)new_q;
-      local_vqd.d = (int16_t)new_d;
+      local_vqd.q = new_q;
+      local_vqd.d = new_d;
     }
 #ifdef NULL_PTR_CHECK_CRC_LIM
   }

@@ -137,7 +137,7 @@ Trig_Components MCM_Trig_Functions(int16_t hAngle);
   * @param  Input int32_t number.
   * @retval int32_t Square root of Input (0 if Input<0).
   */
-int32_t MCM_Sqrt(int32_t wInput);
+/*int32_t*/float MCM_Sqrt(/*int32_t*/float wInput);
 
 /**
   * @brief  Sqrt table used by Circle Limitation function

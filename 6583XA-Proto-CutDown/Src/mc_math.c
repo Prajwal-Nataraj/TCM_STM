@@ -37,7 +37,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 
-#define divSQRT_3 (int32_t)0x49E6    /* 1/sqrt(3) in q1.15 format=0.5773315 */
+#define divSQRT_3 (float)0x49E6    /* 1/sqrt(3) in q1.15 format=0.5773315 */
 
 #if defined (CCMRAM)
 #if defined (__ICCARM__)
@@ -59,27 +59,27 @@ __weak alphabeta_t MCM_Clarke(ab_t Input)
 {
   alphabeta_t Output;
 
-  int32_t a_divSQRT3_tmp;
-  int32_t b_divSQRT3_tmp;
-  int32_t wbeta_tmp;
-  int16_t hbeta_tmp;
+  /*int32_t*/float a_divSQRT3_tmp;
+  /*int32_t*/float b_divSQRT3_tmp;
+  /*int32_t*/float wbeta_tmp;
+  /*int16_t*/float hbeta_tmp;
 
   /* qIalpha = qIas*/
   Output.alpha = Input.a;
 
-  a_divSQRT3_tmp = divSQRT_3 * ((int32_t)Input.a);
+  a_divSQRT3_tmp = divSQRT_3 * Input.a;
 
-  b_divSQRT3_tmp = divSQRT_3 * ((int32_t)Input.b);
+  b_divSQRT3_tmp = divSQRT_3 * Input.b;
 
   /* qIbeta = -(2*qIbs+qIas)/sqrt(3) */
-#ifndef FULL_MISRA_C_COMPLIANCY_MC_MATH
+#ifdef FULL_MISRA_C_COMPLIANCY_MC_MATH
   /* WARNING: the below instruction is not MISRA compliant, user should verify
     that Cortex-M3 assembly instruction ASR (arithmetic shift right) is used by
     the compiler to perform the shift (instead of LSR logical shift right) */
   //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
   wbeta_tmp = (-(a_divSQRT3_tmp) - (b_divSQRT3_tmp) - (b_divSQRT3_tmp)) >> 15;
 #else
-  wbeta_tmp = (-(a_divSQRT3_tmp) - (b_divSQRT3_tmp) - (b_divSQRT3_tmp)) / 32768;
+  wbeta_tmp = (-(a_divSQRT3_tmp) - (b_divSQRT3_tmp) - (b_divSQRT3_tmp)) / 32768.0;
 #endif
 
   /* Check saturation of Ibeta */
@@ -93,7 +93,7 @@ __weak alphabeta_t MCM_Clarke(ab_t Input)
   }
   else
   {
-    hbeta_tmp = ((int16_t)wbeta_tmp);
+    hbeta_tmp = (wbeta_tmp);
   }
 
   Output.beta = hbeta_tmp;
@@ -130,12 +130,12 @@ __attribute__( ( section ( ".ccmram" ) ) )
 __weak qd_t MCM_Park(alphabeta_t Input, int16_t Theta)
 {
   qd_t Output;
-  int32_t d_tmp_1;
-  int32_t d_tmp_2;
-  int32_t q_tmp_1;
-  int32_t q_tmp_2;
-  int32_t wqd_tmp;
-  int16_t hqd_tmp;
+  /*int32_t*/float d_tmp_1;
+  /*int32_t*/float d_tmp_2;
+  /*int32_t*/float q_tmp_1;
+  /*int32_t*/float q_tmp_2;
+  /*int32_t*/float wqd_tmp;
+  /*int16_t*/float hqd_tmp;
   Trig_Components Local_Vector_Components;
 
   Local_Vector_Components = MCM_Trig_Functions(Theta);
@@ -147,13 +147,13 @@ __weak qd_t MCM_Park(alphabeta_t Input, int16_t Theta)
   q_tmp_2 = Input.beta * ((int32_t)Local_Vector_Components.hSin);
 
   /* Iq component in Q1.15 Format */
-#ifndef FULL_MISRA_C_COMPLIANCY_MC_MATH
+#ifdef FULL_MISRA_C_COMPLIANCY_MC_MATH
   /* WARNING: the below instruction is not MISRA compliant, user should verify
     that Cortex-M3 assembly instruction ASR (arithmetic shift right) is used by
     the compiler to perform the shift (instead of LSR logical shift right) */
   wqd_tmp = (q_tmp_1 - q_tmp_2) >> 15; //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
 #else
-  wqd_tmp = (q_tmp_1 - q_tmp_2) / 32768;
+  wqd_tmp = (q_tmp_1 - q_tmp_2) / 32768.0;
 #endif
 
   /* Check saturation of Iq */
@@ -167,7 +167,7 @@ __weak qd_t MCM_Park(alphabeta_t Input, int16_t Theta)
   }
   else
   {
-    hqd_tmp = ((int16_t)wqd_tmp);
+    hqd_tmp = (wqd_tmp);
   }
 
   Output.q = hqd_tmp;
@@ -188,13 +188,13 @@ __weak qd_t MCM_Park(alphabeta_t Input, int16_t Theta)
   d_tmp_2 = Input.beta * ((int32_t )Local_Vector_Components.hCos);
 
   /* Id component in Q1.15 Format */
-#ifndef FULL_MISRA_C_COMPLIANCY_MC_MATH
+#ifdef FULL_MISRA_C_COMPLIANCY_MC_MATH
   /* WARNING: the below instruction is not MISRA compliant, user should verify
     that Cortex-M3 assembly instruction ASR (arithmetic shift right) is used by
     the compiler to perform the shift (instead of LSR logical shift right) */
   wqd_tmp = (d_tmp_1 + d_tmp_2) >> 15; //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
 #else
-  wqd_tmp = (d_tmp_1 + d_tmp_2) / 32768;
+  wqd_tmp = (d_tmp_1 + d_tmp_2) / 32768.0;
 #endif
 
   /* Check saturation of Id */
@@ -208,7 +208,7 @@ __weak qd_t MCM_Park(alphabeta_t Input, int16_t Theta)
   }
   else
   {
-    hqd_tmp = ((int16_t)wqd_tmp);
+    hqd_tmp = (wqd_tmp);
   }
 
   Output.d = hqd_tmp;
@@ -244,10 +244,10 @@ __attribute__( ( section ( ".ccmram" ) ) )
   */
 __weak alphabeta_t MCM_Rev_Park(qd_t Input, int16_t Theta)
 {
-  int32_t alpha_tmp1;
-  int32_t alpha_tmp2;
-  int32_t beta_tmp1;
-  int32_t beta_tmp2;
+  /*int32_t*/float alpha_tmp1;
+  /*int32_t*/float alpha_tmp2;
+  /*int32_t*/float beta_tmp1;
+  /*int32_t*/float beta_tmp2;
   Trig_Components Local_Vector_Components;
   alphabeta_t Output;
 
@@ -257,27 +257,27 @@ __weak alphabeta_t MCM_Rev_Park(qd_t Input, int16_t Theta)
   alpha_tmp1 = Input.q * ((int32_t)Local_Vector_Components.hCos);
   alpha_tmp2 = Input.d * ((int32_t)Local_Vector_Components.hSin);
 
-#ifndef FULL_MISRA_C_COMPLIANCY_MC_MATH
+#ifdef FULL_MISRA_C_COMPLIANCY_MC_MATH
   /* WARNING: the below instruction is not MISRA compliant, user should verify
     that Cortex-M3 assembly instruction ASR (arithmetic shift right) is used by
     the compiler to perform the shift (instead of LSR logical shift right) */
   //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
   Output.alpha = (int16_t)(((alpha_tmp1) + (alpha_tmp2)) >> 15);
 #else
-  Output.alpha = (int16_t)(((alpha_tmp1) + (alpha_tmp2)) / 32768);
+  Output.alpha = (((alpha_tmp1) + (alpha_tmp2)) / 32768.0);
 #endif
 
   beta_tmp1 = Input.q * ((int32_t)Local_Vector_Components.hSin);
   beta_tmp2 = Input.d * ((int32_t)Local_Vector_Components.hCos);
 
-#ifndef FULL_MISRA_C_COMPLIANCY_MC_MATH
+#ifdef FULL_MISRA_C_COMPLIANCY_MC_MATH
   /* WARNING: the below instruction is not MISRA compliant, user should verify
   that Cortex-M3 assembly instruction ASR (arithmetic shift right) is used by
   the compiler to perform the shift (instead of LSR logical shift right) */
   //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
   Output.beta = (int16_t)((beta_tmp2 - beta_tmp1) >> 15);
 #else
-  Output.beta = (int16_t)((beta_tmp2 - beta_tmp1) / 32768);
+  Output.beta = ((beta_tmp2 - beta_tmp1) / 32768.0);
 #endif
 
   return (Output);
@@ -340,25 +340,25 @@ __attribute__( ( section ( ".ccmram" ) ) )
   * @param  Input int32_t number.
   * @retval int32_t Square root of Input (0 if Input<0).
   */
-__weak int32_t MCM_Sqrt(int32_t wInput)
+__weak /*int32_t*/float MCM_Sqrt(/*int32_t*/float wInput)
 {
-  int32_t wtemprootnew;
+	/*int32_t*/float wtemprootnew;
 
   if (wInput > 0)
   {
-    uint32_t retVal;
+	  /*uint32_t*/float retVal;
     /* Disable Irq as sqrt is used in MF and HF task */
     __disable_irq();
     /* Configure CORDIC */
     WRITE_REG(CORDIC->CSR, CORDIC_CONFIG_SQRT);
     LL_CORDIC_WriteData(CORDIC, ((uint32_t)wInput));
     /* Read sqrt and return */
-#ifndef FULL_MISRA_C_COMPLIANCY_MC_MATH
+#ifdef FULL_MISRA_C_COMPLIANCY_MC_MATH
     retVal = (LL_CORDIC_ReadData(CORDIC)) >> 15; //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
 #else
-    retVal = (LL_CORDIC_ReadData(CORDIC)) / 32768U;
+    retVal = ((float)LL_CORDIC_ReadData(CORDIC)) / 32768.0;
 #endif
-    wtemprootnew = (int32_t)retVal;
+    wtemprootnew = retVal;
     __enable_irq();
 
   }

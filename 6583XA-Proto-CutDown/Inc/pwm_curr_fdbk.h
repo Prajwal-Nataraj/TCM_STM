@@ -42,7 +42,7 @@ extern "C" {
   *
   * See function PWMC_CalcPhaseCurrentsEst
   */
-#define SQRT3FACTOR ((uint16_t)0xDDB4) /* = (16384 * 1.732051 * 2)*/
+#define SQRT3FACTOR ((float)0xDDB4) /* = (16384 * 1.732051 * 2)*/
 
 /** @addtogroup MCSDK
   * @{

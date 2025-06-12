@@ -491,7 +491,7 @@ void PWMC_CalcPhaseCurrentsEst(PWMC_Handle_t *pHandle, qd_t Iqd, int16_t hElAngl
 #endif
     qd_t idq_ave;
     alphabeta_t ialpha_beta;
-    int32_t temp1, temp2;
+    /*int32_t*/float temp1, temp2;
 
     idq_ave.q = (int16_t)PWMC_LowPassFilter(Iqd.q, &(pHandle->LPFIqBuf), pHandle->LPFIqd_const);
     idq_ave.d = (int16_t)PWMC_LowPassFilter(Iqd.d, &(pHandle->LPFIdBuf), pHandle->LPFIqd_const);
@@ -504,18 +504,18 @@ void PWMC_CalcPhaseCurrentsEst(PWMC_Handle_t *pHandle, qd_t Iqd, int16_t hElAngl
     pHandle->IaEst = ialpha_beta.alpha;
 
     temp1 = - ialpha_beta.alpha;
-#ifndef FULL_MISRA_C_COMPLIANCY_PWM_CURR
+#ifdef FULL_MISRA_C_COMPLIANCY_PWM_CURR
     //cstat !MISRAC2012-Rule-1.3_n !ATH-shift-neg !MISRAC2012-Rule-10.1_R6
     temp2 = (int32_t)(ialpha_beta.beta) * ((int32_t)SQRT3FACTOR >> 15);
 #else
-    temp2 = (int32_t)(ialpha_beta.beta) * (int32_t)SQRT3FACTOR / 32768;
+    temp2 = (ialpha_beta.beta) * (SQRT3FACTOR / 32768.0);
 #endif
 
     /* Ib */
-    pHandle->IbEst = (int16_t)(temp1 - temp2)/2;
+    pHandle->IbEst = (int16_t)((temp1 - temp2)/2.0);
 
     /* Ic */
-    pHandle->IcEst = (int16_t)(temp1 + temp2)/2;
+    pHandle->IcEst = (int16_t)(temp1 + temp2)/2.0;
 #ifdef NULL_PTR_CHECK_PWR_CUR_FDB
   }
 #endif

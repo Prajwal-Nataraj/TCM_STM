@@ -10,6 +10,7 @@
 
 #define GEAR_RATIO			6.0f
 #define MM_PER_THREAD		5.08f
+#define SPEED_ADJ_FACT		0.998213f
 
 extern UART_HandleTypeDef huart_MD;
 
@@ -161,7 +162,7 @@ bool Motor_Start(void)
 	float adjSpeed = 0;
 
 	Motor.newSpeedRPM = mmpm_to_rpm(Motor.newSpeedMMPM);						// mm/min in UP or DOWN to +RPM or -RPM
-	adjSpeed = 1.0 * Motor.newSpeedRPM;										// Adjusted Speed
+	adjSpeed = SPEED_ADJ_FACT * Motor.newSpeedRPM;								// Adjusted Speed
 
 	rampTime = Motor_CalcRampTimeMs(ACCEL, Motor.newSpeedRPM);
 	rampTime = (rampTime < 50) ? 50 : rampTime;									// always keep rampTime > 0

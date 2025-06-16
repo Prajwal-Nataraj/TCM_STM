@@ -179,7 +179,14 @@ bool Motor_Start(void)
 bool Motor_Stop(void)
 {
 	rampTime = Motor_CalcRampTimeMs(DECEL, 0);
-	rampTime = (rampTime < 50) ? 50 : rampTime;									// always keep rampTime >= 50
+	if(Motor.currentSpeedMMPM <= 200)
+		rampTime = (rampTime < 50) ? 50 : rampTime;
+	else
+	{
+		uint16_t rampTimeLimit = 0;
+		rampTimeLimit = (uint16_t)(Motor.currentSpeedMMPM / 4);
+		rampTime = (rampTime < rampTimeLimit) ? rampTimeLimit : rampTime;
+	}
 
 	MCI_ExecSpeedRamp(pMCI[M1], 0, rampTime);
 
@@ -192,7 +199,12 @@ bool Motor_Stop(void)
 /* Critical Stop (max Deceleration) */
 bool Motor_CriticalStop(void)
 {
-	MCI_ExecSpeedRamp(pMCI[M1], 0, 50);
+	if(Motor.currentSpeedMMPM <= 200)
+		MCI_ExecSpeedRamp(pMCI[M1], 0, 50);
+
+	else
+		MCI_ExecSpeedRamp(pMCI[M1], 0, (uint16_t)(Motor.currentSpeedMMPM / 4));
+
 	Motor.currentSpeedMMPM = 0;
 	Motor.currentSpeedRPM = 0;
 

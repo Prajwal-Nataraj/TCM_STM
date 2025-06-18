@@ -482,7 +482,7 @@ __weak /*int32_t*/float STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle
 
       pHandle->SpeedRefUnitExt = wCurrentReference;
 //      pHandle->TorqueRef = ((int32_t)hTorqueReference) * 65536;
-      pHandle->TorqueRef = (int32_t)(hTorqueReference * 65536.0);
+      pHandle->TorqueRef = (hTorqueReference * 65536.0);
     }
     else
     {

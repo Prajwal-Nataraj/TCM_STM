@@ -43,6 +43,7 @@ extern "C" {
   * See function PWMC_CalcPhaseCurrentsEst
   */
 #define SQRT3FACTOR ((float)0xDDB4) /* = (16384 * 1.732051 * 2)*/
+#define CURR_FACTOR 0.8f
 
 /** @addtogroup MCSDK
   * @{
@@ -198,12 +199,12 @@ struct PWMC_Handle
   uint16_t  HighDutyStored;                            /**< Discontinuous PWM Store current Highest Duty for recovering.  */
   uint16_t  OffCalibrWaitTimeCounter;                  /**< Counter to wait fixed time before motor
                                                             current measurement offset calibration. */
-  int16_t   Ia;                                        /**< Last @f$I_{a}@f$ measurement. */
-  int16_t   Ib;                                        /**< Last @f$I_{b}@f$ measurement. */
-  int16_t   Ic;                                        /**< Last @f$I_{c}@f$ measurement. */
-  int16_t   IaEst;                           /**< Estimated @f$I_{a}@f$ based on averaged @f$ I_q @f$,@f$ I_d @f$ values and used when @f$I_{a}@f$ current is not available. */
-  int16_t   IbEst;                           /**< Estimated @f$I_{b}@f$ based on averaged @f$ I_q @f$,@f$ I_d @f$ values and used when @f$I_{b}@f$ current is not available. */
-  int16_t   IcEst;                           /**< Estimated @f$I_{c}@f$ based on averaged @f$ I_q @f$,@f$ I_d @f$ values and used when @f$I_{c}@f$ current is not available. */
+  /*int16_t*/float   Ia;                                        /**< Last @f$I_{a}@f$ measurement. */
+  /*int16_t*/float   Ib;                                        /**< Last @f$I_{b}@f$ measurement. */
+  /*int16_t*/float   Ic;                                        /**< Last @f$I_{c}@f$ measurement. */
+  /*int16_t*/float   IaEst;                           /**< Estimated @f$I_{a}@f$ based on averaged @f$ I_q @f$,@f$ I_d @f$ values and used when @f$I_{a}@f$ current is not available. */
+  /*int16_t*/float   IbEst;                           /**< Estimated @f$I_{b}@f$ based on averaged @f$ I_q @f$,@f$ I_d @f$ values and used when @f$I_{b}@f$ current is not available. */
+  /*int16_t*/float   IcEst;                           /**< Estimated @f$I_{c}@f$ based on averaged @f$ I_q @f$,@f$ I_d @f$ values and used when @f$I_{c}@f$ current is not available. */
   int16_t   LPFIqd_const;                              /**< Low pass filter constant (averaging coeficient). */
   uint16_t PWMperiod;                                  /**< PWM period expressed in timer clock cycles unit:
                                                          *  @f$hPWMPeriod = TimerFreq_{CLK} / F_{PWM}@f$    */

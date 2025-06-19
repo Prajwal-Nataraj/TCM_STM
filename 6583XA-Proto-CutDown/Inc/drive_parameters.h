@@ -56,10 +56,10 @@
 
 /* Gains values for torque and flux control loops */
 #define PID_TORQUE_KP_DEFAULT               8192
-#define PID_TORQUE_KI_DEFAULT               2048
+#define PID_TORQUE_KI_DEFAULT               2000
 #define PID_TORQUE_KD_DEFAULT               100
 #define PID_FLUX_KP_DEFAULT                 8192
-#define PID_FLUX_KI_DEFAULT                 2048
+#define PID_FLUX_KI_DEFAULT                 2000
 #define PID_FLUX_KD_DEFAULT                 100
 
 /* Torque/Flux control loop gains dividers*/
@@ -71,8 +71,8 @@
 #define TF_KDDIV_LOG                        LOG2((8192))
 #define TFDIFFERENTIAL_TERM_ENABLING        DISABLE
 
-#define PID_SPEED_KP_DEFAULT                28800/(SPEED_UNIT/10) /* Workbench compute the gain for 01Hz unit*/
-#define PID_SPEED_KI_DEFAULT                3360/(SPEED_UNIT/10) /* Workbench compute the gain for 01Hz unit*/
+#define PID_SPEED_KP_DEFAULT                23000/(SPEED_UNIT/10) /* Workbench compute the gain for 01Hz unit*/
+#define PID_SPEED_KI_DEFAULT                3350/(SPEED_UNIT/10) /* Workbench compute the gain for 01Hz unit*/
 #define PID_SPEED_KD_DEFAULT                0/(SPEED_UNIT/10) /* Workbench compute the gain for 01Hz unit*/
 
 /* Speed control loop */

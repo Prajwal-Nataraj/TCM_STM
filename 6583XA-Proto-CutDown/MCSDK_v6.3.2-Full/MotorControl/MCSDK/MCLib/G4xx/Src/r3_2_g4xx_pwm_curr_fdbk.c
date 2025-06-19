@@ -576,7 +576,7 @@ __weak void R3_2_GetPhaseCurrents(PWMC_Handle_t *pHdl, ab_t *Iab)
   else
   {
 #endif
-    int32_t Aux;
+	  /*int32_t*/float Aux;
     uint32_t ADCDataReg1;
     uint32_t ADCDataReg2;
     PWMC_R3_2_Handle_t *pHandle = (PWMC_R3_2_Handle_t *)pHdl;  //cstat !MISRAC2012-Rule-11.3
@@ -611,7 +611,7 @@ __weak void R3_2_GetPhaseCurrents(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->a = (int16_t)Aux;
+          Iab->a = Aux;
         }
 
         /* Ib = PhaseBOffset - ADC converted value) */
@@ -628,7 +628,7 @@ __weak void R3_2_GetPhaseCurrents(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->b = (int16_t)Aux;
+          Iab->b = Aux;
         }
         break;
       }
@@ -651,12 +651,12 @@ __weak void R3_2_GetPhaseCurrents(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->b = (int16_t)Aux;
+          Iab->b = Aux;
         }
 
         /* Ia = -Ic -Ib */
         Aux = (int32_t)(ADCDataReg2) - (int32_t)(pHandle->PhaseCOffset); /* -Ic */
-        Aux -= (int32_t)Iab->b;             /* Ia  */
+        Aux -= Iab->b;             /* Ia  */
 
         /* Saturation of Ia */
         if (Aux > INT16_MAX)
@@ -669,7 +669,7 @@ __weak void R3_2_GetPhaseCurrents(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->a = (int16_t)Aux;
+          Iab->a = Aux;
         }
         break;
       }
@@ -692,12 +692,12 @@ __weak void R3_2_GetPhaseCurrents(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->a = (int16_t)Aux;
+          Iab->a = Aux;
         }
 
         /* Ib = -Ic -Ia */
         Aux = (int32_t)(ADCDataReg2) - (int32_t)(pHandle->PhaseCOffset); /* -Ic */
-        Aux -= (int32_t)Iab->a;             /* Ib */
+        Aux -= Iab->a;             /* Ib */
 
         /* Saturation of Ib */
         if (Aux > INT16_MAX)
@@ -710,7 +710,7 @@ __weak void R3_2_GetPhaseCurrents(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->b = (int16_t)Aux;
+          Iab->b = Aux;
         }
         break;
       }
@@ -718,6 +718,9 @@ __weak void R3_2_GetPhaseCurrents(PWMC_Handle_t *pHdl, ab_t *Iab)
       default:
         break;
     }
+
+    Iab->a *= CURR_FACTOR;
+    Iab->b *= CURR_FACTOR;
 
     pHandle->_Super.Ia = Iab->a;
     pHandle->_Super.Ib = Iab->b;
@@ -751,7 +754,7 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
     PWMC_R3_2_Handle_t *pHandle = (PWMC_R3_2_Handle_t *)pHdl; //cstat !MISRAC2012-Rule-11.3
     TIM_TypeDef *TIMx = pHandle->pParams_str->TIMx;
 
-    int32_t Aux;
+    /*int32_t*/float Aux;
     uint32_t ADCDataReg1;
     uint32_t ADCDataReg2;
     uint8_t Sector;
@@ -782,13 +785,13 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->a = (int16_t)Aux;
+          Iab->a = Aux;
         }
 
         if (true == pHandle->_Super.useEstCurrent)
         {
           // Ib not available, use estimated Ib
-          Aux = (int32_t)(pHandle->_Super.IbEst);
+          Aux = (pHandle->_Super.IbEst);
         }
         else
         {
@@ -807,7 +810,7 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->b = (int16_t)Aux;
+          Iab->b = Aux;
         }
         break;
       }
@@ -819,7 +822,7 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         if (true == pHandle->_Super.useEstCurrent)
         {
           /* Ia not available, use estimated Ia */
-          Aux = (int32_t)(pHandle->_Super.IaEst);
+          Aux = (pHandle->_Super.IaEst);
         }
         else
         {
@@ -837,7 +840,7 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->a = (int16_t)Aux;
+          Iab->a = Aux;
         }
 
         /* Ib = PhaseBOffset - ADC converted value) */
@@ -854,7 +857,7 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->b = (int16_t)Aux;
+          Iab->b = Aux;
         }
         break;
       }
@@ -876,19 +879,19 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->b = (int16_t)Aux;
+          Iab->b = Aux;
         }
 
         if (pHandle->_Super.useEstCurrent == true)
         {
-          Aux = (int32_t) pHandle->_Super.IcEst ;  /* -Ic */
-          Aux -= (int32_t)Iab->b;
+          Aux = pHandle->_Super.IcEst ;  /* -Ic */
+          Aux -= Iab->b;
         }
         else
         {
           /* Ia = -Ic -Ib */
           Aux = (int32_t)(ADCDataReg2) - (int32_t)(pHandle->PhaseCOffset); /* -Ic */
-          Aux -= (int32_t)Iab->b;             /* Ia  */
+          Aux -= Iab->b;             /* Ia  */
         }
         /* Saturation of Ia */
         if (Aux > INT16_MAX)
@@ -901,7 +904,7 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->a = (int16_t)Aux;
+          Iab->a = Aux;
         }
         break;
       }
@@ -912,7 +915,7 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         /* Ib = PhaseBOffset - ADC converted value) */
         if (true == pHandle->_Super.useEstCurrent)
         {
-          Aux = (int32_t) pHandle->_Super.IbEst;
+          Aux = pHandle->_Super.IbEst;
         }
         else
         {
@@ -929,12 +932,12 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->b = (int16_t)Aux;
+          Iab->b = Aux;
         }
 
         /* Ia = -Ic -Ib */
         Aux = ((int32_t)ADCDataReg2) - ((int32_t)pHandle->PhaseCOffset); /* -Ic */
-        Aux -= (int32_t)Iab->b;             /* Ia  */
+        Aux -= Iab->b;             /* Ia  */
 
         /* Saturation of Ia */
         if (Aux > INT16_MAX)
@@ -947,7 +950,7 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->a = (int16_t)Aux;
+          Iab->a = Aux;
         }
         break;
       }
@@ -958,7 +961,7 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         /* Ia = PhaseAOffset - ADC converted value) */
         if (true == pHandle->_Super.useEstCurrent)
         {
-          Aux = (int32_t)pHandle->_Super.IaEst;
+          Aux = pHandle->_Super.IaEst;
         }
         else
         {
@@ -975,12 +978,12 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->a = (int16_t)Aux;
+          Iab->a = Aux;
         }
 
         /* Ib = -Ic -Ia */
         Aux = ((int32_t)ADCDataReg2) - ((int32_t)pHandle->PhaseCOffset); /* -Ic */
-        Aux -= (int32_t)Iab->a;             /* Ib */
+        Aux -= Iab->a;             /* Ib */
 
         /* Saturation of Ib */
         if (Aux > INT16_MAX)
@@ -993,7 +996,7 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->b = (int16_t)Aux;
+          Iab->b = Aux;
         }
         break;
       }
@@ -1015,20 +1018,20 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->a = (int16_t)Aux;
+          Iab->a = Aux;
         }
 
         if (pHandle->_Super.useEstCurrent == true)
         {
           /* Ib = -Ic -Ia */
-          Aux = (int32_t)pHandle->_Super.IcEst; /* -Ic */
-          Aux -= (int32_t)Iab->a;             /* Ib */
+          Aux = pHandle->_Super.IcEst; /* -Ic */
+          Aux -= Iab->a;             /* Ib */
         }
         else
         {
           /* Ib = -Ic -Ia */
           Aux = ((int32_t)ADCDataReg2) - ((int32_t)pHandle->PhaseCOffset); /* -Ic */
-          Aux -= (int32_t)Iab->a;             /* Ib */
+          Aux -= Iab->a;             /* Ib */
         }
 
         /* Saturation of Ib */
@@ -1042,7 +1045,7 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         }
         else
         {
-          Iab->b = (int16_t)Aux;
+          Iab->b = Aux;
         }
         break;
       }
@@ -1050,6 +1053,9 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
       default:
         break;
     }
+
+    Iab->a *= CURR_FACTOR;
+	Iab->b *= CURR_FACTOR;
 
     pHandle->_Super.Ia = Iab->a;
     pHandle->_Super.Ib = Iab->b;

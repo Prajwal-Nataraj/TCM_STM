@@ -164,21 +164,21 @@ __weak uint16_t PWMC_SetPhaseVoltage(PWMC_Handle_t *pHandle, alphabeta_t Valfa_b
   else
   {
 #endif
-    int32_t wX;
-    int32_t wY;
-    int32_t wZ;
-    int32_t wUAlpha;
-    int32_t wUBeta;
-    int32_t wTimePhA;
-    int32_t wTimePhB;
-    int32_t wTimePhC;
+	/*int32_t*/float wX;
+	/*int32_t*/float wY;
+	/*int32_t*/float wZ;
+	/*int32_t*/float wUAlpha;
+	/*int32_t*/float wUBeta;
+	/*int32_t*/float wTimePhA;
+	/*int32_t*/float wTimePhB;
+	/*int32_t*/float wTimePhC;
 
     wUAlpha = Valfa_beta.alpha * (int32_t)pHandle->hT_Sqrt3;
-    wUBeta = -(Valfa_beta.beta * ((int32_t)pHandle->PWMperiod)) * 2;
+    wUBeta = -(Valfa_beta.beta * ((int32_t)pHandle->PWMperiod)) * 2.0;
 
     wX = wUBeta;
-    wY = (wUBeta + wUAlpha) / 2;
-    wZ = (wUBeta - wUAlpha) / 2;
+    wY = (wUBeta + wUAlpha) / 2.0;
+    wZ = (wUBeta - wUAlpha) / 2.0;
 
     /* Sector calculation from wX, wY, wZ */
     if (wY < 0)
@@ -186,9 +186,9 @@ __weak uint16_t PWMC_SetPhaseVoltage(PWMC_Handle_t *pHandle, alphabeta_t Valfa_b
       if (wZ < 0)
       {
         pHandle->Sector = SECTOR_5;
-        wTimePhA = (((int32_t)pHandle->PWMperiod) / 4) + ((wY - wZ) / (int32_t)262144);
-        wTimePhB = wTimePhA + (wZ / 131072);
-        wTimePhC = wTimePhA - (wY / 131072) ;
+        wTimePhA = (((int32_t)pHandle->PWMperiod) / 4.0) + ((wY - wZ) / 262144.0);
+        wTimePhB = wTimePhA + (wZ / 131072.0);
+        wTimePhC = wTimePhA - (wY / 131072.0) ;
 
         if(true == pHandle->SingleShuntTopology)
         {
@@ -207,9 +207,9 @@ __weak uint16_t PWMC_SetPhaseVoltage(PWMC_Handle_t *pHandle, alphabeta_t Valfa_b
         if (wX <= 0)
         {
           pHandle->Sector = SECTOR_4;
-          wTimePhA = (((int32_t)pHandle->PWMperiod) / 4) + ((wX - wZ) / (int32_t)262144);
-          wTimePhB = wTimePhA + (wZ / 131072);
-          wTimePhC = wTimePhB - (wX / 131072);
+          wTimePhA = (((int32_t)pHandle->PWMperiod) / 4.0) + ((wX - wZ) / 262144.0);
+          wTimePhB = wTimePhA + (wZ / 131072.0);
+          wTimePhC = wTimePhB - (wX / 131072.0);
 
           if(true == pHandle->SingleShuntTopology)
           {
@@ -227,9 +227,9 @@ __weak uint16_t PWMC_SetPhaseVoltage(PWMC_Handle_t *pHandle, alphabeta_t Valfa_b
         else /* wX > 0 */
         {
           pHandle->Sector = SECTOR_3;
-          wTimePhA = (((int32_t )pHandle->PWMperiod) / 4)+ ((wY - wX) / (int32_t)262144);
-          wTimePhC = wTimePhA - (wY / 131072);
-          wTimePhB = wTimePhC + (wX / 131072);
+          wTimePhA = (((int32_t )pHandle->PWMperiod) / 4.0)+ ((wY - wX) / 262144.0);
+          wTimePhC = wTimePhA - (wY / 131072.0);
+          wTimePhB = wTimePhC + (wX / 131072.0);
 
           if(true == pHandle->SingleShuntTopology)
           {
@@ -250,9 +250,9 @@ __weak uint16_t PWMC_SetPhaseVoltage(PWMC_Handle_t *pHandle, alphabeta_t Valfa_b
       if (wZ >= 0)
       {
         pHandle->Sector = SECTOR_2;
-        wTimePhA = (((int32_t)pHandle->PWMperiod) / 4) + ((wY - wZ) / (int32_t)262144);
-        wTimePhB = wTimePhA + (wZ / 131072);
-        wTimePhC = wTimePhA - (wY / 131072);
+        wTimePhA = (((int32_t)pHandle->PWMperiod) / 4.0) + ((wY - wZ) / 262144.0);
+        wTimePhB = wTimePhA + (wZ / 131072.0);
+        wTimePhC = wTimePhA - (wY / 131072.0);
 
         if(true == pHandle->SingleShuntTopology)
         {
@@ -271,9 +271,9 @@ __weak uint16_t PWMC_SetPhaseVoltage(PWMC_Handle_t *pHandle, alphabeta_t Valfa_b
         if ( wX <= 0 )
         {
           pHandle->Sector = SECTOR_6;
-          wTimePhA = (((int32_t )pHandle->PWMperiod) / 4) + ((wY - wX) / (int32_t)262144);
-          wTimePhC = wTimePhA - (wY / 131072);
-          wTimePhB = wTimePhC + (wX / 131072);
+          wTimePhA = (((int32_t )pHandle->PWMperiod) / 4.0) + ((wY - wX) / 262144.0);
+          wTimePhC = wTimePhA - (wY / 131072.0);
+          wTimePhB = wTimePhC + (wX / 131072.0);
 
           if(true == pHandle->SingleShuntTopology)
           {
@@ -291,9 +291,9 @@ __weak uint16_t PWMC_SetPhaseVoltage(PWMC_Handle_t *pHandle, alphabeta_t Valfa_b
         else /* wX > 0 */
         {
           pHandle->Sector = SECTOR_1;
-          wTimePhA = (((int32_t)pHandle->PWMperiod) / 4)+ ((wX - wZ) / (int32_t)262144);
-          wTimePhB = wTimePhA + (wZ / 131072);
-          wTimePhC = wTimePhB - (wX / 131072);
+          wTimePhA = (((int32_t)pHandle->PWMperiod) / 4.0)+ ((wX - wZ) / 262144.0);
+          wTimePhB = wTimePhA + (wZ / 131072.0);
+          wTimePhC = wTimePhB - (wX / 131072.0);
 
           if((pHandle->DPWM_Mode == true) || (pHandle->SingleShuntTopology == true))
           {
@@ -501,7 +501,7 @@ void PWMC_CalcPhaseCurrentsEst(PWMC_Handle_t *pHandle, qd_t Iqd, int16_t hElAngl
     /* Reverse Clarke */
 
     /*Ia*/
-    pHandle->IaEst = ialpha_beta.alpha;
+    pHandle->IaEst = ialpha_beta.alpha * CURR_FACTOR;
 
     temp1 = - ialpha_beta.alpha;
 #ifdef FULL_MISRA_C_COMPLIANCY_PWM_CURR
@@ -512,10 +512,10 @@ void PWMC_CalcPhaseCurrentsEst(PWMC_Handle_t *pHandle, qd_t Iqd, int16_t hElAngl
 #endif
 
     /* Ib */
-    pHandle->IbEst = (int16_t)((temp1 - temp2)/2.0);
+    pHandle->IbEst = ((temp1 - temp2)/2.0) * CURR_FACTOR;
 
     /* Ic */
-    pHandle->IcEst = (int16_t)(temp1 + temp2)/2.0;
+    pHandle->IcEst = ((temp1 + temp2)/2.0) * CURR_FACTOR;
 #ifdef NULL_PTR_CHECK_PWR_CUR_FDB
   }
 #endif

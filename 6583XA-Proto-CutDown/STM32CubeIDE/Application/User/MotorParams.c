@@ -10,7 +10,7 @@
 
 #define GEAR_RATIO			6.0f
 #define MM_PER_THREAD		5.08f
-#define SPEED_ADJ_FACT		0.998213f
+#define SPEED_ADJ_FACT		0.997813f
 
 extern UART_HandleTypeDef huart_MD;
 

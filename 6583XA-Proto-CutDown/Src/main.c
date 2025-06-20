@@ -140,6 +140,7 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM4_Init();
   MX_USART1_UART_Init();
+  SetCurrentFactor(0.8f);
   MX_MotorControl_Init();
 
   /* Initialize interrupts */
@@ -148,8 +149,6 @@ int main(void)
     uint8_t CmdBuf[CMDBUF_SIZE] = {0};
     uint8_t RspBuf[RSPBUF_SIZE] = {0};
     uint32_t RspLen = 0;
-
-//  	float mm_min_send = 0.0;
 
     StdReturn_t stdRet;
     HAL_UART_Transmit(&huart_MD, (uint8_t *)"Welcome to TCM Motor Drive", 28, UART_TIMEOUT);

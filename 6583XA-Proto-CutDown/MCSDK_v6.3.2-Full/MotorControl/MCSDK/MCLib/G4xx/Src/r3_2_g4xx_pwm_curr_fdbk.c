@@ -33,6 +33,7 @@
 #include "r3_2_g4xx_pwm_curr_fdbk.h"
 #include "pwm_common.h"
 #include "mc_type.h"
+#include "MotorParams.h"
 
 /** @addtogroup MCSDK
   * @{
@@ -719,8 +720,8 @@ __weak void R3_2_GetPhaseCurrents(PWMC_Handle_t *pHdl, ab_t *Iab)
         break;
     }
 
-    Iab->a *= CURR_FACTOR;
-    Iab->b *= CURR_FACTOR;
+    Iab->a *= GetCurrentFactor();
+    Iab->b *= GetCurrentFactor();
 
     pHandle->_Super.Ia = Iab->a;
     pHandle->_Super.Ib = Iab->b;
@@ -1054,8 +1055,8 @@ __weak void R3_2_GetPhaseCurrents_OVM(PWMC_Handle_t *pHdl, ab_t *Iab)
         break;
     }
 
-    Iab->a *= CURR_FACTOR;
-	Iab->b *= CURR_FACTOR;
+    Iab->a *= GetCurrentFactor();
+	Iab->b *= GetCurrentFactor();
 
     pHandle->_Super.Ia = Iab->a;
     pHandle->_Super.Ib = Iab->b;

@@ -28,6 +28,7 @@
 #include "pwm_curr_fdbk.h"
 #include "mc_math.h"
 #include "mc_type.h"
+#include "MotorParams.h"
 
 /** @addtogroup MCSDK
   * @{
@@ -501,7 +502,7 @@ void PWMC_CalcPhaseCurrentsEst(PWMC_Handle_t *pHandle, qd_t Iqd, int16_t hElAngl
     /* Reverse Clarke */
 
     /*Ia*/
-    pHandle->IaEst = ialpha_beta.alpha * CURR_FACTOR;
+    pHandle->IaEst = ialpha_beta.alpha * GetCurrentFactor();
 
     temp1 = - ialpha_beta.alpha;
 #ifdef FULL_MISRA_C_COMPLIANCY_PWM_CURR
@@ -512,10 +513,10 @@ void PWMC_CalcPhaseCurrentsEst(PWMC_Handle_t *pHandle, qd_t Iqd, int16_t hElAngl
 #endif
 
     /* Ib */
-    pHandle->IbEst = ((temp1 - temp2)/2.0) * CURR_FACTOR;
+    pHandle->IbEst = ((temp1 - temp2)/2.0) * GetCurrentFactor();
 
     /* Ic */
-    pHandle->IcEst = ((temp1 + temp2)/2.0) * CURR_FACTOR;
+    pHandle->IcEst = ((temp1 + temp2)/2.0) * GetCurrentFactor();
 #ifdef NULL_PTR_CHECK_PWR_CUR_FDB
   }
 #endif

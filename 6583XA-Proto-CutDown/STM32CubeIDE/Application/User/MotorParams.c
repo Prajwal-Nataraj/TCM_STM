@@ -24,6 +24,17 @@ bool Motor_Init(void)
 	return Motor_ResetParams();
 }
 
+/* Set the Current Factor */
+void SetCurrentFactor(float currFact)
+{
+	Motor.currFactor = currFact;
+}
+/* Get the Current Factor */
+float GetCurrentFactor(void)
+{
+	return Motor.currFactor;
+}
+
 /* Set Vertical Distance in mm */
 bool Motor_SetDistance(float distance)
 {
@@ -87,7 +98,7 @@ bool Motor_GetDirection(void)
 	return Motor.direction;
 }
 
-/* Reset Motor Parameters to 0 */
+/* Reset Motor Parameters*/
 bool Motor_ResetParams(void)
 {
 	rampTime = 100;
@@ -108,9 +119,58 @@ bool Motor_ResetParams(void)
 	return true;
 }
 
-void Motor_ResetDriveParams(void)
+/* Set PI Gains of Speed, Torque and Flux */
+static void SetPIGains(float speed)
 {
-	FOC_Init();
+	if(speed < 75.5)
+	{
+		Motor.currFactor = 0.8f;
+		Motor.spdKP = 23000/6;
+		Motor.spdKI = 3350/6;
+		Motor.trqKP = 8192;
+		Motor.trqKI = 2000;
+		Motor.flxKP = 8192;
+		Motor.flxKI = 2000;
+	}
+	else if((speed > 75.5) && (speed < 120.5))
+	{
+		Motor.currFactor = 0.9f;
+		Motor.spdKP = 23000/6;
+		Motor.spdKI = 3350/6;
+		Motor.trqKP = 8192;
+		Motor.trqKI = 2100;
+		Motor.flxKP = 8192;
+		Motor.flxKI = 2100;
+	}
+	else if((speed > 120.5) && (speed < 230.5))
+	{
+		Motor.currFactor = 0.9f;
+		Motor.spdKP = 23000/6;
+		Motor.spdKI = 3660/6;
+		Motor.trqKP = 8350;
+		Motor.trqKI = 2100;
+		Motor.flxKP = 8350;
+		Motor.flxKI = 2100;
+	}
+	else
+	{
+		Motor.currFactor = 1.0f;
+		Motor.spdKP = 28800/6;
+		Motor.spdKI = 3360/6;
+		Motor.trqKP = 8192;
+		Motor.trqKI = 2048;
+		Motor.flxKP = 8192;
+		Motor.flxKI = 2048;
+	}
+
+	PID_SetKP(&PIDIqHandle_M1, (int16_t)Motor.trqKP);
+	PID_SetKI(&PIDIqHandle_M1, (int16_t)Motor.trqKI);
+
+	PID_SetKP(&PIDIdHandle_M1, (int16_t)Motor.flxKP);
+	PID_SetKI(&PIDIdHandle_M1, (int16_t)Motor.flxKI);
+
+	PID_SetKP(&PIDSpeedHandle_M1, (int16_t)Motor.spdKP);
+	PID_SetKI(&PIDSpeedHandle_M1, (int16_t)Motor.spdKI);
 }
 
 /* Conversion from mm/min to rpm */
@@ -167,6 +227,7 @@ bool Motor_Start(void)
 	rampTime = Motor_CalcRampTimeMs(ACCEL, Motor.newSpeedRPM);
 	rampTime = (rampTime < 50) ? 50 : rampTime;									// always keep rampTime > 0
 
+	SetPIGains(Motor.newSpeedMMPM);
 	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, rampTime);
 
 	Motor.currentSpeedMMPM = Motor.newSpeedMMPM;

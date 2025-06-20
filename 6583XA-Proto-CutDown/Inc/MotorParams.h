@@ -27,10 +27,23 @@ typedef struct
 	bool direction;
 	float accel;
 	float decel;
+
+	int16_t spdKP;
+	int16_t spdKI;
+	int16_t trqKP;
+	int16_t trqKI;
+	int16_t flxKP;
+	int16_t flxKI;
+
+	float currFactor;
 }MotorParams;
 
 /* Initialize/Reset Motor Parameters */
 bool Motor_Init(void);
+/* Set the Current Factor */
+void SetCurrentFactor(float);
+/* Get the Current Factor */
+float GetCurrentFactor(void);
 /* Set Vertical Distance in mm */
 bool Motor_SetDistance(float);
 /* Get Vertical Distance in mm */
@@ -51,10 +64,8 @@ float Motor_GetDecel(void);
 bool Motor_SetDirection(bool);
 /* Get Vertical Direction */
 bool Motor_GetDirection(void);
-/* Reset Motor Parameters to 0 */
+/* Reset Motor Parameters */
 bool Motor_ResetParams(void);
-/* Resets the Motor's Drive Parameters */
-void Motor_ResetDriveParams(void);
 /* Conversion from mm/min to rpm */
 float mmpm_to_rpm(float mmpm);
 /* Calculate Ramp time in ms */

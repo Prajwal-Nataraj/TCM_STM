@@ -10,7 +10,7 @@
 
 #define GEAR_RATIO			6.0f
 #define MM_PER_THREAD		5.08f
-#define SPEED_ADJ_FACT		0.997813f
+#define SPEED_ADJ_FACT		0.998013f
 
 extern UART_HandleTypeDef huart_MD;
 
@@ -125,12 +125,12 @@ static void SetPIGains(float speed)
 	if(speed < 75.5)
 	{
 		Motor.currFactor = 0.8f;
-		Motor.spdKP = 23000/6;
+		Motor.spdKP = 25000/6;
 		Motor.spdKI = 3350/6;
 		Motor.trqKP = 8192;
-		Motor.trqKI = 2000;
+		Motor.trqKI = 2048;
 		Motor.flxKP = 8192;
-		Motor.flxKI = 2000;
+		Motor.flxKI = 2048;
 	}
 	else if((speed > 75.5) && (speed < 120.5))
 	{

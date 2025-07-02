@@ -142,7 +142,7 @@ int main(void)
   MX_USART1_UART_Init();
   SetCurrentFactor(0.8f);
   MX_MotorControl_Init();
-
+  Motor_Init();
   /* Initialize interrupts */
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */

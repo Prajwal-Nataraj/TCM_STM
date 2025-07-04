@@ -28,6 +28,9 @@ typedef struct
 	float accel;
 	float decel;
 
+	bool customGains;
+	bool defGains;
+
 	int16_t spdKP;
 	int16_t spdKI;
 	int16_t trqKP;
@@ -64,6 +67,24 @@ float Motor_GetDecel(void);
 bool Motor_SetDirection(bool);
 /* Get Vertical Direction */
 bool Motor_GetDirection(void);
+/* Reset the PI Gains to default */
+bool Motor_ResetPIGains(void);
+/* Set Speed Kp */
+bool Motor_SetSpdKp(int16_t);
+/* Get Speed Kp */
+int16_t Motor_GetSpdKp(void);
+/* Set Speed Ki */
+bool Motor_SetSpdKi(int16_t);
+/* Get Speed Ki */
+int16_t Motor_GetSpdKi(void);
+/* Set Torque Kp */
+bool Motor_SetTrqKp(int16_t);
+/* Get Torque Kp */
+int16_t Motor_GetTrqKp(void);
+/* Set Torque Ki */
+bool Motor_SetTrqKi(int16_t);
+/* Get Torque Ki */
+int16_t Motor_GetTrqKi(void);
 /* Reset Motor Parameters */
 bool Motor_ResetParams(void);
 /* Conversion from mm/min to rpm */

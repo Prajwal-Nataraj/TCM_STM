@@ -58,6 +58,15 @@
 #define CMD_ENBRIDGE		(0x0C)
 #define CMD_DISBRIDGE		(0x0D)
 
+#define CMD_RESERVED1		(0x0E)
+#define CMD_RESERVED2		(0x0F)
+
+#define CMD_RSTPIGAIN		(0x10)
+#define CMD_SPDKP			(0x11)
+#define CMD_SPDKI			(0x12)
+#define CMD_TRQKP			(0x13)
+#define CMD_TRQKI			(0x14)
+
 #define CMD_EXC_CMDS    	((uint8_t)243)
 
 #define GetCRC(x, y)		checkCRC(x, y)
@@ -101,6 +110,20 @@ void CmdProc_Accel(uint8_t *, uint32_t, uint8_t *, uint32_t *);
 void CmdProc_Decel(uint8_t *, uint32_t, uint8_t *, uint32_t *);
 
 void CmdProc_Direction(uint8_t *, uint32_t , uint8_t *, uint32_t *);
+
+void CmdProc_ResetPIGains(uint8_t *, uint32_t , uint8_t *, uint32_t *);
+
+void CmdProc_SpdKp(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
+
+void CmdProc_SpdKi(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
+
+void CmdProc_TrqKp(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
+
+void CmdProc_TrqKi(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
+
+void CmdProc_Reserved1(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
+
+void CmdProc_Reserved2(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
 
 void CmdProc_ResetParams(uint8_t *, uint32_t , uint8_t *, uint32_t *);
 

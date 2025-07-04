@@ -279,6 +279,154 @@ void CmdProc_Direction(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32
 	}
 }
 
+void CmdProc_ResetPIGains(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(Motor_ResetPIGains())
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
+}
+
+void CmdProc_SpdKp(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
+
+	float32_t spdKp = 0;
+
+	if(argGS == CMD_GET)
+	{
+		spdKp = (float32_t)Motor_GetSpdKp();
+
+		uint8_t data[4] = {0};
+		SetValFLT32(spdKp, data);
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)data, sizeof(data), RspBuf, RspLen);
+		return;
+	}
+
+	if(argGS == CMD_SET)
+	{
+		pCmdBuf += 1;
+		spdKp = GetArgFLT32(pCmdBuf);
+
+		if(!Motor_SetSpdKp((int16_t)spdKp))
+			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+		else
+			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+		return;
+	}
+}
+
+void CmdProc_SpdKi(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
+
+	float32_t spdKi = 0;
+
+	if(argGS == CMD_GET)
+	{
+		spdKi = (float32_t)Motor_GetSpdKi();
+
+		uint8_t data[4] = {0};
+		SetValFLT32(spdKi, data);
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)data, sizeof(data), RspBuf, RspLen);
+		return;
+	}
+
+	if(argGS == CMD_SET)
+	{
+		pCmdBuf += 1;
+		spdKi = GetArgFLT32(pCmdBuf);
+
+		if(!Motor_SetSpdKi((int16_t)spdKi))
+			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+		else
+			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+		return;
+	}
+}
+
+void CmdProc_TrqKp(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
+
+	float32_t trqKp = 0;
+
+	if(argGS == CMD_GET)
+	{
+		trqKp = (float32_t)Motor_GetTrqKp();
+
+		uint8_t data[4] = {0};
+		SetValFLT32(trqKp, data);
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)data, sizeof(data), RspBuf, RspLen);
+		return;
+	}
+
+	if(argGS == CMD_SET)
+	{
+		pCmdBuf += 1;
+		trqKp = GetArgFLT32(pCmdBuf);
+
+		if(!Motor_SetTrqKp((int16_t)trqKp))
+			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+		else
+			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+		return;
+	}
+}
+
+void CmdProc_TrqKi(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
+
+	float32_t trqKi = 0;
+
+	if(argGS == CMD_GET)
+	{
+		trqKi = (float32_t)Motor_GetTrqKi();
+
+		uint8_t data[4] = {0};
+		SetValFLT32(trqKi, data);
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)data, sizeof(data), RspBuf, RspLen);
+		return;
+	}
+
+	if(argGS == CMD_SET)
+	{
+		pCmdBuf += 1;
+		trqKi = GetArgFLT32(pCmdBuf);
+
+		if(!Motor_SetTrqKi((int16_t)trqKi))
+			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+		else
+			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+		return;
+	}
+}
+
+void CmdProc_Reserved1(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(0)
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_NOIMPL, RspBuf, RspLen);
+}
+
+void CmdProc_Reserved2(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(0)
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_NOIMPL, RspBuf, RspLen);
+}
+
 void CmdProc_ResetParams(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
 {
 	if(Motor_ResetParams())
@@ -359,6 +507,15 @@ static const CmdHandler_t CmdTable[] =
 		{ 	CMD_DECEL		, 		CmdProc_Decel		},
 		{ 	CMD_ENBRIDGE	, 		CmdProc_EnBridge	},
 		{ 	CMD_DISBRIDGE	, 		CmdProc_DisBridge	},
+
+		{ 	CMD_RESERVED1	, 		CmdProc_Reserved1	},
+		{ 	CMD_RESERVED2	, 		CmdProc_Reserved2	},
+
+		{	CMD_RSTPIGAIN	,		CmdProc_ResetPIGains},
+		{ 	CMD_SPDKP		, 		CmdProc_SpdKp		},
+		{ 	CMD_SPDKI		, 		CmdProc_SpdKi		},
+		{ 	CMD_TRQKP		, 		CmdProc_TrqKp		},
+		{ 	CMD_TRQKI		, 		CmdProc_TrqKi		},
 };
 
 StdReturn_t Cmd_Process(uint8_t *CmdBuf, uint8_t *RspBuf, uint32_t *RspLen)

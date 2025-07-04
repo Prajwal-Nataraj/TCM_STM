@@ -98,29 +98,36 @@ bool Motor_GetDirection(void)
 	return Motor.direction;
 }
 
-/* Reset Motor Parameters*/
-bool Motor_ResetParams(void)
+/* Program the PI Gains */
+static void SetPIGains(void)
 {
-	rampTime = 100;
+	PID_SetKP(&PIDIqHandle_M1, (int16_t)Motor.trqKP);
+	PID_SetKI(&PIDIqHandle_M1, (int16_t)Motor.trqKI);
 
-	Motor.distance = 0;
-	Motor.newSpeedMMPM = 0;
-	Motor.currentSpeedMMPM = 0;
-	Motor.newSpeedRPM = 0;
-	Motor.currentSpeedRPM = 0;
-	Motor.direction = 0;
+	PID_SetKP(&PIDIdHandle_M1, (int16_t)Motor.flxKP);
+	PID_SetKI(&PIDIdHandle_M1, (int16_t)Motor.flxKI);
 
-	Motor_SetAccel(1181.10236);									// 100mm/min / 100ms or 1mm/min / 1ms
-	Motor_SetDecel(1181.10236);									// 100mm/min / 100ms or 1mm/min / 1ms
-
-	if(!Motor_DisBridge())
-		return false;
-
-	return true;
+	PID_SetKP(&PIDSpeedHandle_M1, (int16_t)Motor.spdKP);
+	PID_SetKI(&PIDSpeedHandle_M1, (int16_t)Motor.spdKI);
 }
 
-/* Set PI Gains of Speed, Torque and Flux */
-static void SetPIGains(float speed)
+/* Set Default PI Gains */
+static void SetDefPIGains(void)
+{
+	Motor.currFactor = 1.0f;
+	Motor.spdKP = 28800/6;
+	Motor.spdKI = 3360/6;
+	Motor.trqKP = 8192;
+	Motor.trqKI = 2048;
+	Motor.flxKP = 8192;
+	Motor.flxKI = 2048;
+
+	SetPIGains();
+	Motor.defGains = true;
+}
+
+/* Set TCM PI Gains */
+static void SetTcmPIGains(float speed)
 {
 	if(speed < 75.5)
 	{
@@ -163,14 +170,121 @@ static void SetPIGains(float speed)
 		Motor.flxKI = 2048;
 	}
 
-	PID_SetKP(&PIDIqHandle_M1, (int16_t)Motor.trqKP);
-	PID_SetKI(&PIDIqHandle_M1, (int16_t)Motor.trqKI);
+	SetPIGains();
+}
 
-	PID_SetKP(&PIDIdHandle_M1, (int16_t)Motor.flxKP);
-	PID_SetKI(&PIDIdHandle_M1, (int16_t)Motor.flxKI);
+/* Set Custom PI Gains */
+static void SetCustPIGains(void)
+{
+	SetPIGains();
+}
 
-	PID_SetKP(&PIDSpeedHandle_M1, (int16_t)Motor.spdKP);
-	PID_SetKI(&PIDSpeedHandle_M1, (int16_t)Motor.spdKI);
+/* Reset the PI Gains to default */
+bool Motor_ResetPIGains(void)
+{
+	SetDefPIGains();
+	Motor.defGains = false;
+	Motor.customGains = false;
+	return true;
+}
+
+/* Set Speed Kp */
+bool Motor_SetSpdKp(int16_t spdKp)
+{
+	Motor.customGains = true;
+	if(!Motor.defGains)
+		SetDefPIGains();
+
+	Motor.spdKP = spdKp/6;
+	return true;
+}
+/* Get Speed Kp */
+int16_t Motor_GetSpdKp(void)
+{
+	return Motor.spdKP*6;
+}
+
+/* Set Speed Ki */
+bool Motor_SetSpdKi(int16_t spdKi)
+{
+	Motor.customGains = true;
+	if(!Motor.defGains)
+		SetDefPIGains();
+
+	Motor.spdKI = spdKi/6;
+	return true;
+}
+/* Get Speed Ki */
+int16_t Motor_GetSpdKi(void)
+{
+	return Motor.spdKI*6;
+}
+
+/* Set Torque Kp */
+bool Motor_SetTrqKp(int16_t trqKp)
+{
+	Motor.customGains = true;
+	if(!Motor.defGains)
+		SetDefPIGains();
+
+	Motor.trqKP = trqKp;
+	Motor.flxKP = trqKp;
+	return true;
+}
+/* Get Torque Kp */
+int16_t Motor_GetTrqKp(void)
+{
+	return Motor.trqKP;
+}
+
+/* Set Torque Ki */
+bool Motor_SetTrqKi(int16_t trqKi)
+{
+	Motor.customGains = true;
+	if(!Motor.defGains)
+		SetDefPIGains();
+
+	Motor.trqKI = trqKi;
+	Motor.flxKI = trqKi;
+	return true;
+}
+/* Get Torque Ki */
+int16_t Motor_GetTrqKi(void)
+{
+	return Motor.trqKI;
+}
+
+/* Reset Motor Parameters*/
+bool Motor_ResetParams(void)
+{
+	rampTime = 100;
+
+	Motor.distance = 0;
+	Motor.newSpeedMMPM = 0;
+	Motor.currentSpeedMMPM = 0;
+	Motor.newSpeedRPM = 0;
+	Motor.currentSpeedRPM = 0;
+	Motor.direction = 0;
+
+	Motor.defGains = false;
+	Motor.customGains = false;
+
+	Motor.currFactor = 1.0f;
+	Motor.spdKP = 28800/6;
+	Motor.spdKI = 3360/6;
+	Motor.trqKP = 8192;
+	Motor.trqKI = 2048;
+	Motor.flxKP = 8192;
+	Motor.flxKI = 2048;
+
+
+	Motor.accel = 1181.10236;									// 100mm/min / 100ms or 1mm/min / 1ms
+	Motor.decel = 1181.10236;									// 100mm/min / 100ms or 1mm/min / 1ms
+
+	if(!Motor_DisBridge())
+		return false;
+
+	return true;
 }
 
 /* Conversion from mm/min to rpm */
@@ -227,7 +341,10 @@ bool Motor_Start(void)
 	rampTime = Motor_CalcRampTimeMs(ACCEL, Motor.newSpeedRPM);
 	rampTime = (rampTime < 50) ? 50 : rampTime;									// always keep rampTime > 0
 
-	SetPIGains(Motor.newSpeedMMPM);
+	if(Motor.customGains)
+		SetCustPIGains();
+	else
+		SetTcmPIGains(Motor.newSpeedMMPM);
 	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, rampTime);
 
 	Motor.currentSpeedMMPM = Motor.newSpeedMMPM;

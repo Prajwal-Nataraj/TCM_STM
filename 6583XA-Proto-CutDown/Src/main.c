@@ -140,9 +140,8 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM4_Init();
   MX_USART1_UART_Init();
-  SetCurrentFactor(0.8f);
-  MX_MotorControl_Init();
   Motor_Init();
+  MX_MotorControl_Init();
   /* Initialize interrupts */
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */

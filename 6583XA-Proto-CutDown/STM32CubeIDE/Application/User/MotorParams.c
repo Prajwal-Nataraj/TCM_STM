@@ -13,8 +13,14 @@
 #define SPEED_ADJ_FACT		0.998013f
 
 extern UART_HandleTypeDef huart_MD;
+extern uint32_t pulseCount;
 
-static uint16_t rampTime;
+static uint16_t rampTime = 0;
+
+static int32_t zeroDeltaCnt = 0;
+static bool rtzInProgress = false;
+static bool dir_bef_rtz;			/* Direction before RTZ */
+static float spd_bef_rtz;			/* Speed before RTZ */
 
 MotorParams Motor;
 
@@ -345,7 +351,11 @@ bool Motor_Start(void)
 		SetCustPIGains();
 	else
 		SetTcmPIGains(Motor.newSpeedMMPM);
+
 	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, rampTime);
+
+	if(Motor.currentSpeedMMPM < 1.0)
+			pulseCount = 0;
 
 	Motor.currentSpeedMMPM = Motor.newSpeedMMPM;
 	Motor.currentSpeedRPM = Motor.newSpeedRPM;
@@ -370,6 +380,11 @@ bool Motor_Stop(void)
 
 	Motor.currentSpeedMMPM = 0;
 	Motor.currentSpeedRPM = 0;
+
+	if(DIR_UP == Motor_GetDirection())
+		zeroDeltaCnt += pulseCount;
+	else
+		zeroDeltaCnt -= pulseCount;
 
 	return true;
 }
@@ -422,18 +437,58 @@ bool Motor_StopAtTarget(void)
 /* Set Zero Position */
 bool Motor_SetZeroPos(void)
 {
+	pulseCount = 0;
 	return true;
 }
 
 /* Return Motor back to Zero Pos */
 bool Motor_RTZ(void)
 {
+	dir_bef_rtz = Motor.direction;
+	spd_bef_rtz = Motor.newSpeedMMPM;
+	bool execRTZ = false;
+
+	if(zeroDeltaCnt > 0)
+	{
+		Motor.direction = DIR_DOWN;
+		execRTZ = true;
+	}
+//	else if(pulseCount < 0)
+//	{
+//		Motor.direction = DIR_UP;
+//		execRTZ = true;
+//	}
+	else
+	{
+		execRTZ = false;
+	}
+
+	if(execRTZ)
+	{
+		Motor.newSpeedMMPM = 1000;
+		Motor_Start();
+		rtzInProgress = true;
+	}
+
 	return true;
 }
 
 /* Stop Motor when Zero Position is reached */
 bool Motor_CheckRTZ(void)
 {
+	if(rtzInProgress)
+	{
+//		if(((Motor.direction == DIR_UP) && (pulseCount > (-59055/2))) ||
+//		   ((Motor.direction == DIR_DOWN) && (pulseCount < (59055/2))))
+		if(pulseCount > zeroDeltaCnt)
+		{
+			Motor_Stop();
+			zeroDeltaCnt = 0;
+			Motor.direction = dir_bef_rtz;
+			Motor.newSpeedMMPM = spd_bef_rtz;
+			rtzInProgress = false;
+		}
+	}
 	return true;
 }
 

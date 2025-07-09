@@ -61,13 +61,14 @@ OPAMP_HandleTypeDef hopamp2;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim17;
 
 UART_HandleTypeDef huart_MD;
 DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart1_tx;
 
 /* USER CODE BEGIN PV */
-
+uint32_t pulseCount = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -87,6 +88,7 @@ static void MX_OPAMP2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_TIM17_Init(void);
 static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -94,7 +96,16 @@ static void MX_NVIC_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+//	if((Motor_GetSpeed() > 0.9))
+//	{
+//		if(Motor_GetDirection() == DIR_UP)
+			pulseCount++;
+//		else if(Motor_GetDirection() == DIR_DOWN)
+//			pulseCount--;
+//	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -142,8 +153,11 @@ int main(void)
   MX_USART1_UART_Init();
   Motor_Init();
   MX_MotorControl_Init();
+  MX_TIM17_Init();
+
   /* Initialize interrupts */
   MX_NVIC_Init();
+  HAL_TIM_IC_Start_IT(&htim17, TIM_CHANNEL_1);
   /* USER CODE BEGIN 2 */
     uint8_t CmdBuf[CMDBUF_SIZE] = {0};
     uint8_t RspBuf[RSPBUF_SIZE] = {0};
@@ -158,32 +172,32 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      	  HAL_UART_Receive(&huart_MD, CmdBuf, CMDBUF_SIZE, UART_TIMEOUT);
+	  HAL_UART_Receive(&huart_MD, CmdBuf, CMDBUF_SIZE, UART_TIMEOUT);
 
-      	  if(CmdBuf[0] != 0)
-      	  {
-      		  stdRet = Cmd_Process(CmdBuf, RspBuf, &RspLen);
-      		  CmdBuf[0] = 0;
+	  if(CmdBuf[0] != 0)
+	  {
+		  stdRet = Cmd_Process(CmdBuf, RspBuf, &RspLen);
+		  CmdBuf[0] = 0;
 
-      		  if(RET_OK != stdRet)
-      			  Send_ErrorMsg(stdRet);		// Change to Send_ErrorCode(stdRet) afterwords.
+		  if(RET_OK != stdRet)
+			  Send_ErrorMsg(stdRet);		// Change to Send_ErrorCode(stdRet) afterwords.
 
-      		  memset(CmdBuf, 0, sizeof(CmdBuf));
-      		  memset(RspBuf, 0, sizeof(CmdBuf));
-      	  }
+		  memset(CmdBuf, 0, sizeof(CmdBuf));
+		  memset(RspBuf, 0, sizeof(CmdBuf));
+	  }
 
 //		  if(RUN == Mci[M1].State)
 //		  {
 //
 //		  }
 
-//      	  Motor_StopAtTarget();
-//      	  Motor_CheckRTZ();
+//      Motor_StopAtTarget();
+	  Motor_CheckRTZ();
 
-          /* USER CODE END WHILE */
+	  /* USER CODE END WHILE */
 
-          /* USER CODE BEGIN 3 */
-        }
+	  /* USER CODE BEGIN 3 */
+	}
   /* USER CODE END 3 */
 }
 
@@ -208,8 +222,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV4;
-  RCC_OscInitStruct.PLL.PLLN = 80;
+  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV5;
+  RCC_OscInitStruct.PLL.PLLN = 100;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV8;
   RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
   RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
@@ -314,7 +328,7 @@ static void MX_ADC1_Init(void)
   */
   sConfigInjected.InjectedChannel = ADC_CHANNEL_3;
   sConfigInjected.InjectedRank = ADC_INJECTED_RANK_1;
-  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_6CYCLES_5;
   sConfigInjected.InjectedSingleDiff = ADC_SINGLE_ENDED;
   sConfigInjected.InjectedOffsetNumber = ADC_OFFSET_NONE;
   sConfigInjected.InjectedOffset = 0;
@@ -391,7 +405,7 @@ static void MX_ADC2_Init(void)
   */
   sConfigInjected.InjectedChannel = ADC_CHANNEL_3;
   sConfigInjected.InjectedRank = ADC_INJECTED_RANK_1;
-  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_6CYCLES_5;
   sConfigInjected.InjectedSingleDiff = ADC_SINGLE_ENDED;
   sConfigInjected.InjectedOffsetNumber = ADC_OFFSET_NONE;
   sConfigInjected.InjectedOffset = 0;
@@ -860,6 +874,52 @@ static void MX_TIM4_Init(void)
 }
 
 /**
+  * @brief TIM17 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM17_Init(void)
+{
+
+  /* USER CODE BEGIN TIM17_Init 0 */
+
+  /* USER CODE END TIM17_Init 0 */
+
+  TIM_IC_InitTypeDef sConfigIC = {0};
+
+  /* USER CODE BEGIN TIM17_Init 1 */
+
+  /* USER CODE END TIM17_Init 1 */
+  htim17.Instance = TIM17;
+  htim17.Init.Prescaler = 0;
+  htim17.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim17.Init.Period = 65535;
+  htim17.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim17.Init.RepetitionCounter = 0;
+  htim17.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim17) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_IC_Init(&htim17) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
+  sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
+  sConfigIC.ICFilter = 0;
+  if (HAL_TIM_IC_ConfigChannel(&htim17, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM17_Init 2 */
+
+  /* USER CODE END TIM17_Init 2 */
+
+}
+
+/**
   * @brief USART1 Initialization Function
   * @param None
   * @retval None
@@ -927,8 +987,8 @@ static void MX_USART1_UART_Init(void)
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-/* USER CODE BEGIN MX_GPIO_Init_1 */
-/* USER CODE END MX_GPIO_Init_1 */
+  /* USER CODE BEGIN MX_GPIO_Init_1 */
+  /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
@@ -952,8 +1012,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-/* USER CODE BEGIN MX_GPIO_Init_2 */
-/* USER CODE END MX_GPIO_Init_2 */
+  /* USER CODE BEGIN MX_GPIO_Init_2 */
+  /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */

@@ -5,18 +5,25 @@
  *
  **/
 
+/* Private includes ----------------------------------------------------------*/
 #include "math.h"
 #include "MotorParams.h"
 
+
+/* Private define ------------------------------------------------------------*/
 #define GEAR_RATIO			6.0f
 #define MM_PER_THREAD		5.08f
 #define SPEED_ADJ_FACT		0.998013f
 
+/* External Variable/Handle --------------------------------------------------*/
+/* UART Handle */
 extern UART_HandleTypeDef huart_MD;
-extern uint32_t pulseCount;
 
+/* Private variables ---------------------------------------------------------*/
+/* For Accel/Decel */
 static uint16_t rampTime = 0;
-
+/* RTZ variables */
+static bool prevDir = DIR_DOWN;
 static int32_t zeroDeltaCnt = 0;
 static bool rtzInProgress = false;
 static bool dir_bef_rtz;			/* Direction before RTZ */
@@ -102,6 +109,37 @@ bool Motor_SetDirection(bool dir)
 bool Motor_GetDirection(void)
 {
 	return Motor.direction;
+}
+
+/* Conversion from mm/min to rpm */
+static float mmpm_to_rpm(float mmpm)
+{
+	float rpm = 0;
+	rpm = (mmpm * (Motor.direction ? 1 :-1))	\
+		* (float)(GEAR_RATIO / MM_PER_THREAD);
+
+	return rpm;
+}
+
+/* Calculate Ramp time in ms */
+static uint16_t Motor_CalcRampTimeMs(bool ad, float targetSpeed)
+{
+	/* v = u + at;
+	 * t = (v - u) / a */
+
+	float rTime = 0;
+	rTime = (targetSpeed - Motor.currentSpeedRPM) / ( (ACCEL == ad) ? Motor.accel : Motor.decel);
+
+	return (uint16_t)(abs(rTime * 1000));	// convert to ms
+}
+
+/* Calculate Delta counts from zero position */
+static void CalcZeroDelta(void)
+{
+	if(DIR_UP == prevDir)
+		zeroDeltaCnt += PULSE_COUNT;
+	else
+		zeroDeltaCnt -= PULSE_COUNT;
 }
 
 /* Program the PI Gains */
@@ -293,28 +331,6 @@ bool Motor_ResetParams(void)
 	return true;
 }
 
-/* Conversion from mm/min to rpm */
-float mmpm_to_rpm(float mmpm)
-{
-	float rpm = 0;
-	rpm = (mmpm * (Motor.direction ? 1 :-1))	\
-		* (float)(GEAR_RATIO / MM_PER_THREAD);
-
-	return rpm;
-}
-
-/* Calculate Ramp time in ms */
-uint16_t Motor_CalcRampTimeMs(bool ad, float targetSpeed)
-{
-	/* v = u + at;
-	 * t = (v - u) / a */
-
-	float rTime = 0;
-	rTime = (targetSpeed - Motor.currentSpeedRPM) / ( (ACCEL == ad) ? Motor.accel : Motor.decel);
-
-	return (uint16_t)(abs(rTime * 1000));	// convert to ms
-}
-
 /* Enable Bridge */
 bool Motor_EnBridge(void)
 {
@@ -354,8 +370,12 @@ bool Motor_Start(void)
 
 	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, rampTime);
 
-	if(Motor.currentSpeedMMPM < 1.0)
-			pulseCount = 0;
+	if((Motor.currentSpeedMMPM >= 1.0) && (!rtzInProgress))
+		CalcZeroDelta();
+
+	PULSE_COUNT = 0;
+
+	prevDir = Motor.direction;
 
 	Motor.currentSpeedMMPM = Motor.newSpeedMMPM;
 	Motor.currentSpeedRPM = Motor.newSpeedRPM;
@@ -378,13 +398,11 @@ bool Motor_Stop(void)
 
 	MCI_ExecSpeedRamp(pMCI[M1], 0, rampTime);
 
+	if(Motor.currentSpeedMMPM >= 1)
+		CalcZeroDelta();
+
 	Motor.currentSpeedMMPM = 0;
 	Motor.currentSpeedRPM = 0;
-
-	if(DIR_UP == Motor_GetDirection())
-		zeroDeltaCnt += pulseCount;
-	else
-		zeroDeltaCnt -= pulseCount;
 
 	return true;
 }
@@ -437,7 +455,8 @@ bool Motor_StopAtTarget(void)
 /* Set Zero Position */
 bool Motor_SetZeroPos(void)
 {
-	pulseCount = 0;
+	PULSE_COUNT = 0;
+	zeroDeltaCnt = 0;
 	return true;
 }
 
@@ -448,16 +467,19 @@ bool Motor_RTZ(void)
 	spd_bef_rtz = Motor.newSpeedMMPM;
 	bool execRTZ = false;
 
+	if(Motor.currentSpeedMMPM >= 1)
+		CalcZeroDelta();
+
 	if(zeroDeltaCnt > 0)
 	{
 		Motor.direction = DIR_DOWN;
 		execRTZ = true;
 	}
-//	else if(pulseCount < 0)
-//	{
-//		Motor.direction = DIR_UP;
-//		execRTZ = true;
-//	}
+	else if(zeroDeltaCnt < 0)
+	{
+		Motor.direction = DIR_UP;
+		execRTZ = true;
+	}
 	else
 	{
 		execRTZ = false;
@@ -466,8 +488,8 @@ bool Motor_RTZ(void)
 	if(execRTZ)
 	{
 		Motor.newSpeedMMPM = 1000;
-		Motor_Start();
 		rtzInProgress = true;
+		Motor_Start();
 	}
 
 	return true;
@@ -478,9 +500,7 @@ bool Motor_CheckRTZ(void)
 {
 	if(rtzInProgress)
 	{
-//		if(((Motor.direction == DIR_UP) && (pulseCount > (-59055/2))) ||
-//		   ((Motor.direction == DIR_DOWN) && (pulseCount < (59055/2))))
-		if(pulseCount > zeroDeltaCnt)
+		if(PULSE_COUNT > abs(zeroDeltaCnt))
 		{
 			Motor_Stop();
 			zeroDeltaCnt = 0;

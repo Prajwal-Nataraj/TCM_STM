@@ -5,8 +5,11 @@
  *
  **/
 
+/* Private includes ----------------------------------------------------------*/
 #include "MotorCmds.h"
 
+/* External Variable/Handle --------------------------------------------------*/
+/* UART Handle */
 extern UART_HandleTypeDef huart_MD;
 
 const char *Error_msg[13] =

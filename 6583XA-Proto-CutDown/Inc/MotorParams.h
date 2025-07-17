@@ -10,6 +10,8 @@
 
 #include "MotorCmds.h"
 
+#define PULSE_COUNT	TIM2->CNT
+
 #define ONGOING		1
 #define COMPLETED	0
 #define DIR_UP		1
@@ -67,6 +69,8 @@ float Motor_GetDecel(void);
 bool Motor_SetDirection(bool);
 /* Get Vertical Direction */
 bool Motor_GetDirection(void);
+
+void CalcZeroDelta(void);
 /* Reset the PI Gains to default */
 bool Motor_ResetPIGains(void);
 /* Set Speed Kp */
@@ -87,10 +91,6 @@ bool Motor_SetTrqKi(int16_t);
 int16_t Motor_GetTrqKi(void);
 /* Reset Motor Parameters */
 bool Motor_ResetParams(void);
-/* Conversion from mm/min to rpm */
-float mmpm_to_rpm(float mmpm);
-/* Calculate Ramp time in ms */
-uint16_t Motor_CalcRampTimeMs(bool, float);
 /* Enable Bridge */
 bool Motor_EnBridge(void);
 /* Disable Bridge */

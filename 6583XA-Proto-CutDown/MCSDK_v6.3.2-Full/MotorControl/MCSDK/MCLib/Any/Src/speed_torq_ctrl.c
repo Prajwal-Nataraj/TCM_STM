@@ -25,6 +25,7 @@
 #include "speed_pos_fdbk.h"
 
 #include "mc_type.h"
+#include "MotorParams.h"
 
 #define CHECK_BOUNDARY
 
@@ -394,6 +395,8 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, /*int16_t*/float hTar
 static uint8_t settleCounter = 0;
 static FunctionalState PIloop = ENABLE;
 static FunctionalState checkZero = ENABLE;
+extern bool stopExec;
+extern bool rtzExec;
 __weak /*int32_t*/float STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
 {
 	/*int16_t*/float hTorqueReference;
@@ -435,6 +438,17 @@ __weak /*int32_t*/float STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle
 //      wCurrentReference = ((int32_t)pHandle->TargetFinal) * 65536;
     	wCurrentReference = (pHandle->TargetFinal * 65536.0);
       pHandle->RampRemainingStep = 0U;
+
+      if(stopExec)
+      {
+    	  CalcZeroDelta();
+    	  stopExec = false;
+      }
+      if(rtzExec)
+	  {
+		  Motor_SetZeroPos();
+		  rtzExec = false;
+	  }
     }
     else
     {

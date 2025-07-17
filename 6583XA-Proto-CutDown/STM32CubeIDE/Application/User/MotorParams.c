@@ -25,9 +25,12 @@ static uint16_t rampTime = 0;
 /* RTZ variables */
 static bool prevDir = DIR_DOWN;
 static int32_t zeroDeltaCnt = 0;
-static bool rtzInProgress = false;
+bool rtzInProgress = false;
 static bool dir_bef_rtz;			/* Direction before RTZ */
 static float spd_bef_rtz;			/* Speed before RTZ */
+
+bool stopExec = false;
+bool rtzExec = false;
 
 MotorParams Motor;
 
@@ -133,13 +136,13 @@ static uint16_t Motor_CalcRampTimeMs(bool ad, float targetSpeed)
 	return (uint16_t)(abs(rTime * 1000));	// convert to ms
 }
 
-/* Calculate Delta counts from zero position */
-static void CalcZeroDelta(void)
+/* Calculate deceleration counts */
+static uint32_t Motor_CalcDecelCounts(float rpm)
 {
-	if(DIR_UP == prevDir)
-		zeroDeltaCnt += PULSE_COUNT;
-	else
-		zeroDeltaCnt -= PULSE_COUNT;
+	float decelCounts = 0;
+
+	decelCounts = rpm * (1181.10236f / Motor.decel) * 42;
+	return (uint32_t)(decelCounts);
 }
 
 /* Program the PI Gains */
@@ -221,6 +224,15 @@ static void SetTcmPIGains(float speed)
 static void SetCustPIGains(void)
 {
 	SetPIGains();
+}
+
+/* Calculate Delta counts from zero position */
+void CalcZeroDelta(void)
+{
+	if(DIR_UP == prevDir)
+		zeroDeltaCnt += PULSE_COUNT;
+	else
+		zeroDeltaCnt -= PULSE_COUNT;
 }
 
 /* Reset the PI Gains to default */
@@ -398,8 +410,9 @@ bool Motor_Stop(void)
 
 	MCI_ExecSpeedRamp(pMCI[M1], 0, rampTime);
 
-	if(Motor.currentSpeedMMPM >= 1)
-		CalcZeroDelta();
+	stopExec = true;
+//	if(Motor.currentSpeedMMPM >= 1)
+//		CalcZeroDelta();
 
 	Motor.currentSpeedMMPM = 0;
 	Motor.currentSpeedRPM = 0;
@@ -498,12 +511,15 @@ bool Motor_RTZ(void)
 /* Stop Motor when Zero Position is reached */
 bool Motor_CheckRTZ(void)
 {
+	uint32_t rtzCounts = 0;
+
 	if(rtzInProgress)
 	{
-		if(PULSE_COUNT > abs(zeroDeltaCnt))
+		rtzCounts = abs(zeroDeltaCnt) - Motor_CalcDecelCounts(1181.10236);		// Subtracting deceleration counts
+		if(PULSE_COUNT >= rtzCounts)//abs(zeroDeltaCnt))
 		{
+			rtzExec = true;
 			Motor_Stop();
-			zeroDeltaCnt = 0;
 			Motor.direction = dir_bef_rtz;
 			Motor.newSpeedMMPM = spd_bef_rtz;
 			rtzInProgress = false;

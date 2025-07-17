@@ -69,6 +69,8 @@ float Motor_GetDecel(void);
 bool Motor_SetDirection(bool);
 /* Get Vertical Direction */
 bool Motor_GetDirection(void);
+
+void CalcZeroDelta(void);
 /* Reset the PI Gains to default */
 bool Motor_ResetPIGains(void);
 /* Set Speed Kp */

@@ -411,8 +411,6 @@ bool Motor_Stop(void)
 	MCI_ExecSpeedRamp(pMCI[M1], 0, rampTime);
 
 	stopExec = true;
-//	if(Motor.currentSpeedMMPM >= 1)
-//		CalcZeroDelta();
 
 	Motor.currentSpeedMMPM = 0;
 	Motor.currentSpeedRPM = 0;
@@ -428,6 +426,8 @@ bool Motor_CriticalStop(void)
 
 	else
 		MCI_ExecSpeedRamp(pMCI[M1], 0, (uint16_t)(Motor.currentSpeedMMPM / 4));
+
+	stopExec = true;
 
 	Motor.currentSpeedMMPM = 0;
 	Motor.currentSpeedRPM = 0;

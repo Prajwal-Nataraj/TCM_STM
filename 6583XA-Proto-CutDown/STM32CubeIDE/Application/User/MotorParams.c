@@ -501,7 +501,7 @@ bool IsTimedOut(uint32_t *prevTime, uint32_t timeOut)
 /* Stop the Motor when Target Distance is reached */
 bool Motor_StopAtTarget(void)
 {
-	if(Motor.drvToDist)
+	if(Motor.drvToDist && (!rtzInProgress))
 	{
 		if((Motor.distance < 0.1) || (Motor.currentSpeedMMPM < 0.1))
 			return false;

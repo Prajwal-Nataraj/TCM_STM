@@ -58,8 +58,8 @@
 #define CMD_ENBRIDGE		(0x0C)
 #define CMD_DISBRIDGE		(0x0D)
 
-#define CMD_RESERVED1		(0x0E)
-#define CMD_RESERVED2		(0x0F)
+#define CMD_DRVTODIST		(0x0E)
+#define CMD_RESERVED		(0x0F)
 
 #define CMD_RSTPIGAIN		(0x10)
 #define CMD_SPDKP			(0x11)
@@ -121,9 +121,9 @@ void CmdProc_TrqKp(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *
 
 void CmdProc_TrqKi(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
 
-void CmdProc_Reserved1(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
+void CmdProc_DrvToDist(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
 
-void CmdProc_Reserved2(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
+void CmdProc_Reserved(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
 
 void CmdProc_ResetParams(uint8_t *, uint32_t , uint8_t *, uint32_t *);
 

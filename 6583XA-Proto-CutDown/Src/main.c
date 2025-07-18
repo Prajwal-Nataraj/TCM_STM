@@ -177,7 +177,7 @@ int main(void)
 		  memset(RspBuf, 0, sizeof(CmdBuf));
 	  }
 
-//      Motor_StopAtTarget();
+      Motor_StopAtTarget();
 	  Motor_CheckRTZ();
 
     /* USER CODE END WHILE */

@@ -124,6 +124,14 @@ static float mmpm_to_rpm(float mmpm)
 	return rpm;
 }
 
+/* Calculate encoder counts based on distance in mm */
+static uint32_t mm_to_counts(float dist_mm)
+{
+	uint32_t counts = 0;
+	counts = (dist_mm / MM_PER_THREAD) * GEAR_RATIO * 5000;		/* 5000 is the counts per rotation */
+	return counts;
+}
+
 /* Calculate Ramp time in ms */
 static uint16_t Motor_CalcRampTimeMs(bool ad, float targetSpeed)
 {
@@ -139,10 +147,28 @@ static uint16_t Motor_CalcRampTimeMs(bool ad, float targetSpeed)
 /* Calculate deceleration counts */
 static uint32_t Motor_CalcDecelCounts(float rpm)
 {
-	float decelCounts = 0;
+    uint32_t steps = 0;
+    float incDecAmt = 0;
+    float wCurrentRPM = 0;
+    float currentRPM = 0;
+    float counts = 0;
 
-	decelCounts = rpm * (1181.10236f / Motor.decel) * 42;
-	return (uint32_t)(decelCounts);
+    rpm = abs(rpm) * SPEED_ADJ_FACT;
+
+    steps = rampTime * 2;         /* rampTime(ms) * FREQ / 1000 */
+    steps++;
+
+    incDecAmt = (rpm * 65536.0) / steps;
+
+    for(uint32_t i = 0; i < steps; i++)
+    {
+        wCurrentRPM = incDecAmt*(steps-i);
+        currentRPM = wCurrentRPM / 65536.0;
+
+        counts += (currentRPM / 60.0) * 0.5 * 5.0;      /* (currentRPM / 60) * 0.5ms * 5000 pulsesPERrotation */
+    }
+
+    return (uint32_t)(counts+0.5);      /* +0.5 to round-off */
 }
 
 /* Program the PI Gains */
@@ -176,7 +202,7 @@ static void SetDefPIGains(void)
 /* Set TCM PI Gains */
 static void SetTcmPIGains(float speed)
 {
-	if(speed < 75.5)
+	if(speed < 55.5)
 	{
 		Motor.currFactor = 0.8f;
 		Motor.spdKP = 25000/6;
@@ -186,7 +212,7 @@ static void SetTcmPIGains(float speed)
 		Motor.flxKP = 8192;
 		Motor.flxKI = 2048;
 	}
-	else if((speed > 75.5) && (speed < 120.5))
+	else if((speed > 55.5) && (speed < 120.5))
 	{
 		Motor.currFactor = 0.9f;
 		Motor.spdKP = 23000/6;
@@ -310,6 +336,18 @@ int16_t Motor_GetTrqKi(void)
 	return Motor.trqKI;
 }
 
+/* Set Drive to distance */
+bool Motor_SetDrvToDist(bool drvToDist)
+{
+	Motor.drvToDist = drvToDist;
+	return true;
+}
+/* Get Drive to distance */
+bool Motor_GetDrvToDist(void)
+{
+	return Motor.drvToDist;
+}
+
 /* Reset Motor Parameters*/
 bool Motor_ResetParams(void)
 {
@@ -321,6 +359,7 @@ bool Motor_ResetParams(void)
 	Motor.newSpeedRPM = 0;
 	Motor.currentSpeedRPM = 0;
 	Motor.direction = 0;
+	Motor.drvToDist = false;
 
 	Motor.defGains = false;
 	Motor.customGains = false;
@@ -462,6 +501,17 @@ bool IsTimedOut(uint32_t *prevTime, uint32_t timeOut)
 /* Stop the Motor when Target Distance is reached */
 bool Motor_StopAtTarget(void)
 {
+	if(Motor.drvToDist)
+	{
+		if((Motor.distance < 0.1) || (Motor.currentSpeedMMPM < 0.1))
+			return false;
+
+		uint32_t distCounts = 0;
+		distCounts = mm_to_counts(Motor.distance) - Motor_CalcDecelCounts(Motor.currentSpeedRPM);
+
+		if(PULSE_COUNT >= distCounts)
+			Motor_Stop();
+	}
 	return true;
 }
 
@@ -516,7 +566,7 @@ bool Motor_CheckRTZ(void)
 	if(rtzInProgress)
 	{
 		rtzCounts = abs(zeroDeltaCnt) - Motor_CalcDecelCounts(1181.10236);		// Subtracting deceleration counts
-		if(PULSE_COUNT >= rtzCounts)//abs(zeroDeltaCnt))
+		if(PULSE_COUNT >= rtzCounts)
 		{
 			rtzExec = true;
 			Motor_Stop();

@@ -414,15 +414,35 @@ void CmdProc_TrqKi(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *
 	}
 }
 
-void CmdProc_Reserved1(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+void CmdProc_DrvToDist(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
 {
-	if(0)
-		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
-	else
-		NACK(CMDBYTE_FUNCCODE, CMD_RET_NOIMPL, RspBuf, RspLen);
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
+
+	uint8_t drvToDist = 0;
+
+	if(argGS == CMD_GET)
+	{
+		drvToDist = Motor_GetDrvToDist();
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)&drvToDist, sizeof(drvToDist), RspBuf, RspLen);
+		return;
+	}
+
+	if(argGS == CMD_SET)
+	{
+		pCmdBuf += 1;
+		drvToDist = GetArgUINT8(pCmdBuf);
+
+		if(!Motor_SetDrvToDist(drvToDist))
+			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+		else
+			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+		return;
+	}
 }
 
-void CmdProc_Reserved2(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+void CmdProc_Reserved(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
 {
 	if(0)
 		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
@@ -511,8 +531,8 @@ static const CmdHandler_t CmdTable[] =
 		{ 	CMD_ENBRIDGE	, 		CmdProc_EnBridge	},
 		{ 	CMD_DISBRIDGE	, 		CmdProc_DisBridge	},
 
-		{ 	CMD_RESERVED1	, 		CmdProc_Reserved1	},
-		{ 	CMD_RESERVED2	, 		CmdProc_Reserved2	},
+		{ 	CMD_DRVTODIST	, 		CmdProc_DrvToDist	},
+		{ 	CMD_RESERVED	, 		CmdProc_Reserved	},
 
 		{	CMD_RSTPIGAIN	,		CmdProc_ResetPIGains},
 		{ 	CMD_SPDKP		, 		CmdProc_SpdKp		},

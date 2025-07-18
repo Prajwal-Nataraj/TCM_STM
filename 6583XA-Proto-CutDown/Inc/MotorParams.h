@@ -41,6 +41,7 @@ typedef struct
 	int16_t flxKI;
 
 	float currFactor;
+	bool drvToDist;
 }MotorParams;
 
 /* Initialize/Reset Motor Parameters */
@@ -69,7 +70,7 @@ float Motor_GetDecel(void);
 bool Motor_SetDirection(bool);
 /* Get Vertical Direction */
 bool Motor_GetDirection(void);
-
+/* Calculate delta counts from zero position */
 void CalcZeroDelta(void);
 /* Reset the PI Gains to default */
 bool Motor_ResetPIGains(void);
@@ -89,6 +90,10 @@ int16_t Motor_GetTrqKp(void);
 bool Motor_SetTrqKi(int16_t);
 /* Get Torque Ki */
 int16_t Motor_GetTrqKi(void);
+/* Set Drive to distance */
+bool Motor_SetDrvToDist(bool);
+/* Get Drive to distance */
+bool Motor_GetDrvToDist(void);
 /* Reset Motor Parameters */
 bool Motor_ResetParams(void);
 /* Enable Bridge */

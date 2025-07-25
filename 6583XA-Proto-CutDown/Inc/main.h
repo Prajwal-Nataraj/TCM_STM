@@ -68,6 +68,8 @@ void Error_Handler(void);
 #define M1_OPAMP1_OUT_GPIO_Port GPIOA
 #define M1_OPAMP1_EXT_GAIN_Pin GPIO_PIN_3
 #define M1_OPAMP1_EXT_GAIN_GPIO_Port GPIOA
+#define DistCountPin_Pin GPIO_PIN_4
+#define DistCountPin_GPIO_Port GPIOA
 #define M1_OPAMP2_OUT_Pin GPIO_PIN_6
 #define M1_OPAMP2_OUT_GPIO_Port GPIOA
 #define M1_CURR_SHUNT_V_Pin GPIO_PIN_7

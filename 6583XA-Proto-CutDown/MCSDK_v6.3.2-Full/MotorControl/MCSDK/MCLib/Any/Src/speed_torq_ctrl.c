@@ -397,6 +397,9 @@ static FunctionalState PIloop = ENABLE;
 static FunctionalState checkZero = ENABLE;
 extern bool stopExec;
 extern bool rtzExec;
+/** Remove Afterwords; Dist FB to F4 Controller **/
+extern bool d2dExec;
+/***************************************************************************/
 __weak /*int32_t*/float STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle)
 {
 	/*int16_t*/float hTorqueReference;
@@ -449,6 +452,13 @@ __weak /*int32_t*/float STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle
 		  Motor_SetZeroPos();
 		  rtzExec = false;
 	  }
+      /** Remove Afterwords; Dist FB to F4 Controller **/
+      	if(d2dExec)
+      	{
+      		HAL_GPIO_WritePin(DistCountPin_GPIO_Port, DistCountPin_Pin, GPIO_PIN_RESET);
+      		d2dExec = false;
+      	}
+	  /***************************************************************************/
     }
     else
     {

@@ -171,7 +171,7 @@ int main(void)
 		  CmdBuf[0] = 0;
 
 		  if(RET_OK != stdRet)
-			  Send_ErrorMsg(stdRet);		// Change to Send_ErrorCode(stdRet) afterwords.
+			  Send_ErrorMsg(stdRet);
 
 		  memset(CmdBuf, 0, sizeof(CmdBuf));
 		  memset(RspBuf, 0, sizeof(CmdBuf));

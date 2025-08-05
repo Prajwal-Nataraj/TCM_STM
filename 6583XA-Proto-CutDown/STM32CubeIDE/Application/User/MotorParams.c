@@ -5,37 +5,42 @@
  *
  **/
 
-/* Private includes ----------------------------------------------------------*/
+/* Private includes ---------------------------------------------------------*/
 #include "math.h"
 #include "MotorParams.h"
 
 
-/* Private define ------------------------------------------------------------*/
+/* Private define -----------------------------------------------------------*/
 #define GEAR_RATIO			6.0f
 #define MM_PER_THREAD		5.08f
 #define SPEED_ADJ_FACT		0.998013f
 
-/* External Variable/Handle --------------------------------------------------*/
+/* External Variable/Handle -------------------------------------------------*/
 /* UART Handle */
 extern UART_HandleTypeDef huart_MD;
 
-/* Private variables ---------------------------------------------------------*/
+/* Private variables --------------------------------------------------------*/
 /* For Accel/Decel */
 static uint16_t rampTime = 0;
+
 /* RTZ variables */
 static bool prevDir = DIR_DOWN;
 static int32_t zeroDeltaCnt = 0;
-bool rtzInProgress = false;
 static bool dir_bef_rtz;			/* Direction before RTZ */
 static float spd_bef_rtz;			/* Speed before RTZ */
+static uint32_t rtzCounts = 0;
+static bool rtzInProgress = false;
+bool rtzExec = false;
 
+/* For Distance */
 static uint32_t distCounts = 0;
 
 bool startExec = false;
 bool stopExec = false;
-bool rtzExec = false;
 
 MotorParams Motor;
+
+/*****************************************************************************/
 
 /* Initialize/Reset Motor Parameters */
 bool Motor_Init(void)
@@ -424,7 +429,7 @@ bool Motor_Start(void)
 
 	MCI_ExecSpeedRamp(pMCI[M1], adjSpeed, rampTime);
 
-	if((Motor.currentSpeedMMPM >= 1.0) && (!rtzInProgress))
+	if((Motor.currentSpeedMMPM >= 0.1) && (!rtzInProgress))
 		CalcZeroDelta();
 
 	PULSE_COUNT = 0;
@@ -446,14 +451,7 @@ bool Motor_Start(void)
 bool Motor_Stop(void)
 {
 	rampTime = Motor_CalcRampTimeMs(DECEL, 0);
-//	if(Motor.currentSpeedMMPM <= 200)
-		rampTime = (rampTime < 1) ? 1 : rampTime;
-//	else
-//	{
-//		uint16_t rampTimeLimit = 0;
-//		rampTimeLimit = (uint16_t)(Motor.currentSpeedMMPM / 4);
-//		rampTime = (rampTime < rampTimeLimit) ? rampTimeLimit : rampTime;
-//	}
+	rampTime = (rampTime < 1) ? 1 : rampTime;		// always keep rampTime > 0
 
 	MCI_ExecSpeedRamp(pMCI[M1], 0, rampTime);
 
@@ -537,7 +535,7 @@ bool Motor_RTZ(void)
 	spd_bef_rtz = Motor.newSpeedMMPM;
 	bool execRTZ = false;
 
-	if(Motor.currentSpeedMMPM >= 1)
+	if(Motor.currentSpeedMMPM >= 0.1)
 		CalcZeroDelta();
 
 	if(zeroDeltaCnt > 0)
@@ -560,6 +558,8 @@ bool Motor_RTZ(void)
 		Motor.newSpeedMMPM = 1000;
 		rtzInProgress = true;
 		Motor_Start();
+		/* Subtracting deceleration counts from total counts */
+		rtzCounts = abs(zeroDeltaCnt) - Motor_CalcDecelCounts(1181.10236);		// 1181.10236 rpm = 1000 mmpm
 	}
 
 	return true;
@@ -568,11 +568,8 @@ bool Motor_RTZ(void)
 /* Stop Motor when Zero Position is reached */
 bool Motor_CheckRTZ(void)
 {
-	uint32_t rtzCounts = 0;
-
 	if(rtzInProgress)
 	{
-		rtzCounts = abs(zeroDeltaCnt) - Motor_CalcDecelCounts(1181.10236);		// Subtracting deceleration counts
 		if(PULSE_COUNT >= rtzCounts)
 		{
 			rtzExec = true;
@@ -580,6 +577,7 @@ bool Motor_CheckRTZ(void)
 			Motor.direction = dir_bef_rtz;
 			Motor.newSpeedMMPM = spd_bef_rtz;
 			rtzInProgress = false;
+			rtzCounts = 0;
 		}
 	}
 	return true;

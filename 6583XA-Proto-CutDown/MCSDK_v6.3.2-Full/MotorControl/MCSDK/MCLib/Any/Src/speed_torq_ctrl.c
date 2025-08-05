@@ -395,6 +395,7 @@ __weak bool STC_ExecRamp(SpeednTorqCtrl_Handle_t *pHandle, /*int16_t*/float hTar
 static uint8_t settleCounter = 0;
 static FunctionalState PIloop = ENABLE;
 static FunctionalState checkZero = ENABLE;
+extern bool startExec;
 extern bool stopExec;
 extern bool rtzExec;
 /** Remove Afterwords; Dist FB to F4 Controller **/
@@ -442,6 +443,14 @@ __weak /*int32_t*/float STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle
     	wCurrentReference = (pHandle->TargetFinal * 65536.0);
       pHandle->RampRemainingStep = 0U;
 
+      if(startExec)
+      {
+    	  /** Remove Afterwords; Dist FB to F4 Controller **/
+    	  HAL_GPIO_WritePin(DistCountPin_GPIO_Port, DistCountPin_Pin, GPIO_PIN_SET);
+    	  /***************************************************************************/
+    	  startExec = false;
+      }
+
       if(stopExec)
       {
     	  CalcZeroDelta();
@@ -452,13 +461,7 @@ __weak /*int32_t*/float STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle
 		  Motor_SetZeroPos();
 		  rtzExec = false;
 	  }
-      /** Remove Afterwords; Dist FB to F4 Controller **/
-      	if(d2dExec)
-      	{
-      		HAL_GPIO_WritePin(DistCountPin_GPIO_Port, DistCountPin_Pin, GPIO_PIN_RESET);
-      		d2dExec = false;
-      	}
-	  /***************************************************************************/
+
     }
     else
     {

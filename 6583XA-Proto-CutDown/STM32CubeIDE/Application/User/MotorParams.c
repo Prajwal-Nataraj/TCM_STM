@@ -31,11 +31,9 @@ static float spd_bef_rtz;			/* Speed before RTZ */
 
 static uint32_t distCounts = 0;
 
+bool startExec = false;
 bool stopExec = false;
 bool rtzExec = false;
-/** Remove Afterwords; Dist FB to F4 Controller **/
-bool d2dExec = false;
-/***************************************************************************/
 
 MotorParams Motor;
 
@@ -429,15 +427,14 @@ bool Motor_Start(void)
 	if((Motor.currentSpeedMMPM >= 1.0) && (!rtzInProgress))
 		CalcZeroDelta();
 
-	/** Remove Afterwords; Dist FB to F4 Controller **/
-	HAL_GPIO_WritePin(DistCountPin_GPIO_Port, DistCountPin_Pin, GPIO_PIN_SET);
-	/***************************************************************************/
 	PULSE_COUNT = 0;
 
 	prevDir = Motor.direction;
 
 	Motor.currentSpeedMMPM = Motor.newSpeedMMPM;
 	Motor.currentSpeedRPM = Motor.newSpeedRPM;
+
+	startExec = true;
 
 	if((Motor.distance > 0.1) && (Motor.currentSpeedMMPM > 0.1) && Motor.drvToDist)
 		distCounts = mm_to_counts(Motor.distance) - Motor_CalcDecelCounts(Motor.currentSpeedRPM);
@@ -516,10 +513,10 @@ bool Motor_StopAtTarget(void)
 	{
 		if(PULSE_COUNT >= distCounts)
 		{
+		/** Remove Afterwords; Dist FB to F4 Controller **/
+			HAL_GPIO_WritePin(DistCountPin_GPIO_Port, DistCountPin_Pin, GPIO_PIN_RESET);
+		/*************************************************/
 			Motor_Stop();
-			/** Remove Afterwords; Dist FB to F4 Controller **/
-			d2dExec = true;
-			/***************************************************************************/
 		}
 	}
 	return true;

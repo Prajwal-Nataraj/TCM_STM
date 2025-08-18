@@ -168,7 +168,6 @@ int main(void)
 	  if(CmdBuf[0] != 0)
 	  {
 		  stdRet = Cmd_Process(CmdBuf, RspBuf, &RspLen);
-		  CmdBuf[0] = 0;
 
 		  if(RET_OK != stdRet)
 			  Send_ErrorMsg(stdRet);

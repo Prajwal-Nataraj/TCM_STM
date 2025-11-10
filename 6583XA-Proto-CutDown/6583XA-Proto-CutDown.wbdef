@@ -10,9 +10,9 @@
         <define key="BOARD" value="~6583XA" />
         <define key="BUS_VOLTAGE_READING" value="ENABLE" />
         <define key="CCMRAM_ENABLED" value="FALSE" />
-        <define key="CLOCK_FREQUENCY" value="CPU_CLK_170_MHZ" />
+        <define key="CLOCK_FREQUENCY" value="CPU_CLK_160_MHZ" />
         <define key="CLOCK_SOURCE" value="INTERNAL" />
-        <define key="CPU_CLK_170_MHZ" value="TRUE" />
+        <define key="CPU_CLK_160_MHZ" value="TRUE" />
         <define key="CTLBOARD_NAME" value="~6583XA" />
         <define key="CURR_SAMPLING_TIME" value="6" />
         <define key="CURRENT_READING_TOPOLOGY" value="THREE_SHUNT_INDEPENDENT_RESOURCES" />
@@ -154,7 +154,7 @@
         <define key="M1_PID_FLUX_KP_DEFAULT" value="8192" />
         <define key="M1_PID_SPEED_KD_DEFAULT" value="0" />
         <define key="M1_PID_SPEED_KI_DEFAULT" value="3360" />
-        <define key="M1_PID_SPEED_KP_DEFAULT" value="26880" />
+        <define key="M1_PID_SPEED_KP_DEFAULT" value="28800" />
         <define key="M1_PID_TORQUE_KD_DEFAULT" value="100" />
         <define key="M1_PID_TORQUE_KI_DEFAULT" value="2048" />
         <define key="M1_PID_TORQUE_KP_DEFAULT" value="8192" />
@@ -191,9 +191,9 @@
         <define key="M1_UD_VOLTAGE_THRESHOLD_V" value="10" />
         <define key="M1_USE_INTERNAL_OPAMP" value="ENABLE" />
         <define key="M1_UV_VOLTAGE_PROT_ENABLING" value="ENABLE" />
-        <define key="M1_VBUS_ADC" value="ADC1" />
+        <define key="M1_VBUS_ADC" value="ADC2" />
         <define key="M1_VBUS_ADC_SAMPLING_TIME" value="47" />
-        <define key="M1_VBUS_CHANNEL" value="ADC_Channel_1" />
+        <define key="M1_VBUS_CHANNEL" value="ADC_Channel_17" />
         <define key="M1_VBUS_PARTITIONING_FACTOR" value="0.052083333333333336" />
         <define key="MAX_READABLE_CURRENT" value="7.945" />
         <define key="MC_WORKBENCH_VERSION" value="6.3.2" />
@@ -362,10 +362,10 @@
         <define key="USE_3OPAMPS" value="FALSE" />
         <define key="USE_INTERNAL_OPAMP" value="ENABLE" />
         <define key="UV_VOLTAGE_PROT_ENABLING" value="ENABLE" />
-        <define key="VBUS_ADC" value="ADC1" />
+        <define key="VBUS_ADC" value="ADC2" />
         <define key="VBUS_ADC_SAMPLING_TIME" value="47" />
-        <define key="VBUS_CHANNEL" value="ADC_Channel_1" />
-        <define key="VBUS_GPIO_PIN" value="GPIO_Pin_0" />
+        <define key="VBUS_CHANNEL" value="ADC_Channel_17" />
+        <define key="VBUS_GPIO_PIN" value="GPIO_Pin_4" />
         <define key="VBUS_GPIO_PORT" value="GPIOA" />
         <define key="WB_UI_CUTOFF_FREQUENCY" value="6000" />
         <define key="WB_UI_ENCODER_HAS_INDEX_PIN" value="FALSE" />

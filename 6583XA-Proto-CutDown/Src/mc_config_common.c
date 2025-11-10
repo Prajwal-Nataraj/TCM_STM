@@ -108,8 +108,8 @@ static uint16_t RealBusVoltageSensorFilterBufferM1[M1_VBUS_SW_FILTER_BW_FACTOR];
   */
 RegConv_t VbusRegConv_M1 =
 {
-  .regADC                   = ADC1,
-  .channel                  = MC_ADC_CHANNEL_1,
+  .regADC                   = ADC2,
+  .channel                  = MC_ADC_CHANNEL_17,
   .samplingTime             = M1_VBUS_SAMPLING_TIME,
 };
 

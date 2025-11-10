@@ -1,10 +1,7 @@
 {
+  "algorithm": "FOC",
   "description": "",
   "checkList": {},
-  "version": 10,
-  "workBenchVersion": "6.3.2",
-  "workBenchVersionFileCreation": "6.3.0",
-  "algorithm": "FOC",
   "hardwares": {
     "type": "INVERTER",
     "control": {
@@ -12,7 +9,7 @@
         "id": "STSPIN32G4"
       },
       "clockSource": "internal_osc",
-      "clockFrequency": 170,
+      "clockFrequency": 160,
       "connectors": [],
       "features": [
         {
@@ -92,7 +89,7 @@
       ],
       "hardwareFamily": "CONTROL",
       "id": "user.6583XA.json",
-      "label": "6583XA",
+      "label": "6583A",
       "description": "STSPIN32G4 demonstration board for three-phase brushless motors",
       "descVersion": 4,
       "contentVersion": "1.0",
@@ -613,7 +610,7 @@
                     "signals": {
                       "VBUS": [
                         {
-                          "name": "PA0",
+                          "name": "PA4",
                           "help": "",
                           "cost": 0
                         }
@@ -660,7 +657,7 @@
         ],
         "hardwareFamily": "POWER",
         "id": "user.6583XA.json",
-        "label": "6583XA",
+        "label": "6583A",
         "description": "STSPIN32G4 demonstration board for three-phase brushless motors",
         "descVersion": 4,
         "contentVersion": "1.0",
@@ -1050,8 +1047,8 @@
                                   "signals": [
                                     {
                                       "name": "OPAMP2_OUT",
-                                      "pin": "VPOPAMP2",
-                                      "peripheral": "ADC2_IN_VPOPAMP2",
+                                      "pin": "PA6",
+                                      "peripheral": "ADC2_IN3",
                                       "help": ""
                                     }
                                   ],
@@ -1064,8 +1061,8 @@
                                   "signals": [
                                     {
                                       "name": "OPAMP2_OUT",
-                                      "pin": "PA6",
-                                      "peripheral": "ADC2_IN3",
+                                      "pin": "VPOPAMP2",
+                                      "peripheral": "ADC2_IN_VPOPAMP2",
                                       "help": ""
                                     }
                                   ],
@@ -1406,27 +1403,13 @@
                       "solutions": [
                         {
                           "ip": [
-                            "ADC1"
-                          ],
-                          "signals": [
-                            {
-                              "name": "VBUS",
-                              "pin": "PA0",
-                              "peripheral": "ADC1_IN1",
-                              "help": ""
-                            }
-                          ],
-                          "cost": 0
-                        },
-                        {
-                          "ip": [
                             "ADC2"
                           ],
                           "signals": [
                             {
                               "name": "VBUS",
-                              "pin": "PA0",
-                              "peripheral": "ADC2_IN1",
+                              "pin": "PA4",
+                              "peripheral": "ADC2_IN17",
                               "help": ""
                             }
                           ],
@@ -1528,7 +1511,7 @@
     "inverter": {
       "hardwareFamily": "INVERTER",
       "id": "user.6583XA.json",
-      "label": "6583XA",
+      "label": "6583A",
       "description": "STSPIN32G4 demonstration board for three-phase brushless motors",
       "descVersion": 4,
       "contentVersion": "1.0",
@@ -1539,53 +1522,14 @@
       "status": "success"
     }
   },
+  "version": 13,
+  "workBenchVersion": "6.3.0",
+  "workBenchVersionFileCreation": "6.3.0",
   "details": {
     "steps": {
-      "powerSwitches_0": {
-        "setting": {
-          "PWMFrequency": 20000,
-          "chargeBootCapDuty": "Number.NaN",
-          "chargeBootCapMs": "Number.NaN",
-          "drivingTopology": ""
-        }
-      },
       "speedSensingSel_0": {
         "mainSensorParams": {
           "speedSensorMode": "encoder"
-        }
-      },
-      "currentSensing_0": {
-        "executionRate": "Number.NaN",
-        "topology": "",
-        "topologyData": {
-          "_tag": "3sh",
-          "ampMode": "",
-          "sensing": {
-            "amplification": "internal",
-            "shuntResistor": "Number.NaN",
-            "gainMode": "",
-            "sensingType": "",
-            "gain": "Number.NaN",
-            "tNoise": "Number.NaN",
-            "tRise": "Number.NaN",
-            "internalGainFactor": "Number.NaN",
-            "maxModulation": "Number.NaN",
-            "samplingTime": 6.5,
-            "withFilteredAdc": false,
-            "withFiltering": false
-          }
-        },
-        "ocpData": {
-          "enable": true,
-          "ocpMode": "",
-          "ocp": {
-            "mode": "internal",
-            "digitalFilter": "Number.NaN",
-            "threshold": "Number.NaN",
-            "bkinMode": "",
-            "invertingInput": "DAC",
-            "voltageRef": "Number.NaN"
-          }
         }
       },
       "temperatureSensing_0": {
@@ -1603,6 +1547,46 @@
         "samplingTime": "Number.NaN",
         "adc_freq": "Number.NaN",
         "enable": false
+      },
+      "userInterface": {
+        "startStop": {
+          "enabled": false
+        },
+        "mcpv2": {
+          "bufferSize": "Number.NaN",
+          "stlink": {
+            "enabled": false,
+            "dataLog": {
+              "enabled": false,
+              "numberOfSignal": "Number.NaN",
+              "bufferSize": "Number.NaN"
+            }
+          },
+          "usartA": {
+            "enabled": true,
+            "baudrate": 115200,
+            "channel": "",
+            "tx": "",
+            "rx": "",
+            "UsartIRQn": "",
+            "dataLog": {
+              "enabled": true,
+              "numberOfSignal": "Number.NaN",
+              "bufferSize": "Number.NaN"
+            }
+          },
+          "usartB": {
+            "enabled": false
+          }
+        }
+      },
+      "powerSwitches_0": {
+        "setting": {
+          "PWMFrequency": 20000,
+          "chargeBootCapDuty": "Number.NaN",
+          "chargeBootCapMs": "Number.NaN",
+          "drivingTopology": ""
+        }
       },
       "driveManagement_0": {
         "currentReg": {
@@ -1698,38 +1682,6 @@
         "modulationFlags": {
           "overModulation": false,
           "discontinuousPWM": false
-        }
-      },
-      "userInterface": {
-        "startStop": {
-          "enabled": false
-        },
-        "mcpv2": {
-          "bufferSize": "Number.NaN",
-          "stlink": {
-            "enabled": false,
-            "dataLog": {
-              "enabled": false,
-              "numberOfSignal": "Number.NaN",
-              "bufferSize": "Number.NaN"
-            }
-          },
-          "usartA": {
-            "enabled": true,
-            "baudrate": 115200,
-            "channel": "",
-            "tx": "",
-            "rx": "",
-            "UsartIRQn": "",
-            "dataLog": {
-              "enabled": true,
-              "numberOfSignal": "Number.NaN",
-              "bufferSize": "Number.NaN"
-            }
-          },
-          "usartB": {
-            "enabled": false
-          }
         }
       }
     }

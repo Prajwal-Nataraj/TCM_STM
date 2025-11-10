@@ -60,14 +60,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define M1_BUS_VOLTAGE_Pin GPIO_PIN_0
-#define M1_BUS_VOLTAGE_GPIO_Port GPIOA
 #define M1_CURR_SHUNT_U_Pin GPIO_PIN_1
 #define M1_CURR_SHUNT_U_GPIO_Port GPIOA
 #define M1_OPAMP1_OUT_Pin GPIO_PIN_2
 #define M1_OPAMP1_OUT_GPIO_Port GPIOA
 #define M1_OPAMP1_EXT_GAIN_Pin GPIO_PIN_3
 #define M1_OPAMP1_EXT_GAIN_GPIO_Port GPIOA
+#define M1_BUS_VOLTAGE_Pin GPIO_PIN_4
+#define M1_BUS_VOLTAGE_GPIO_Port GPIOA
 #define M1_OPAMP2_OUT_Pin GPIO_PIN_6
 #define M1_OPAMP2_OUT_GPIO_Port GPIOA
 #define M1_CURR_SHUNT_V_Pin GPIO_PIN_7

@@ -13,7 +13,7 @@
 /* Private define -----------------------------------------------------------*/
 #define GEAR_RATIO			6.0f
 #define MM_PER_THREAD		5.08f
-#define SPEED_ADJ_FACT		0.998013f
+#define SPEED_ADJ_FACT		1.001f
 
 /* External Variable/Handle -------------------------------------------------*/
 /* UART Handle */
@@ -211,7 +211,7 @@ static void SetTcmPIGains(float speed)
 {
 	if(speed < 55.5)
 	{
-		Motor.currFactor = 0.8f;
+		Motor.currFactor = 0.9f;
 		Motor.spdKP = 25000/6;
 		Motor.spdKI = 3350/6;
 		Motor.trqKP = 8192;

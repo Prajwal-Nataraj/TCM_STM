@@ -189,6 +189,7 @@ int main(void)
 
       Motor_StopAtTarget();
 	  Motor_CheckRTZ();
+	  Motor_StallCheck();
 
     /* USER CODE END WHILE */
 

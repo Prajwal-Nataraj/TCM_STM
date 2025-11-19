@@ -118,6 +118,8 @@ bool Motor_SetZeroPos(void);
 bool Motor_RTZ(void);
 /* Stop Motor when Zero Position is reached */
 bool Motor_CheckRTZ(void);
+/* Checks for Motor Stall Condition */
+void Motor_StallCheck(void);
 
 #endif
 

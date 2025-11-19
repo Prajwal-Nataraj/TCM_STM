@@ -66,6 +66,7 @@
 #define CMD_SPDKI			(0x12)
 #define CMD_TRQKP			(0x13)
 #define CMD_TRQKI			(0x14)
+#define CMD_VOLT			(0x15)
 
 #define CMD_EXC_CMDS    	((uint8_t)243)
 

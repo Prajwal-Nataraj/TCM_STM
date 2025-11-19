@@ -514,6 +514,32 @@ void CmdProc_RTZ(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *Rs
 		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
 }
 
+void CmdProc_Voltage(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
+
+	float32_t volt = 0;
+	float32_t convFact = 0;
+	uint16_t v16 = 0;
+
+	if(argGS == CMD_GET)
+	{
+		v16 = VBS_GetBusVoltage_d(&BusVoltageSensor_M1._Super);
+		convFact = ADC_REFERENCE_VOLTAGE / VBUS_PARTITIONING_FACTOR;
+		volt = ((float32_t)v16) * convFact / 65536.0;
+
+		uint8_t data[4] = {0};
+		SetValFLT32(volt, data);
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)data, sizeof(data), RspBuf, RspLen);
+		return;
+	}
+
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+}
+
 static const CmdHandler_t CmdTable[] =
 {
 		{ 	CMD_INIT		, 		CmdProc_Init 		},
@@ -539,6 +565,7 @@ static const CmdHandler_t CmdTable[] =
 		{ 	CMD_SPDKI		, 		CmdProc_SpdKi		},
 		{ 	CMD_TRQKP		, 		CmdProc_TrqKp		},
 		{ 	CMD_TRQKI		, 		CmdProc_TrqKi		},
+		{ 	CMD_VOLT		, 		CmdProc_Voltage		},
 };
 
 StdReturn_t Cmd_Process(uint8_t *CmdBuf, uint8_t *RspBuf, uint32_t *RspLen)

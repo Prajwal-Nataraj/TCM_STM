@@ -571,4 +571,14 @@ bool Motor_CheckRTZ(void)
 	return true;
 }
 
+/* Checks for Motor Stall Condition */
+void Motor_StallCheck(void)
+{
+	if(abs(MCI_GetIqd(&Mci[0]).q) > 20000.0)
+	{
+		Motor_DisBridge();
+		Motor_Stop();
+	}
+}
+
 /********************************* END OF FILE ********************************/

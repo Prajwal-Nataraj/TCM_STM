@@ -60,6 +60,12 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LIM_SWL_Pin GPIO_PIN_2
+#define LIM_SWL_GPIO_Port GPIOC
+#define LIM_SWL_EXTI_IRQn EXTI2_IRQn
+#define LIM_SWU_Pin GPIO_PIN_3
+#define LIM_SWU_GPIO_Port GPIOC
+#define LIM_SWU_EXTI_IRQn EXTI3_IRQn
 #define M1_CURR_SHUNT_U_Pin GPIO_PIN_1
 #define M1_CURR_SHUNT_U_GPIO_Port GPIOA
 #define M1_OPAMP1_OUT_Pin GPIO_PIN_2

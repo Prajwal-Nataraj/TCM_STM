@@ -32,8 +32,8 @@ static uint32_t rtzCounts = 0;
 static bool rtzInProgress = false;
 bool rtzExec = false;
 
-/* For Distance */
-static uint32_t distCounts = 0;
+/* For extension */
+static uint32_t extCounts = 0;
 
 bool stopExec = false;
 
@@ -58,16 +58,16 @@ float GetCurrentFactor(void)
 	return Motor.currFactor;
 }
 
-/* Set Vertical Distance in mm */
-bool Motor_SetDistance(float distance)
+/* Set Vertical Extension in mm */
+bool Motor_SetExtension(float extension)
 {
-	Motor.distance = distance;
+	Motor.extension = extension;
 	return true;
 }
-/* Get Vertical Distance in mm */
-float Motor_GetDistance(void)
+/* Get Vertical Extension in mm */
+float Motor_GetExtension(void)
 {
-	return Motor.distance;
+	return Motor.extension;
 }
 
 /* Set Vertical Speed in mm/min */
@@ -131,11 +131,11 @@ static float mmpm_to_rpm(float mmpm)
 	return rpm;
 }
 
-/* Calculate encoder counts based on distance in mm */
-static uint32_t mm_to_counts(float dist_mm)
+/* Calculate encoder counts based on extension in mm */
+static uint32_t mm_to_counts(float ext_mm)
 {
 	uint32_t counts = 0;
-	counts = (dist_mm / MM_PER_THREAD) * GEAR_RATIO * 5000;		/* 5000 is the counts per rotation */
+	counts = (ext_mm / MM_PER_THREAD) * GEAR_RATIO * 5000;		/* 5000 is the counts per rotation */
 	return counts;
 }
 
@@ -343,16 +343,16 @@ int16_t Motor_GetTrqKi(void)
 	return Motor.trqKI;
 }
 
-/* Set Drive to distance */
-bool Motor_SetDrvToDist(bool drvToDist)
+/* Set Drive to extension */
+bool Motor_SetDrvToExt(bool drvToExt)
 {
-	Motor.drvToDist = drvToDist;
+	Motor.drvToExt = drvToExt;
 	return true;
 }
-/* Get Drive to distance */
-bool Motor_GetDrvToDist(void)
+/* Get Drive to extension */
+bool Motor_GetDrvToExt(void)
 {
-	return Motor.drvToDist;
+	return Motor.drvToExt;
 }
 
 /* Reset Motor Parameters*/
@@ -360,13 +360,13 @@ bool Motor_ResetParams(void)
 {
 	rampTime = 100;
 
-	Motor.distance = 0;
+	Motor.extension = 0;
 	Motor.newSpeedMMPM = 0;
 	Motor.currentSpeedMMPM = 0;
 	Motor.newSpeedRPM = 0;
 	Motor.currentSpeedRPM = 0;
 	Motor.direction = 0;
-	Motor.drvToDist = false;
+	Motor.drvToExt = false;
 
 	Motor.defGains = false;
 	Motor.customGains = false;
@@ -438,8 +438,8 @@ bool Motor_Start(void)
 	Motor.currentSpeedMMPM = Motor.newSpeedMMPM;
 	Motor.currentSpeedRPM = Motor.newSpeedRPM;
 
-	if((Motor.distance > 0.1) && (Motor.currentSpeedMMPM > 0.1) && Motor.drvToDist)
-		distCounts = mm_to_counts(Motor.distance) - Motor_CalcDecelCounts(Motor.currentSpeedRPM);
+	if((Motor.extension > 0.1) && (Motor.currentSpeedMMPM > 0.1) && Motor.drvToExt)
+		extCounts = mm_to_counts(Motor.extension) - Motor_CalcDecelCounts(Motor.currentSpeedRPM);
 
 	return true;
 }
@@ -473,15 +473,13 @@ bool Motor_CriticalStop(void)
 	return true;
 }
 
-bool sendToPort(UART_HandleTypeDef *phuart_MD, float sendData)
+bool sendToPort(float sendData)
 {
 	char sendBuf[15] = {0};
-	HAL_StatusTypeDef retVal;
 
 	sprintf(sendBuf, "%.2f\r\n", sendData);
-	retVal = HAL_UART_Transmit(phuart_MD, (uint8_t *)sendBuf, 15, 100);
 
-	if(HAL_OK == retVal)
+	if(true == sendOut((uint8_t *)sendBuf, sizeof(sendBuf)))
 		return true;
 
 	return false;
@@ -497,13 +495,18 @@ bool IsTimedOut(uint32_t *prevTime, uint32_t timeOut)
 	return false;
 }
 
-/* Stop the Motor when Target Distance is reached */
+/* Stop the Motor when Target Extension is reached */
 bool Motor_StopAtTarget(void)
 {
-	if(Motor.drvToDist && (!rtzInProgress) && (Motor.currentSpeedMMPM > 0.1))
+	uint8_t d2eAck[5] = {0x01, 0x0E, 0x01, 0x03, 0x20};
+	if(Motor.drvToExt && (!rtzInProgress) && (Motor.currentSpeedMMPM > 0.1))
 	{
-		if(PULSE_COUNT >= distCounts)
+		if(PULSE_COUNT >= extCounts)
+		{
 			Motor_Stop();
+			if(true != sendOut(d2eAck, sizeof(d2eAck)))
+				return false;
+		}
 	}
 	return true;
 }

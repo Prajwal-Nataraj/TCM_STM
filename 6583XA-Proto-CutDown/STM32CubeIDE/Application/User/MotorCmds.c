@@ -130,19 +130,19 @@ void CmdProc_Init(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *R
 		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
 }
 
-void CmdProc_Distance(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+void CmdProc_Extension(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
 {
 	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
 	uint8_t argGS = GetArgUINT8(pCmdBuf);
 
-	float32_t distance = 0;
+	float32_t extension = 0;
 
 	if(argGS == CMD_GET)
 	{
-		distance = Motor_GetDistance();
+		extension = Motor_GetExtension();
 
 		uint8_t data[4] = {0};
-		SetValFLT32(distance, data);
+		SetValFLT32(extension, data);
 
 		RESP(CMDBYTE_FUNCCODE, (uint8_t*)data, sizeof(data), RspBuf, RspLen);
 		return;
@@ -151,9 +151,9 @@ void CmdProc_Distance(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_
 	if(argGS == CMD_SET)
 	{
 		pCmdBuf += 1;
-		distance = GetArgFLT32(pCmdBuf);
+		extension = GetArgFLT32(pCmdBuf);
 
-		if(!Motor_SetDistance(distance))
+		if(!Motor_SetExtension(extension))
 			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
 		else
 			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
@@ -414,32 +414,20 @@ void CmdProc_TrqKi(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *
 	}
 }
 
-void CmdProc_DrvToDist(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+void CmdProc_EnDrvToExt(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
 {
-	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
-	uint8_t argGS = GetArgUINT8(pCmdBuf);
+	if(Motor_SetDrvToExt(true))
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
+}
 
-	uint8_t drvToDist = 0;
-
-	if(argGS == CMD_GET)
-	{
-		drvToDist = Motor_GetDrvToDist();
-
-		RESP(CMDBYTE_FUNCCODE, (uint8_t*)&drvToDist, sizeof(drvToDist), RspBuf, RspLen);
-		return;
-	}
-
-	if(argGS == CMD_SET)
-	{
-		pCmdBuf += 1;
-		drvToDist = GetArgUINT8(pCmdBuf);
-
-		if(!Motor_SetDrvToDist(drvToDist))
-			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
-		else
-			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
-		return;
-	}
+void CmdProc_DisDrvToExt(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(Motor_SetDrvToExt(false))
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
 }
 
 void CmdProc_Reserved(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
@@ -543,7 +531,7 @@ void CmdProc_Voltage(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t
 static const CmdHandler_t CmdTable[] =
 {
 		{ 	CMD_INIT		, 		CmdProc_Init 		},
-		{ 	CMD_DIST		, 		CmdProc_Distance 	},
+		{ 	CMD_EXT		, 		CmdProc_Extension 	},
 		{ 	CMD_SPEED		, 		CmdProc_Speed 		},
 		{ 	CMD_DIR			, 		CmdProc_Direction 	},
 		{ 	CMD_RESETPRM	, 		CmdProc_ResetParams },
@@ -557,8 +545,8 @@ static const CmdHandler_t CmdTable[] =
 		{ 	CMD_ENBRIDGE	, 		CmdProc_EnBridge	},
 		{ 	CMD_DISBRIDGE	, 		CmdProc_DisBridge	},
 
-		{ 	CMD_DRVTODIST	, 		CmdProc_DrvToDist	},
-		{ 	CMD_RESERVED	, 		CmdProc_Reserved	},
+		{ 	CMD_ENDRVTOEXT	, 		CmdProc_EnDrvToExt	},
+		{ 	CMD_DISDRVTOEXT	, 		CmdProc_DisDrvToExt },
 
 		{	CMD_RSTPIGAIN	,		CmdProc_ResetPIGains},
 		{ 	CMD_SPDKP		, 		CmdProc_SpdKp		},
@@ -599,6 +587,18 @@ StdReturn_t Cmd_Process(uint8_t *CmdBuf, uint8_t *RspBuf, uint32_t *RspLen)
 void Send_ErrorMsg(uint8_t stdRet)
 {
 	HAL_UART_Transmit(&huart_MD, (uint8_t *)Error_msg[stdRet], strlen(Error_msg[stdRet]), UART_TIMEOUT);
+}
+
+bool sendOut(uint8_t *sendBuf, uint32_t size)
+{
+	HAL_StatusTypeDef retVal;
+
+	retVal = HAL_UART_Transmit(&huart_MD, sendBuf, size, UART_TIMEOUT);
+
+	if(HAL_OK == retVal)
+		return true;
+
+	return false;
 }
 
 /********************************* END OF FILE ********************************/

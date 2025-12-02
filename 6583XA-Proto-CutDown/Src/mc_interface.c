@@ -692,11 +692,7 @@ __weak void MCI_ExecBufferedCommands(MCI_Handle_t *pHandle)
         case MCI_CMD_EXECSPEEDRAMP:
         {
           pHandle->pFOCVars->bDriveInput = INTERNAL;
-
-//          STC_SetControlMode(pHandle->pSTC, MCM_SPEED_MODE);
-          pHandle->pSTC->Mode = MCM_SPEED_MODE;
-          pHandle->pSTC->RampRemainingStep = 0u; /* Interrupts previous ramp */
-
+          STC_SetControlMode(pHandle->pSTC, MCM_SPEED_MODE);
           commandHasBeenExecuted = STC_ExecRamp(pHandle->pSTC, pHandle->hFinalSpeed, pHandle->hDurationms);
           break;
         }
@@ -704,11 +700,7 @@ __weak void MCI_ExecBufferedCommands(MCI_Handle_t *pHandle)
         case MCI_CMD_EXECTORQUERAMP:
         {
           pHandle->pFOCVars->bDriveInput = INTERNAL;
-
-//          STC_SetControlMode(pHandle->pSTC, MCM_TORQUE_MODE);
-          pHandle->pSTC->Mode = MCM_TORQUE_MODE;
-		  pHandle->pSTC->RampRemainingStep = 0u; /* Interrupts previous ramp */
-
+          STC_SetControlMode(pHandle->pSTC, MCM_TORQUE_MODE);
           commandHasBeenExecuted = STC_ExecRamp(pHandle->pSTC, pHandle->hFinalTorque, pHandle->hDurationms);
           break;
         }

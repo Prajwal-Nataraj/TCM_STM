@@ -21,7 +21,7 @@
 
 typedef struct
 {
-	float distance;
+	float extension;
 	float newSpeedMMPM;
 	float currentSpeedMMPM;
 	float newSpeedRPM;
@@ -41,7 +41,7 @@ typedef struct
 	int16_t flxKI;
 
 	float currFactor;
-	bool drvToDist;
+	bool drvToExt;
 }MotorParams;
 
 /* Initialize/Reset Motor Parameters */
@@ -50,10 +50,10 @@ bool Motor_Init(void);
 void SetCurrentFactor(float);
 /* Get the Current Factor */
 float GetCurrentFactor(void);
-/* Set Vertical Distance in mm */
-bool Motor_SetDistance(float);
-/* Get Vertical Distance in mm */
-float Motor_GetDistance(void);
+/* Set Vertical Extension in mm */
+bool Motor_SetExtension(float);
+/* Get Vertical Extension in mm */
+float Motor_GetExtension(void);
 /* Set Vertical Speed in mm/min */
 bool Motor_SetSpeed(float);
 /* Get Vertical Speed in mm/min */
@@ -90,10 +90,10 @@ int16_t Motor_GetTrqKp(void);
 bool Motor_SetTrqKi(int16_t);
 /* Get Torque Ki */
 int16_t Motor_GetTrqKi(void);
-/* Set Drive to distance */
-bool Motor_SetDrvToDist(bool);
-/* Get Drive to distance */
-bool Motor_GetDrvToDist(void);
+/* Set Drive to extension */
+bool Motor_SetDrvToExt(bool);
+/* Get Drive to extension */
+bool Motor_GetDrvToExt(void);
 /* Reset Motor Parameters */
 bool Motor_ResetParams(void);
 /* Enable Bridge */
@@ -107,7 +107,7 @@ bool Motor_Stop(void);
 /* Critical Stop (max Deceleration) */
 bool Motor_CriticalStop(void);
 /* Send Data to COM Port */
-bool sendToPort(UART_HandleTypeDef *, float);
+bool sendToPort(float);
 /* Alert a timeout */
 bool IsTimedOut(uint32_t *, uint32_t);
 /* Stop the Motor when Target Distance is reached */

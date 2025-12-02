@@ -44,7 +44,7 @@
 #define CMD_SET				(0x02)
 
 #define CMD_INIT			(0x00)
-#define CMD_DIST			(0x01)
+#define CMD_EXT				(0x01)
 #define CMD_SPEED			(0x02)
 #define CMD_DIR				(0x03)
 #define CMD_RESETPRM		(0x04)
@@ -58,8 +58,8 @@
 #define CMD_ENBRIDGE		(0x0C)
 #define CMD_DISBRIDGE		(0x0D)
 
-#define CMD_DRVTODIST		(0x0E)
-#define CMD_RESERVED		(0x0F)
+#define CMD_ENDRVTOEXT		(0x0E)
+#define CMD_DISDRVTOEXT		(0x0F)
 
 #define CMD_RSTPIGAIN		(0x10)
 #define CMD_SPDKP			(0x11)
@@ -102,7 +102,7 @@ uint8_t checkCRC(uint8_t *, uint8_t);
 /* Motor Initialization */
 void CmdProc_Init(uint8_t *, uint32_t , uint8_t *, uint32_t *);
 /* Set/Get Distance in mm */
-void CmdProc_Distance(uint8_t *, uint32_t , uint8_t *, uint32_t *);
+void CmdProc_Extension(uint8_t *, uint32_t , uint8_t *, uint32_t *);
 
 void CmdProc_Speed(uint8_t *, uint32_t , uint8_t *, uint32_t *);
 
@@ -122,7 +122,9 @@ void CmdProc_TrqKp(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *
 
 void CmdProc_TrqKi(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
 
-void CmdProc_DrvToDist(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
+void CmdProc_EnDrvToExt(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
+
+void CmdProc_DisDrvToExt(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
 
 void CmdProc_Reserved(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen);
 
@@ -140,6 +142,8 @@ void CmdProc_RTZ(uint8_t *, uint32_t, uint8_t *, uint32_t *);
 
 /* Send Error Message */
 void Send_ErrorMsg(uint8_t);
+
+bool sendOut();
 
 #endif
 

@@ -34,7 +34,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+/* Uncomment to use Motor Pilot */
+//#define MOTOR_PILOT
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -74,7 +75,9 @@ DMA_HandleTypeDef hdma_usart1_tx;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-//static void MX_DMA_Init(void);
+#ifdef MOTOR_PILOT
+static void MX_DMA_Init(void);
+#endif
 static void MX_ADC1_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_COMP1_Init(void);
@@ -139,7 +142,9 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-//  MX_DMA_Init();
+#ifdef MOTOR_PILOT
+  MX_DMA_Init();
+#endif
   MX_ADC1_Init();
   MX_ADC2_Init();
   MX_COMP1_Init();
@@ -161,6 +166,8 @@ int main(void)
   MX_NVIC_Init();
   HAL_TIM_Base_Start(&htim2);
   /* USER CODE BEGIN 2 */
+#ifndef MOTOR_PILOT
+
     uint8_t CmdBuf[CMDBUF_SIZE] = {0};
     uint8_t RspBuf[RSPBUF_SIZE] = {0};
     uint32_t RspLen = 0;
@@ -168,12 +175,15 @@ int main(void)
     StdReturn_t stdRet;
     HAL_UART_Transmit(&huart_MD, (uint8_t *)"Welcome to TCM Motor Drive", 28, UART_TIMEOUT);
 
+#endif
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+#ifndef MOTOR_PILOT
+
 	  HAL_UART_Receive(&huart_MD, CmdBuf, CMDBUF_SIZE, UART_TIMEOUT);
 
 	  if(CmdBuf[0] != 0)
@@ -191,6 +201,7 @@ int main(void)
 	  Motor_CheckRTZ();
 	  Motor_StallCheck();
 
+#endif
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -966,17 +977,19 @@ static void MX_USART1_UART_Init(void)
 
 }
 
+#ifdef MOTOR_PILOT
 /**
   * Enable DMA controller clock
   */
-//static void MX_DMA_Init(void)
-//{
-//
-//  /* DMA controller clock enable */
-//  __HAL_RCC_DMAMUX1_CLK_ENABLE();
-//  __HAL_RCC_DMA1_CLK_ENABLE();
-//
-//}
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMAMUX1_CLK_ENABLE();
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+}
+#endif
 
 /**
   * @brief GPIO Initialization Function

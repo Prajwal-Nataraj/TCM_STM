@@ -67,6 +67,7 @@
 #define CMD_TRQKP			(0x13)
 #define CMD_TRQKI			(0x14)
 #define CMD_VOLT			(0x15)
+#define CMD_FAULT_ACK		(0x16)
 
 #define CMD_EXC_CMDS    	((uint8_t)243)
 
@@ -143,7 +144,7 @@ void CmdProc_RTZ(uint8_t *, uint32_t, uint8_t *, uint32_t *);
 /* Send Error Message */
 void Send_ErrorMsg(uint8_t);
 
-bool sendOut();
+bool sendOut(uint8_t *, uint32_t, bool);
 
 #endif
 

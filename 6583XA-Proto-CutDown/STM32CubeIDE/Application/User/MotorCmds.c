@@ -528,10 +528,18 @@ void CmdProc_Voltage(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t
 		NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
 }
 
+void CmdProc_FaultAck(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+	if(MCI_FaultAcknowledged(pMCI[M1]))
+		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+	else
+		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
+}
+
 static const CmdHandler_t CmdTable[] =
 {
 		{ 	CMD_INIT		, 		CmdProc_Init 		},
-		{ 	CMD_EXT		, 		CmdProc_Extension 	},
+		{ 	CMD_EXT			, 		CmdProc_Extension 	},
 		{ 	CMD_SPEED		, 		CmdProc_Speed 		},
 		{ 	CMD_DIR			, 		CmdProc_Direction 	},
 		{ 	CMD_RESETPRM	, 		CmdProc_ResetParams },
@@ -554,6 +562,7 @@ static const CmdHandler_t CmdTable[] =
 		{ 	CMD_TRQKP		, 		CmdProc_TrqKp		},
 		{ 	CMD_TRQKI		, 		CmdProc_TrqKi		},
 		{ 	CMD_VOLT		, 		CmdProc_Voltage		},
+		{ 	CMD_FAULT_ACK	, 		CmdProc_FaultAck	},
 };
 
 StdReturn_t Cmd_Process(uint8_t *CmdBuf, uint8_t *RspBuf, uint32_t *RspLen)
@@ -589,11 +598,16 @@ void Send_ErrorMsg(uint8_t stdRet)
 	HAL_UART_Transmit(&huart_MD, (uint8_t *)Error_msg[stdRet], strlen(Error_msg[stdRet]), UART_TIMEOUT);
 }
 
-bool sendOut(uint8_t *sendBuf, uint32_t size)
+bool sendOut(uint8_t *CmdBuf, uint32_t size, bool crc)
 {
 	HAL_StatusTypeDef retVal;
 
-	retVal = HAL_UART_Transmit(&huart_MD, sendBuf, size, UART_TIMEOUT);
+	if(crc)
+	{
+		CmdBuf[size-1] = 0x00;
+		CmdBuf[size-1] = GetCRC(CmdBuf, CMDBYTE_DATALEN);
+	}
+	retVal = HAL_UART_Transmit(&huart_MD, CmdBuf, size, UART_TIMEOUT);
 
 	if(HAL_OK == retVal)
 		return true;

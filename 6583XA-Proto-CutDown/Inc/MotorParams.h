@@ -120,6 +120,8 @@ bool Motor_RTZ(void);
 bool Motor_CheckRTZ(void);
 /* Checks for Motor Stall Condition */
 void Motor_StallCheck(void);
+/* Checks for any Falut Condition */
+void Motor_FaultCheck(void);
 
 #endif
 

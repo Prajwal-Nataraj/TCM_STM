@@ -479,7 +479,7 @@ bool sendToPort(float sendData)
 
 	sprintf(sendBuf, "%.2f\r\n", sendData);
 
-	if(true == sendOut((uint8_t *)sendBuf, sizeof(sendBuf)))
+	if(true == sendOut((uint8_t *)sendBuf, sizeof(sendBuf), false))
 		return true;
 
 	return false;
@@ -498,13 +498,13 @@ bool IsTimedOut(uint32_t *prevTime, uint32_t timeOut)
 /* Stop the Motor when Target Extension is reached */
 bool Motor_StopAtTarget(void)
 {
-	uint8_t d2eAck[5] = {0x01, 0x0E, 0x01, 0x03, 0x20};
+	uint8_t d2eAck[5] = {0x01, 0x0E, 0x01, 0x03, 0x00};
 	if(Motor.drvToExt && (!rtzInProgress) && (Motor.currentSpeedMMPM > 0.1))
 	{
 		if(PULSE_COUNT >= extCounts)
 		{
 			Motor_Stop();
-			if(true != sendOut(d2eAck, sizeof(d2eAck)))
+			if(true != sendOut(d2eAck, sizeof(d2eAck), true))
 				return false;
 		}
 	}
@@ -577,10 +577,42 @@ bool Motor_CheckRTZ(void)
 /* Checks for Motor Stall Condition */
 void Motor_StallCheck(void)
 {
-	if(abs(MCI_GetIqd(&Mci[0]).q) > 20000.0)
+	if(abs(MCI_GetIqd(pMCI[M1]).q) > 20000.0)
 	{
 		Motor_DisBridge();
 		Motor_Stop();
+	}
+}
+
+/* Checks for any Falut Condition */
+void Motor_FaultCheck(void)
+{
+	uint16_t curFault = MC_NO_FAULTS;
+	uint16_t pastFault = MC_NO_FAULTS;
+	uint8_t faultCmd[5] = {0x01, 0x16, 0x01, 0x00, 0x00};
+
+	curFault = MCI_GetCurrentFaults(pMCI[M1]);
+	pastFault = MCI_GetOccurredFaults(pMCI[M1]);
+
+	if((MC_NO_FAULTS != curFault) ||
+	   (MC_NO_FAULTS != pastFault))
+	{
+		     if	 ((MC_DURATION & curFault) || (MC_DURATION & pastFault))
+			faultCmd[3] = 0x01;
+		else if ((MC_OVER_VOLT & curFault) || (MC_OVER_VOLT & pastFault))
+			faultCmd[3] = 0x02;
+		else if((MC_UNDER_VOLT & curFault) || (MC_UNDER_VOLT & pastFault))
+			faultCmd[3] = 0x03;
+		else if ((MC_OVER_CURR & curFault) || (MC_OVER_CURR & pastFault))
+			faultCmd[3] = 0x04;
+		else if  ((MC_SW_ERROR & curFault) || (MC_SW_ERROR & pastFault))
+			faultCmd[3] = 0x05;
+		else if  ((MC_DP_FAULT & curFault) || (MC_DP_FAULT & pastFault))
+			faultCmd[3] = 0x06;
+		else
+			return;
+
+		sendOut(faultCmd, sizeof(faultCmd), true);
 	}
 }
 

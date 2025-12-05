@@ -200,6 +200,7 @@ int main(void)
       Motor_StopAtTarget();
 	  Motor_CheckRTZ();
 	  Motor_StallCheck();
+	  Motor_FaultCheck();
 
 #endif
     /* USER CODE END WHILE */

@@ -40,6 +40,10 @@
 
 #define DEVADDR				(0x01)
 
+/* Applicaion protocol version - 1.0 */
+#define APP_PROTOCOL_VER_MAJOR (0x01)
+#define APP_PROTOCOL_VER_MINOR (0x00)
+
 #define CMD_GET				(0x01)
 #define CMD_SET				(0x02)
 
@@ -68,6 +72,7 @@
 #define CMD_TRQKI			(0x14)
 #define CMD_VOLT			(0x15)
 #define CMD_FAULT_ACK		(0x16)
+#define CMD_APPVER          (0x17)
 
 #define CMD_EXC_CMDS    	((uint8_t)243)
 

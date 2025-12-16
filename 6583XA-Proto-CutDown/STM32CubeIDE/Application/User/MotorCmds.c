@@ -122,6 +122,16 @@ static void RESP(uint8_t FuncCode, uint8_t *Data, uint8_t DataLen, uint8_t *RspB
 
 
 
+/* Get MotorDrive Application Protocol version */
+static void CmdProc_AppVer(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+{
+    uint8_t data[2];
+    data[0] = APP_PROTOCOL_VER_MAJOR;
+    data[1] = APP_PROTOCOL_VER_MINOR;
+    RESP(CMDBYTE_FUNCCODE, data, sizeof(data), RspBuf, RspLen);
+    return;
+}
+
 void CmdProc_Init(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
 {
 	if(Motor_Init())
@@ -563,6 +573,7 @@ static const CmdHandler_t CmdTable[] =
 		{ 	CMD_TRQKI		, 		CmdProc_TrqKi		},
 		{ 	CMD_VOLT		, 		CmdProc_Voltage		},
 		{ 	CMD_FAULT_ACK	, 		CmdProc_FaultAck	},
+		{ 	CMD_APPVER		, 		CmdProc_AppVer		},
 };
 
 StdReturn_t Cmd_Process(uint8_t *CmdBuf, uint8_t *RspBuf, uint32_t *RspLen)

@@ -62,8 +62,8 @@
 #define CMD_ENBRIDGE		(0x0C)
 #define CMD_DISBRIDGE		(0x0D)
 
-#define CMD_ENDRVTOEXT		(0x0E)
-#define CMD_DISDRVTOEXT		(0x0F)
+#define CMD_DRVTOEXT		(0x0E)
+#define CMD_APPVER			(0x0F)
 
 #define CMD_RSTPIGAIN		(0x10)
 #define CMD_SPDKP			(0x11)
@@ -72,7 +72,6 @@
 #define CMD_TRQKI			(0x14)
 #define CMD_VOLT			(0x15)
 #define CMD_FAULT_ACK		(0x16)
-#define CMD_APPVER          (0x17)
 
 #define CMD_EXC_CMDS    	((uint8_t)243)
 

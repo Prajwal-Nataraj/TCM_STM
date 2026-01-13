@@ -424,28 +424,32 @@ void CmdProc_TrqKi(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *
 	}
 }
 
-void CmdProc_EnDrvToExt(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
+void CmdProc_DrvToExt(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
 {
-	if(Motor_SetDrvToExt(true))
-		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
-	else
-		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
-}
+	uint8_t *pCmdBuf = &CMDBYTE_DATA0;
+	uint8_t argGS = GetArgUINT8(pCmdBuf);
 
-void CmdProc_DisDrvToExt(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
-{
-	if(Motor_SetDrvToExt(false))
-		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
-	else
-		NACK(CMDBYTE_FUNCCODE, CMD_RET_GENERROR, RspBuf, RspLen);
-}
+	uint8_t drvToExt = 0;
 
-void CmdProc_Reserved(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
-{
-	if(0)
-		ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
-	else
-		NACK(CMDBYTE_FUNCCODE, CMD_RET_NOIMPL, RspBuf, RspLen);
+	if(argGS == CMD_GET)
+	{
+		drvToExt = Motor_GetDrvToExt();
+
+		RESP(CMDBYTE_FUNCCODE, (uint8_t*)&drvToExt, sizeof(drvToExt), RspBuf, RspLen);
+		return;
+	}
+
+	if(argGS == CMD_SET)
+	{
+		pCmdBuf += 1;
+		drvToExt = GetArgUINT8(pCmdBuf);
+
+		if(!Motor_SetDrvToExt(drvToExt))
+			NACK(CMDBYTE_FUNCCODE, CMD_RET_WRONGARGS, RspBuf, RspLen);
+		else
+			ACK(CMDBYTE_FUNCCODE, RspBuf, RspLen);
+		return;
+	}
 }
 
 void CmdProc_ResetParams(uint8_t *CmdBuf, uint32_t CmdLen, uint8_t *RspBuf, uint32_t *RspLen)
@@ -563,8 +567,8 @@ static const CmdHandler_t CmdTable[] =
 		{ 	CMD_ENBRIDGE	, 		CmdProc_EnBridge	},
 		{ 	CMD_DISBRIDGE	, 		CmdProc_DisBridge	},
 
-		{ 	CMD_ENDRVTOEXT	, 		CmdProc_EnDrvToExt	},
-		{ 	CMD_DISDRVTOEXT	, 		CmdProc_DisDrvToExt },
+		{ 	CMD_DRVTOEXT	, 		CmdProc_DrvToExt	},
+		{ 	CMD_APPVER		,		CmdProc_AppVer 		},
 
 		{	CMD_RSTPIGAIN	,		CmdProc_ResetPIGains},
 		{ 	CMD_SPDKP		, 		CmdProc_SpdKp		},
@@ -573,7 +577,6 @@ static const CmdHandler_t CmdTable[] =
 		{ 	CMD_TRQKI		, 		CmdProc_TrqKi		},
 		{ 	CMD_VOLT		, 		CmdProc_Voltage		},
 		{ 	CMD_FAULT_ACK	, 		CmdProc_FaultAck	},
-		{ 	CMD_APPVER		, 		CmdProc_AppVer		},
 };
 
 StdReturn_t Cmd_Process(uint8_t *CmdBuf, uint8_t *RspBuf, uint32_t *RspLen)

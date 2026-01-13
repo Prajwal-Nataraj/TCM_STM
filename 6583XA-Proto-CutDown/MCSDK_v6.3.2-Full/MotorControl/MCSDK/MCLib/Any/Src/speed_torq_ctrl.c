@@ -472,10 +472,10 @@ __weak /*int32_t*/float STC_CalcTorqueReference(SpeednTorqCtrl_Handle_t *pHandle
 //      hTorqueReference = PI_Controller(pHandle->PISpeed, (int32_t)hError);
 
       /********** Stop PI Loop when hTargetSpeed is 0 to avoid vibration *****BEGIN*****/
-      if((hTargetSpeed < 0.5) && (hTargetSpeed > -0.5) && (ENABLE == checkZero))
+      if((hTargetSpeed < 0.0099) && (hTargetSpeed > -0.0099) && (ENABLE == checkZero))
     	  settleCounter++;
 
-      if((hTargetSpeed > 0.5) || (hTargetSpeed < -0.5))
+      if((hTargetSpeed > 0.0099) || (hTargetSpeed < -0.0099))
       {
     	  PIloop = ENABLE;
     	  checkZero = ENABLE;

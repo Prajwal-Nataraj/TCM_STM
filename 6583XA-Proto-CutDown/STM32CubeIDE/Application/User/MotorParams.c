@@ -419,7 +419,7 @@ bool Motor_Start(void)
 	adjSpeed = SPEED_ADJ_FACT * Motor.newSpeedRPM;								// Adjusted Speed
 
 	rampTime = Motor_CalcRampTimeMs(ACCEL, Motor.newSpeedRPM);
-	rampTime = (rampTime < 30) ? 30 : rampTime;									// always keep rampTime >= 30
+	rampTime = (rampTime < 1) ? 1 : rampTime;									// always keep rampTime >= 1
 
 	if(Motor.customGains)
 		SetCustPIGains();
@@ -448,7 +448,7 @@ bool Motor_Start(void)
 bool Motor_Stop(void)
 {
 	rampTime = Motor_CalcRampTimeMs(DECEL, 0);
-	rampTime = (rampTime < 30) ? 30 : rampTime;		// always keep rampTime >= 30
+	rampTime = (rampTime < 1) ? 1 : rampTime;		// always keep rampTime >= 1
 
 	MCI_ExecSpeedRamp(pMCI[M1], 0, rampTime);
 
@@ -463,7 +463,7 @@ bool Motor_Stop(void)
 /* Critical Stop (max Deceleration) */
 bool Motor_CriticalStop(void)
 {
-	MCI_ExecSpeedRamp(pMCI[M1], 0, 30);				// always keep rampTime >= 30
+	MCI_ExecSpeedRamp(pMCI[M1], 0, 1);				// always keep rampTime >= 1
 
 	stopExec = true;
 

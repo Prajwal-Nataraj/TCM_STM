@@ -79,8 +79,8 @@ PinOutPanel.RotationAngle=0
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Project settings                                                                                                     #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-ProjectManager.ProjectFileName=6583XA-Proto-CutDown.ioc
-ProjectManager.ProjectName=6583XA-Proto-CutDown
+ProjectManager.ProjectFileName=STCMotorDrive.ioc
+ProjectManager.ProjectName=STCMotorDrive
 ProjectManager.TargetToolchain=STM32CubeIDE
 ProjectManager.AskForMigrate=true
 ProjectManager.BackupPrevious=false

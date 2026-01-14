@@ -1,1 +1,2 @@
-6583XA-Proto-CutDown/STM32CubeIDE/Debug/*
+STCMotorDrive/STM32CubeIDE/Debug/*
+!STCMotorDrive/STM32CubeIDE/Debug/STCMotorDrive.elf

@@ -1,11 +1,11 @@
-2025-11-07 09:30:07,489 DEBUG [WB_to_MX.lambda$run_gui_mode$0] Arguments: [-mx_timeout, -1, -pack, assets/MotorControlPack/MotorControl.zip, -exp, templates/wb-defines_where_and_what.txt, -ftl, templates/wb_ioc_template.ftl, -xdm, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\6583XA-Proto-CutDown.wbdef, -ioc, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\6583XA-Proto-CutDown.ioc]
+2025-11-07 09:30:07,489 DEBUG [WB_to_MX.lambda$run_gui_mode$0] Arguments: [-mx_timeout, -1, -pack, assets/MotorControlPack/MotorControl.zip, -exp, templates/wb-defines_where_and_what.txt, -ftl, templates/wb_ioc_template.ftl, -xdm, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\STCMotorDrive.wbdef, -ioc, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\STCMotorDrive.ioc]
 2025-11-07 09:30:07,494 DEBUG [ArgsValue.lambda$retrieve$2] CLI_ARG[ftl]: templates/wb_ioc_template.ftl
 2025-11-07 09:30:07,495 DEBUG [ArgsValue.lambda$retrieve$2] CLI_ARG[exp]: templates/wb-defines_where_and_what.txt
-2025-11-07 09:30:07,500 DEBUG [ArgsValue.lambda$retrieve$2] CLI_ARG[xdm]: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\6583XA-Proto-CutDown.wbdef
-2025-11-07 09:30:07,501 DEBUG [ArgsValue.lambda$retrieve$2] CLI_ARG[ioc]: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\6583XA-Proto-CutDown.ioc
+2025-11-07 09:30:07,500 DEBUG [ArgsValue.lambda$retrieve$2] CLI_ARG[xdm]: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\STCMotorDrive.wbdef
+2025-11-07 09:30:07,501 DEBUG [ArgsValue.lambda$retrieve$2] CLI_ARG[ioc]: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\STCMotorDrive.ioc
 2025-11-07 09:30:07,501 DEBUG [ArgsValue.lambda$retrieve$2] CLI_ARG[pack]: assets/MotorControlPack/MotorControl.zip
 2025-11-07 09:30:07,501 DEBUG [ArgsValue.lambda$retrieve$2] CLI_ARG[mx_timeout]: -1
-2025-11-07 09:30:07,502 DEBUG [ArgsValue.retrieve] {xdm=C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\6583XA-Proto-CutDown.wbdef, updftl=templates/wb_ioc_mc-middleware.ftl, mx_timeout=-1, exp=templates/wb-defines_where_and_what.txt, ioc=C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\6583XA-Proto-CutDown.ioc, pack=assets/MotorControlPack/MotorControl.zip, ftl=templates/wb_ioc_template.ftl}
+2025-11-07 09:30:07,502 DEBUG [ArgsValue.retrieve] {xdm=C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\STCMotorDrive.wbdef, updftl=templates/wb_ioc_mc-middleware.ftl, mx_timeout=-1, exp=templates/wb-defines_where_and_what.txt, ioc=C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\STCMotorDrive.ioc, pack=assets/MotorControlPack/MotorControl.zip, ftl=templates/wb_ioc_template.ftl}
 2025-11-07 09:30:07,537 DEBUG [WB_to_MX.run] Targeted MCU family = G4
 2025-11-07 09:30:07,565 DEBUG [WB_to_MX.run] Minimum associated CubeMx to the `6.0.0-a0` targeted MCU family is `G4`
 2025-11-07 09:30:13,508 DEBUG [EnvironmentChecker.checkPack] STM32CubeMX.Version: 6.14.1-RC2
@@ -26,12 +26,12 @@ Generation options:
 2025-11-07 09:30:13,589 INFO  [IocGenerator.logModulesVersionInfo]   Target Driver      : HAL - Hardware Abstraction Layer
 2025-11-07 09:30:13,589 INFO  [IocGenerator.logModulesVersionInfo]   Target STM32 FW    : 1.6.0
 
-2025-11-07 09:30:13,594 DEBUG [IocGenerator.process] C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\6583XA-Proto-CutDown.ioc ioc file: Generating
+2025-11-07 09:30:13,594 DEBUG [IocGenerator.process] C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\STCMotorDrive.ioc ioc file: Generating
 2025-11-07 09:30:13,596 DEBUG [IocGenerator.createOutput] Generating file from template templates\wb_ioc_template.ftl
-2025-11-07 09:30:14,499 DEBUG [IocGenerator.process] ioc file C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\6583XA-Proto-CutDown.ioc Generated
-2025-11-07 09:30:14,505 INFO  [LineInfo_to_exitCode.log_LineInfo] C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\6583XA-Proto-CutDown.ioc ioc: Generated
-2025-11-07 09:30:14,573 INFO  [Wb2MxProcess.lambda$copyFolder$e7a869af$1] Folder Copied: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\ftl
-2025-11-07 09:30:14,627 INFO  [extSettings.lambda$writeContentToFile$f5919002$1] Generated C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\.extSettings
+2025-11-07 09:30:14,499 DEBUG [IocGenerator.process] ioc file C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\STCMotorDrive.ioc Generated
+2025-11-07 09:30:14,505 INFO  [LineInfo_to_exitCode.log_LineInfo] C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\STCMotorDrive.ioc ioc: Generated
+2025-11-07 09:30:14,573 INFO  [Wb2MxProcess.lambda$copyFolder$e7a869af$1] Folder Copied: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\ftl
+2025-11-07 09:30:14,627 INFO  [extSettings.lambda$writeContentToFile$f5919002$1] Generated C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\.extSettings
 2025-11-07 09:30:14,636 INFO  [Wb2MxProcess.lambda$run$$19] 
 Started STM32CubeMX for final c-code generation
 2025-11-07 09:30:14,680 DEBUG [CubeMxRunner.create_code_generation_script_for] Generated CubeMx script file: C:\Users\PNataraj\AppData\Local\Temp\WB_to_Mx-xaprotocutdown-5228308415442959640.script
@@ -678,118 +678,118 @@ Started STM32CubeMX for final c-code generation
 2025-11-07 09:30:33,565 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:33,564 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: CORDIC
 2025-11-07 09:30:33,565 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:33,565 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: GPIO
 2025-11-07 09:30:33,568 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:33,568 [INFO] CodeGenerator:882 - code generatio: config db path: C:\Users\PNataraj\AppData\Local\Programs\STM32CubeMX\\db\
-2025-11-07 09:30:33,721 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:33,720 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\MXTmpFiles\license.tmp_save
-2025-11-07 09:30:33,957 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:33,957 [INFO] CodeEngine:287 - Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\MXTmpFiles\license.tmp
-2025-11-07 09:30:34,058 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:34,058 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\MXTmpFiles\gpio.tmp_save
-2025-11-07 09:30:34,178 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:34,178 [INFO] CodeEngine:287 - Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\MXTmpFiles\gpio.tmp
+2025-11-07 09:30:33,721 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:33,720 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\MXTmpFiles\license.tmp_save
+2025-11-07 09:30:33,957 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:33,957 [INFO] CodeEngine:287 - Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\MXTmpFiles\license.tmp
+2025-11-07 09:30:34,058 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:34,058 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\MXTmpFiles\gpio.tmp_save
+2025-11-07 09:30:34,178 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:34,178 [INFO] CodeEngine:287 - Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\MXTmpFiles\gpio.tmp
 2025-11-07 09:30:35,314 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,314 [INFO] Middleware:1452 - No code input for Bsp Dependency
-2025-11-07 09:30:35,409 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,409 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\MXTmpFiles\dma.tmp_save
-2025-11-07 09:30:35,470 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,470 [INFO] CodeEngine:287 - Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\MXTmpFiles\dma.tmp
-2025-11-07 09:30:35,477 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,477 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\MXTmpFiles\dma_GV.tmp_save
-2025-11-07 09:30:35,530 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,530 [INFO] CodeEngine:287 - Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\MXTmpFiles\dma_GV.tmp
+2025-11-07 09:30:35,409 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,409 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\MXTmpFiles\dma.tmp_save
+2025-11-07 09:30:35,470 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,470 [INFO] CodeEngine:287 - Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\MXTmpFiles\dma.tmp
+2025-11-07 09:30:35,477 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,477 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\MXTmpFiles\dma_GV.tmp_save
+2025-11-07 09:30:35,530 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,530 [INFO] CodeEngine:287 - Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\MXTmpFiles\dma_GV.tmp
 2025-11-07 09:30:35,677 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,677 [INFO] Middleware:1452 - No code input for Bsp Dependency
-2025-11-07 09:30:35,730 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,730 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\motorcontrol.c_save
-2025-11-07 09:30:35,791 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\motorcontrol.c
-2025-11-07 09:30:35,798 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,798 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\motorcontrol.h_save
-2025-11-07 09:30:35,849 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\motorcontrol.h
-2025-11-07 09:30:35,858 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,857 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\drive_parameters.h_save
-2025-11-07 09:30:35,944 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\drive_parameters.h
-2025-11-07 09:30:35,950 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,949 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_type.h_save
-2025-11-07 09:30:36,014 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_type.h
-2025-11-07 09:30:36,022 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,022 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_tasks.h_save
-2025-11-07 09:30:36,085 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_tasks.h
-2025-11-07 09:30:36,092 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,092 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\pwm_common.c_save
-2025-11-07 09:30:36,150 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\pwm_common.c
-2025-11-07 09:30:36,156 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,156 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\pwm_common.h_save
-2025-11-07 09:30:36,207 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\pwm_common.h
-2025-11-07 09:30:36,215 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,215 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_api.c_save
-2025-11-07 09:30:36,291 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_api.c
-2025-11-07 09:30:36,299 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,299 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_api.h_save
-2025-11-07 09:30:36,358 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_api.h
-2025-11-07 09:30:36,364 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,364 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_config.c_save
-2025-11-07 09:30:36,448 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_config.c
-2025-11-07 09:30:36,455 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,455 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_config_common.c_save
-2025-11-07 09:30:36,525 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_config_common.c
-2025-11-07 09:30:36,531 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,531 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_config.h_save
-2025-11-07 09:30:36,589 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_config.h
-2025-11-07 09:30:36,595 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,595 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_config_common.h_save
-2025-11-07 09:30:36,648 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_config_common.h
-2025-11-07 09:30:36,655 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,655 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mcp_config.h_save
-2025-11-07 09:30:36,710 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mcp_config.h
-2025-11-07 09:30:36,716 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,716 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mcp_config.c_save
-2025-11-07 09:30:36,768 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mcp_config.c
-2025-11-07 09:30:36,776 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,775 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_stm_types.h_save
-2025-11-07 09:30:36,835 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_stm_types.h
-2025-11-07 09:30:36,843 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,843 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_tasks.c_save
-2025-11-07 09:30:36,922 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_tasks.c
-2025-11-07 09:30:36,929 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,929 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_tasks_foc.c_save
-2025-11-07 09:30:37,022 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_tasks_foc.c
-2025-11-07 09:30:37,029 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,029 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\pwm_curr_fdbk.c_save
-2025-11-07 09:30:37,084 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\pwm_curr_fdbk.c
-2025-11-07 09:30:37,091 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,091 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\pwm_curr_fdbk.h_save
-2025-11-07 09:30:37,141 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\pwm_curr_fdbk.h
-2025-11-07 09:30:37,148 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,148 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\regular_conversion_manager.c_save
-2025-11-07 09:30:37,218 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\regular_conversion_manager.c
-2025-11-07 09:30:37,225 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,224 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\regular_conversion_manager.h_save
-2025-11-07 09:30:37,278 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\regular_conversion_manager.h
-2025-11-07 09:30:37,284 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,283 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_math.c_save
-2025-11-07 09:30:37,341 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_math.c
-2025-11-07 09:30:37,348 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,348 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_math.h_save
-2025-11-07 09:30:37,405 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_math.h
-2025-11-07 09:30:37,412 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,412 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_interface.c_save
-2025-11-07 09:30:37,478 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_interface.c
-2025-11-07 09:30:37,484 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,484 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_interface.h_save
-2025-11-07 09:30:37,542 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_interface.h
-2025-11-07 09:30:37,548 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,548 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\parameters_conversion.h_save
-2025-11-07 09:30:37,632 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\parameters_conversion.h
-2025-11-07 09:30:37,638 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,638 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\parameters_conversion_g4xx.h_save
-2025-11-07 09:30:37,711 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\parameters_conversion_g4xx.h
-2025-11-07 09:30:37,716 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,716 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\pmsm_motor_parameters.h_save
-2025-11-07 09:30:37,765 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\pmsm_motor_parameters.h
-2025-11-07 09:30:37,771 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,771 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\power_stage_parameters.h_save
-2025-11-07 09:30:37,829 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\power_stage_parameters.h
-2025-11-07 09:30:37,835 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,835 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\stm32_mc_common_it.c_save
-2025-11-07 09:30:37,903 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\stm32_mc_common_it.c
-2025-11-07 09:30:37,909 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,909 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\stm32g4xx_mc_it.c_save
-2025-11-07 09:30:37,965 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\stm32g4xx_mc_it.c
-2025-11-07 09:30:37,972 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,972 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_parameters.h_save
-2025-11-07 09:30:38,023 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_parameters.h
-2025-11-07 09:30:38,029 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,029 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_parameters.c_save
-2025-11-07 09:30:38,128 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_parameters.c
-2025-11-07 09:30:38,135 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,135 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\register_interface.c_save
-2025-11-07 09:30:38,216 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\register_interface.c
-2025-11-07 09:30:38,223 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,223 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mcp.c_save
-2025-11-07 09:30:38,279 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mcp.c
-2025-11-07 09:30:38,286 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,286 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_perf.h_save
-2025-11-07 09:30:38,335 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_perf.h
-2025-11-07 09:30:38,342 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,342 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_perf.c_save
-2025-11-07 09:30:38,393 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_perf.c
-2025-11-07 09:30:38,399 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,399 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\register_interface.h_save
-2025-11-07 09:30:38,455 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\register_interface.h
-2025-11-07 09:30:38,460 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,460 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\usart_aspep_driver.c_save
-2025-11-07 09:30:38,508 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\usart_aspep_driver.c
-2025-11-07 09:30:38,514 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,514 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_configuration_registers.c_save
-2025-11-07 09:30:38,563 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_configuration_registers.c
-2025-11-07 09:30:38,569 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,568 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_configuration_registers.h_save
-2025-11-07 09:30:38,622 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_configuration_registers.h
-2025-11-07 09:30:38,628 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,627 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\aspep.h_save
-2025-11-07 09:30:38,678 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\aspep.h
-2025-11-07 09:30:38,685 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,685 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\aspep.c_save
-2025-11-07 09:30:38,743 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\aspep.c
-2025-11-07 09:30:38,750 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,750 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_app_hooks.h_save
-2025-11-07 09:30:38,794 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\mc_app_hooks.h
-2025-11-07 09:30:38,799 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,799 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_app_hooks.c_save
-2025-11-07 09:30:38,853 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\mc_app_hooks.c
-2025-11-07 09:30:38,874 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,874 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\stm32g4xx_it.c_save
-2025-11-07 09:30:38,935 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\stm32g4xx_it.c
-2025-11-07 09:30:38,940 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,940 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\stm32g4xx_it.h_save
-2025-11-07 09:30:38,999 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\stm32g4xx_it.h
-2025-11-07 09:30:39,020 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,020 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\stm32g4xx_hal_msp.c_save
-2025-11-07 09:30:39,117 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\stm32g4xx_hal_msp.c
-2025-11-07 09:30:39,124 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,124 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\MXTmpFiles\system.tmp_save
-2025-11-07 09:30:39,163 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,163 [INFO] CodeEngine:287 - Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\MXTmpFiles\system.tmp
-2025-11-07 09:30:39,178 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,178 [INFO] CodeEngine:319 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\stm32g4xx_hal_conf.h_save
-2025-11-07 09:30:39,228 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\stm32g4xx_hal_conf.h
+2025-11-07 09:30:35,730 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,730 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\motorcontrol.c_save
+2025-11-07 09:30:35,791 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\motorcontrol.c
+2025-11-07 09:30:35,798 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,798 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\motorcontrol.h_save
+2025-11-07 09:30:35,849 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\motorcontrol.h
+2025-11-07 09:30:35,858 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,857 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\drive_parameters.h_save
+2025-11-07 09:30:35,944 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\drive_parameters.h
+2025-11-07 09:30:35,950 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:35,949 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_type.h_save
+2025-11-07 09:30:36,014 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_type.h
+2025-11-07 09:30:36,022 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,022 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_tasks.h_save
+2025-11-07 09:30:36,085 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_tasks.h
+2025-11-07 09:30:36,092 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,092 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\pwm_common.c_save
+2025-11-07 09:30:36,150 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\pwm_common.c
+2025-11-07 09:30:36,156 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,156 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\pwm_common.h_save
+2025-11-07 09:30:36,207 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\pwm_common.h
+2025-11-07 09:30:36,215 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,215 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_api.c_save
+2025-11-07 09:30:36,291 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_api.c
+2025-11-07 09:30:36,299 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,299 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_api.h_save
+2025-11-07 09:30:36,358 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_api.h
+2025-11-07 09:30:36,364 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,364 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_config.c_save
+2025-11-07 09:30:36,448 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_config.c
+2025-11-07 09:30:36,455 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,455 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_config_common.c_save
+2025-11-07 09:30:36,525 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_config_common.c
+2025-11-07 09:30:36,531 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,531 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_config.h_save
+2025-11-07 09:30:36,589 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_config.h
+2025-11-07 09:30:36,595 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,595 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_config_common.h_save
+2025-11-07 09:30:36,648 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_config_common.h
+2025-11-07 09:30:36,655 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,655 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mcp_config.h_save
+2025-11-07 09:30:36,710 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mcp_config.h
+2025-11-07 09:30:36,716 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,716 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mcp_config.c_save
+2025-11-07 09:30:36,768 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mcp_config.c
+2025-11-07 09:30:36,776 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,775 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_stm_types.h_save
+2025-11-07 09:30:36,835 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_stm_types.h
+2025-11-07 09:30:36,843 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,843 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_tasks.c_save
+2025-11-07 09:30:36,922 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_tasks.c
+2025-11-07 09:30:36,929 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:36,929 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_tasks_foc.c_save
+2025-11-07 09:30:37,022 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_tasks_foc.c
+2025-11-07 09:30:37,029 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,029 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\pwm_curr_fdbk.c_save
+2025-11-07 09:30:37,084 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\pwm_curr_fdbk.c
+2025-11-07 09:30:37,091 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,091 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\pwm_curr_fdbk.h_save
+2025-11-07 09:30:37,141 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\pwm_curr_fdbk.h
+2025-11-07 09:30:37,148 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,148 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\regular_conversion_manager.c_save
+2025-11-07 09:30:37,218 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\regular_conversion_manager.c
+2025-11-07 09:30:37,225 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,224 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\regular_conversion_manager.h_save
+2025-11-07 09:30:37,278 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\regular_conversion_manager.h
+2025-11-07 09:30:37,284 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,283 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_math.c_save
+2025-11-07 09:30:37,341 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_math.c
+2025-11-07 09:30:37,348 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,348 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_math.h_save
+2025-11-07 09:30:37,405 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_math.h
+2025-11-07 09:30:37,412 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,412 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_interface.c_save
+2025-11-07 09:30:37,478 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_interface.c
+2025-11-07 09:30:37,484 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,484 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_interface.h_save
+2025-11-07 09:30:37,542 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_interface.h
+2025-11-07 09:30:37,548 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,548 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\parameters_conversion.h_save
+2025-11-07 09:30:37,632 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\parameters_conversion.h
+2025-11-07 09:30:37,638 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,638 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\parameters_conversion_g4xx.h_save
+2025-11-07 09:30:37,711 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\parameters_conversion_g4xx.h
+2025-11-07 09:30:37,716 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,716 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\pmsm_motor_parameters.h_save
+2025-11-07 09:30:37,765 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\pmsm_motor_parameters.h
+2025-11-07 09:30:37,771 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,771 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\power_stage_parameters.h_save
+2025-11-07 09:30:37,829 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\power_stage_parameters.h
+2025-11-07 09:30:37,835 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,835 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\stm32_mc_common_it.c_save
+2025-11-07 09:30:37,903 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\stm32_mc_common_it.c
+2025-11-07 09:30:37,909 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,909 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\stm32g4xx_mc_it.c_save
+2025-11-07 09:30:37,965 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\stm32g4xx_mc_it.c
+2025-11-07 09:30:37,972 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:37,972 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_parameters.h_save
+2025-11-07 09:30:38,023 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_parameters.h
+2025-11-07 09:30:38,029 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,029 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_parameters.c_save
+2025-11-07 09:30:38,128 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_parameters.c
+2025-11-07 09:30:38,135 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,135 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\register_interface.c_save
+2025-11-07 09:30:38,216 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\register_interface.c
+2025-11-07 09:30:38,223 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,223 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mcp.c_save
+2025-11-07 09:30:38,279 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mcp.c
+2025-11-07 09:30:38,286 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,286 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_perf.h_save
+2025-11-07 09:30:38,335 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_perf.h
+2025-11-07 09:30:38,342 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,342 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_perf.c_save
+2025-11-07 09:30:38,393 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_perf.c
+2025-11-07 09:30:38,399 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,399 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\register_interface.h_save
+2025-11-07 09:30:38,455 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\register_interface.h
+2025-11-07 09:30:38,460 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,460 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\usart_aspep_driver.c_save
+2025-11-07 09:30:38,508 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\usart_aspep_driver.c
+2025-11-07 09:30:38,514 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,514 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_configuration_registers.c_save
+2025-11-07 09:30:38,563 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_configuration_registers.c
+2025-11-07 09:30:38,569 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,568 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_configuration_registers.h_save
+2025-11-07 09:30:38,622 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_configuration_registers.h
+2025-11-07 09:30:38,628 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,627 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\aspep.h_save
+2025-11-07 09:30:38,678 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\aspep.h
+2025-11-07 09:30:38,685 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,685 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\aspep.c_save
+2025-11-07 09:30:38,743 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\aspep.c
+2025-11-07 09:30:38,750 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,750 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_app_hooks.h_save
+2025-11-07 09:30:38,794 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\mc_app_hooks.h
+2025-11-07 09:30:38,799 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,799 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_app_hooks.c_save
+2025-11-07 09:30:38,853 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\mc_app_hooks.c
+2025-11-07 09:30:38,874 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,874 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\stm32g4xx_it.c_save
+2025-11-07 09:30:38,935 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\stm32g4xx_it.c
+2025-11-07 09:30:38,940 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:38,940 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\stm32g4xx_it.h_save
+2025-11-07 09:30:38,999 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\stm32g4xx_it.h
+2025-11-07 09:30:39,020 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,020 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\stm32g4xx_hal_msp.c_save
+2025-11-07 09:30:39,117 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\stm32g4xx_hal_msp.c
+2025-11-07 09:30:39,124 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,124 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\MXTmpFiles\system.tmp_save
+2025-11-07 09:30:39,163 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,163 [INFO] CodeEngine:287 - Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\MXTmpFiles\system.tmp
+2025-11-07 09:30:39,178 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,178 [INFO] CodeEngine:319 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\stm32g4xx_hal_conf.h_save
+2025-11-07 09:30:39,228 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\stm32g4xx_hal_conf.h
 2025-11-07 09:30:39,261 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,261 [INFO] ApiDbMcu:508 - Load IP Config File for ADC1
 2025-11-07 09:30:39,263 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,263 [INFO] ApiDbMcu:508 - Load IP Config File for ADC2
 2025-11-07 09:30:39,265 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,265 [INFO] ApiDbMcu:508 - Load IP Config File for COMP1
@@ -804,10 +804,10 @@ Started STM32CubeMX for final c-code generation
 2025-11-07 09:30:39,296 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,296 [INFO] ApiDbMcu:508 - Load IP Config File for TIM4
 2025-11-07 09:30:39,303 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,303 [INFO] ApiDbMcu:508 - Load IP Config File for USART1
 2025-11-07 09:30:39,305 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,305 [INFO] ApiDbMcu:508 - Load IP Config File for RCC
-2025-11-07 09:30:39,320 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,320 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\main.h_save
-2025-11-07 09:30:39,376 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Inc\main.h
-2025-11-07 09:30:39,382 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,382 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\main.c_save
-2025-11-07 09:30:39,498 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\6583XA-Proto-CutDown\Src\main.c
+2025-11-07 09:30:39,320 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,320 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\main.h_save
+2025-11-07 09:30:39,376 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Inc\main.h
+2025-11-07 09:30:39,382 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:39,382 [INFO] CodeEngine:263 - oldGeneratedFile, C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\main.c_save
+2025-11-07 09:30:39,498 INFO  [LineInfo_to_exitCode.log_LineInfo] Generated code: C:\Users\PNataraj\Downloads\6853A_Test\STCMotorDrive\Src\main.c
 2025-11-07 09:30:40,429 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:40,429 [INFO] ProjectBuilder:3324 - Time for Copy HAL[0] : 823mS.
 2025-11-07 09:30:40,441 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:40,441 [INFO] ProjectBuilder:4912 - Project Generator version: 4.6.0.1-B1
 2025-11-07 09:30:40,487 DEBUG [LineInfo_to_exitCode.log_LineInfo] 2025-11-07 09:30:40,486 [INFO] ConfigFileManager:1590 - The Die is : DIE468

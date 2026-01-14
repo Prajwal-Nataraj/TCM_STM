@@ -1,2 +1,3 @@
 STCMotorDrive/STM32CubeIDE/Debug/*
 !STCMotorDrive/STM32CubeIDE/Debug/STCMotorDrive.elf
+!STCMotorDrive/STM32CubeIDE/Debug/makefile
